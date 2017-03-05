@@ -1,0 +1,19 @@
+.clTotal{
+	-fx-alignment: center-right;
+	-fx-font-weight:  bold;
+}
+.clNo{
+	-fx-alignment: center;
+}
+.clCusDate{
+	-fx-alignment: center;
+}
+.clOrderId{
+	-fx-alignment: center;
+}
+.clCusId{
+	-fx-alignment: center;
+}
+.clStatus{
+	-fx-alignment: center;
+}

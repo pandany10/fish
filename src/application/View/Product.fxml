@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="r" prefHeight="753.0" prefWidth="1267.0" stylesheets="@../Css/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller.ProductController">
+   <children>
+      <MenuBar fx:id="menuBar" layoutY="2.0" prefHeight="25.0" prefWidth="1266.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem fx:id="menuItemOrders" mnemonicParsing="false" text="Orders" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemCustomers" mnemonicParsing="false" text="Customers" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemTools" mnemonicParsing="false" text="Tools" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemInvoicer" mnemonicParsing="false" text="Invoicer" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemWavelist" mnemonicParsing="false" text="Wave list" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemPrintinvoices" mnemonicParsing="false" text="Print invoices" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemSalesreports" mnemonicParsing="false" text="Sales reports" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemExpressorders" mnemonicParsing="false" text="Express orders" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemLogout" mnemonicParsing="false" text="Logout" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Navigate">
+            <items>
+              <MenuItem fx:id="menuItemHome" mnemonicParsing="false" onAction="#gotoHome" text="Home" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <Pane layoutY="27.0" prefHeight="724.0" prefWidth="1267.0">
+         <children>
+            <Label layoutX="9.0" layoutY="4.0" prefHeight="20.0" prefWidth="117.0" text="Search:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="keySearch" layoutX="126.0" layoutY="4.0" onAction="#actionSearch" prefHeight="25.0" prefWidth="399.0" />
+            <ChoiceBox fx:id="filter" layoutX="538.0" layoutY="4.0" prefWidth="150.0" />
+            <Label layoutX="9.0" layoutY="42.0" prefHeight="25.0" prefWidth="117.0" text="Add product:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label layoutX="126.0" layoutY="42.0" prefHeight="25.0" prefWidth="53.0" text="Sku:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="asku" layoutX="179.0" layoutY="42.0" prefHeight="25.0" prefWidth="108.0" promptText="Sku" />
+            <TextField fx:id="aname" layoutX="365.0" layoutY="42.0" prefHeight="25.0" prefWidth="231.0" promptText="Name" />
+            <Label layoutX="305.0" layoutY="42.0" prefHeight="25.0" prefWidth="61.0" text="Name:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label layoutX="604.0" layoutY="42.0" prefHeight="25.0" prefWidth="73.0" text="Size:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="asize" layoutX="679.0" layoutY="42.0" prefHeight="25.0" prefWidth="108.0" promptText="Size" />
+            <TextField fx:id="alot" layoutX="870.0" layoutY="42.0" prefHeight="25.0" prefWidth="108.0" promptText="Lot" />
+            <Label layoutX="795.0" layoutY="42.0" prefHeight="25.0" prefWidth="73.0" text="Lot">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label layoutX="996.0" layoutY="42.0" prefHeight="25.0" prefWidth="73.0" text="Price:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="aprice" layoutX="1071.0" layoutY="42.0" prefHeight="25.0" prefWidth="108.0" promptText="Price" />
+            <Button layoutX="1199.0" layoutY="42.0" mnemonicParsing="false" onAction="#addProduct" onKeyPressed="#addProducts" prefHeight="25.0" prefWidth="61.0" text="Add" />
+            <TableView fx:id="twResultSearch" layoutX="5.0" layoutY="79.0" prefHeight="646.0" prefWidth="1266.0">
+               <columns>
+                  <TableColumn fx:id="tws_sku1" prefWidth="125.0" text="Sku" />
+                  <TableColumn fx:id="tws_name" prefWidth="817.0" text="Name" />
+                  <TableColumn fx:id="tws_size" minWidth="0.0" prefWidth="73.0" text="Size" />
+                  <TableColumn fx:id="tws_lot" minWidth="0.0" prefWidth="72.0" text="Lot" />
+                  <TableColumn fx:id="tws_price" prefWidth="126.0" text="Price">
+                     <styleClass>
+                        <String fx:value="clright" />
+                        <String fx:value="clbold" />
+                     </styleClass>
+                  </TableColumn>
+               </columns>
+            </TableView>
+            <Label fx:id="statusAdd" alignment="TOP_RIGHT" layoutX="804.0" layoutY="8.0" prefHeight="17.0" prefWidth="447.0" textFill="#0f0fe1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

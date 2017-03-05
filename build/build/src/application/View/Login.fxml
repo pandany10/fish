@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="lgStatus1a" prefHeight="306.0" prefWidth="446.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../Css/Style.css"  fx:controller="application.Controller.LoginController">
+   <children>
+      <TextField id="1" fx:id="txtUser" layoutX="133.0" layoutY="96.0" onAction="#Login" prefHeight="25.0" prefWidth="201.0" promptText="user name">
+         <font>
+            <Font size="18.0" />
+         </font></TextField>
+      <PasswordField id="2" fx:id="txtPW" layoutX="132.0" layoutY="153.0" onAction="#Login" prefHeight="39.0" prefWidth="201.0" promptText="password">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </PasswordField>
+      <Label contentDisplay="CENTER" layoutX="160.0" layoutY="24.0" text="FishPro v2">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <CheckBox id="3" fx:id="chkLg" layoutX="132.0" layoutY="207.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="201.0" text="remember login">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </CheckBox>
+      <Label fx:id="lbl" alignment="CENTER" layoutX="1.0" layoutY="71.0" prefHeight="20.0" prefWidth="446.0" textFill="#3111e8">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button id="4" fx:id="btnLogin" layoutX="179.0" layoutY="243.0" mnemonicParsing="false" onAction="#Login" prefHeight="39.0" prefWidth="88.0" text="Login">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+   </children>
+</AnchorPane>

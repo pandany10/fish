@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="aphome" prefHeight="604.0" prefWidth="1046.0" stylesheets="@../Css/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller.HomeController">
+   <children>
+      <MenuBar fx:id="menuBar" layoutY="2.0" prefHeight="25.0" prefWidth="1046.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem fx:id="menuItemOrders" mnemonicParsing="false" text="Orders" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemOrdersTemp" mnemonicParsing="false" onAction="#gotoOrdersTemp" text="Orders Temporary" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemCustomers" mnemonicParsing="false" text="Customers" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemTools" mnemonicParsing="false" text="Tools" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemInvoicer" mnemonicParsing="false" text="Invoicer" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemWavelist" mnemonicParsing="false" text="Wave list" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemPrintinvoices" mnemonicParsing="false" text="Print invoices" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemSalesreports" mnemonicParsing="false" text="Sales reports" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemExpressorders" mnemonicParsing="false" text="Express orders" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemLogout" mnemonicParsing="false" onAction="#gotoLogin" text="Logout" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <Button fx:id="btnOrder" layoutX="29.0" layoutY="150.0" mnemonicParsing="false" onAction="#gotoOrders" prefHeight="47.0" prefWidth="116.0" text="ORDERS">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnCustomer" layoutX="249.0" layoutY="150.0" mnemonicParsing="false" onAction="#gotoCustomer" prefHeight="47.0" prefWidth="190.0" text="CUSTOMERS">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnProduct" layoutX="560.0" layoutY="150.0" mnemonicParsing="false" onAction="#gotoProduct" prefHeight="47.0" prefWidth="132.0" text="PRODUCTS">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button disable="true" layoutX="829.0" layoutY="289.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="132.0" text="TOOLS">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnInvoice" layoutX="29.0" layoutY="289.0" mnemonicParsing="false" onAction="#gotoInvoice" prefHeight="47.0" prefWidth="116.0" text="INVOICER">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button disable="true" layoutX="281.0" layoutY="458.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="132.0" text="WAVE LIST">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnPayment" layoutX="561.0" layoutY="289.0" mnemonicParsing="false" onAction="#gotoPayment" prefHeight="47.0" prefWidth="132.0" text="PAYMENT">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnSales" layoutX="800.0" layoutY="150.0" mnemonicParsing="false" onAction="#gotoSales" prefHeight="47.0" prefWidth="190.0" text="SALES REPORTS">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button disable="true" layoutX="538.0" layoutY="458.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="197.0" text="EXPRESS ORDERS">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnTemp" layoutX="252.0" layoutY="289.0" mnemonicParsing="false" onAction="#gotoOrdersTemp" prefHeight="47.0" prefWidth="190.0" text="ORDER TEMPORARY">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

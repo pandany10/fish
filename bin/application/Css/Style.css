@@ -1,0 +1,41 @@
+.clTotal{
+	-fx-alignment: center-right;
+	-fx-font-weight:  bold;
+}
+.clNo{
+	-fx-alignment: center;
+}
+.clCusDate{
+	-fx-alignment: center;
+}
+.clOrderId{
+	-fx-alignment: center;
+}
+.clCusId{
+	-fx-alignment: center;
+}
+.clStatus{
+	-fx-alignment: center;
+}
+.clSku{
+	-fx-alignment: center;
+}
+.clcenter{
+	-fx-alignment: center;
+}
+.clright{
+	-fx-alignment: center-right;
+}
+.clbold{
+	-fx-font-weight:  bold;
+}
+.TextField {
+    -fx-border-width: 1;
+    -fx-border-color: lightgray;
+    -fx-background-insets:1;
+    -fx-border-radius:3 0 0 3;
+    /*    -fx-border-radius:0 0 0 0;*/
+}
+.boderblue{
+	-fx-border-color: #1f2aee;
+}

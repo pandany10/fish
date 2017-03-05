@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="FishProv2.jnlp">
+  <information>
+    <title>FishProv2</title>
+    <vendor>Unknown</vendor>
+    <description>FishProv2</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href=".\FishProv2.jar" size="1052383" download="null" />
+  </resources>
+  <jfx:javafx-desc  width="0" height="0" main-class="application.Main"  name="FishProv2" />
+  <update check="background"/>
+</jnlp>
