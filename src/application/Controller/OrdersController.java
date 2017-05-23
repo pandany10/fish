@@ -3,7 +3,6 @@ package application.Controller;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -16,7 +15,9 @@ import application.Model.OrderDetailModel;
 import application.Model.OrderInfoModel;
 import application.Model.OrderModel;
 import application.Model.ProductModel;
+import application.Utill.Menu;
 import application.Utill.Pdf;
+import application.Utill.PdfPackingList;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,13 +25,12 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -42,25 +42,25 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
-public class OrdersController implements Initializable {
+public class OrdersController extends Menu implements Initializable {
 
-	Stage prevStage;
 	final String[] statusS = new String[] { "Pending", "Packing", "Shipped", "Completed","Pulling" };
 	final String[] filter = new String[] { "Pending", "Packing", "Shipped", "Completed" ,"Pulling" };
+	final String[] screens = new String[] { "Express", "Exotic", "Both" };
+	private String str_filters = screens[1];
 	String screen = "final";
 	
 	public boolean stateEdit = false;
@@ -80,12 +80,53 @@ public class OrdersController implements Initializable {
 
 	public void setScreen(String screen) {
 		this.screen = screen;
+		if(screen.equals("Express")){
+			twOrder.getItems().clear();
+			Thread thLoadData = new Thread() {
+				@SuppressWarnings("deprecation")
+				public void run() {
+					try {
+						list = orderDao.getOrder(filter[0],screen);
+						twOrder.getItems().clear();
+						twOrder.getItems().addAll(list);
+						twOrder.getSelectionModel().selectFirst();
+						Platform.runLater(new Runnable() {
+							  @Override
+							  public void run() {
+								     if(screen.equals("App Java")){
+									    	// tw_payment.
+									    	tw_payment.setVisible(false);
+									    	tw_issued.setVisible(false);
+									    	status.setVisible(false);
+									    	cbFilter.setVisible(false);
+									  }
+							  }
+							});
+
+						this.suspend();
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			};
+
+			thLoadData.start();
+		}
 	}
 
-	public void setPrevStage(Stage stage) {
-		this.prevStage = stage;
+	public void showDetail(List<OrderModel> currentOrders) throws ClassNotFoundException, SQLException {
+		currentOrder = currentOrders;
+		Integer in = currentOrder.get(0).getOrder_id();
+		System.out.println(in);
+		editOrderId = in;
+		isShowOrdes(false);
+		orderDetail = orderDao.getOrderDetail(editOrderId);
+		showDetail(orderDetail);
 	}
-
 	/*
 	 * @FXML private TableView<Order> twOrder;
 	 */
@@ -144,6 +185,11 @@ public class OrdersController implements Initializable {
 	private TextField ship_phone;
 	@FXML
 	private ChoiceBox fSearchP;
+	@FXML
+	private CheckBox chkpm;
+	@FXML
+	private CheckBox chkIs;
+	
 	
 	@FXML
 	private TableColumn<ProductModel, Boolean> tws_sku1;
@@ -221,16 +267,55 @@ public class OrdersController implements Initializable {
 	private TableColumn<ProductModel, Float> twd_total;
 	@FXML
 	private TableColumn<ProductModel, Boolean> twd_commission;
+
 	@FXML
-	private MenuItem menuItemOrders;
+	public ChoiceBox cbFilter;
 	@FXML
-	private ChoiceBox cbFilter;
+	public ChoiceBox cbFilterScreen;
 	@FXML
-	private MenuItem menuItemInvoicer;
+	public Label lblEnter;
+	@FXML
+	public Label lblcp;
+	@FXML
+	public Label lblcp1;
+	@FXML
+	public Label lblcps;
+	@FXML
+	public Label pk1;
+	@FXML
+	public Label pk2;
+	@FXML
+	public Label pk3;
+	@FXML
+	public CheckBox chkPackingList;
+	@FXML
+	public Button btnPackingList;
+	@FXML
+	private MenuItem menuItemPackingList;
+	
+	public void setCbFilter(Boolean hiden) {
+		cbFilter.setVisible(hiden);
+	}
+	public void setTw_payment(Boolean hiden) {
+		tw_payment.setVisible(hiden);
+	}
+	public void setTw_issued(Boolean hiden) {
+		tw_issued.setVisible(hiden);
+	}
+	public void setStatus(Boolean hiden) {
+		status.setVisible(hiden);
+		if(hiden == false){
+			Customer_emails.setPrefWidth(320.0);
+			CompanyName.setPrefWidth(350.0);
+			twOrder.setLayoutY(0);
+			twOrder.setPrefHeight(640);
+			cbFilterScreen.setVisible(false);
+		}
+	}
+;
 	@FXML
 	private MenuItem menuItemHome;
-	@FXML
-	private MenuItem menuItemCustomers;
+
 	@FXML
 	private MenuItem menuItemPrintInvoice;
 	private CustomerModel customer;
@@ -247,19 +332,64 @@ public class OrdersController implements Initializable {
 	
 	private int str_fSearchPs = fSearchPs[0];
 	
+	TableColumn<OrderModel, Boolean> tw_payment =  new  TableColumn<OrderModel, Boolean>("Payment");
+	TableColumn<OrderModel, Boolean> tw_issued =  new  TableColumn<OrderModel, Boolean>("Issued");
+	TableColumn<OrderModel, String> status = new TableColumn<>("Status");
+	TableColumn<OrderModel, String> Customer_emails = new TableColumn<>("Email");
+	TableColumn<OrderModel, String> CompanyName = new TableColumn<>("Store");
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		inits();
 		isShowOrdes(true);
+		menuItemPackingList.setAccelerator(KeyCombination.keyCombination("Ctrl+K"));
+
+		menuItemPackingList.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					createPackingList();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		//lblEnter.setMnemonicParsing(false);
+		//twOrder.setLayoutY(0);
+		twOrder.setPrefHeight(660);
+		cbFilter.setVisible(false);
 		orderDao = new OrderDao();
 		initViewOrders();
 		initViewOrderDetail();
+		twOrder.setPlaceholder(new Label("Please wait… Searching Database."));
+		if(!screen.equals("Express")){
 		Thread thLoadData = new Thread() {
 			@SuppressWarnings("deprecation")
 			public void run() {
 				try {
-					list = orderDao.getOrder(filter[0],screen);
+					list = orderDao.getOrder(str_filters,screen);
+					twOrder.getItems().clear();
 					twOrder.getItems().addAll(list);
 					twOrder.getSelectionModel().selectFirst();
+					Platform.runLater(new Runnable() {
+						  @Override
+						  public void run() {
+							  if(list.size()==0){
+								  twOrder.setPlaceholder(new Label("No matching results were found."));
+							  }
+							     if(screen.equals("App Java")){
+								    	// tw_payment.
+								    	tw_payment.setVisible(false);
+								    	tw_issued.setVisible(false);
+								    	status.setVisible(false);
+								    	cbFilter.setVisible(false);
+								    	twOrder.setPrefHeight(670);
+								  }
+						  }
+						});
+
 					this.suspend();
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -270,8 +400,10 @@ public class OrdersController implements Initializable {
 				}
 			}
 		};
+		
 
 		thLoadData.start();
+		}
 	}
 
 	public void initViewOrderDetail() {
@@ -378,7 +510,7 @@ public class OrdersController implements Initializable {
 		this.terms.textProperty().addListener(new TextFieldListener(this.terms));
 		this.salsperson.textProperty().addListener(new TextFieldListener(this.salsperson));
 		this.txtShippingCost.textProperty().addListener(new TextFieldListener(this.txtShippingCost));
-		orders.setPrefHeight(913);
+		orders.setPrefHeight(860);
 		this.courier.textProperty().addListener(new TextFieldListenerInfo(this.courier));
 		this.tracking.textProperty().addListener(new TextFieldListenerInfo(this.tracking));
 		this.fish_boxes.textProperty().addListener(new TextFieldListenerInfo(this.fish_boxes));
@@ -490,35 +622,7 @@ public class OrdersController implements Initializable {
 		    //  }
 		    }
 		});
-		menuItemInvoicer.setAccelerator(KeyCombination.keyCombination("Ctrl+I"));
 
-		menuItemInvoicer.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					gotoInvoice();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		menuItemOrders.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));
-
-		menuItemOrders.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				//isShowOrdes(true);
-				try {
-					gotoOrders();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
 		menuItemHome.setAccelerator(KeyCombination.keyCombination("Ctrl+H"));
 
 		menuItemHome.setOnAction(new EventHandler<ActionEvent>() {
@@ -533,21 +637,8 @@ public class OrdersController implements Initializable {
 				}
 			}
 		});
-		menuItemCustomers.setAccelerator(KeyCombination.keyCombination("Ctrl+U"));
 
-		menuItemCustomers.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					gotoCustomer();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		menuItemPrintInvoice.setAccelerator(KeyCombination.keyCombination("Ctrl+P"));
+		menuItemPrintInvoice.setAccelerator(KeyCombination.keyCombination("Ctrl+G"));
 
 		menuItemPrintInvoice.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -950,6 +1041,29 @@ public class OrdersController implements Initializable {
 	public void actionSearch(ActionEvent event) throws IOException {
 		actionSearch();
 	}
+	public void createPackingList(ActionEvent event) throws IOException {
+		createPackingList();
+	}
+	public void changePackingList(ActionEvent event) throws IOException {
+		changePackingList();
+	}
+	public void createPackingList() throws IOException {
+		boolean ischeck = chkPackingList.isSelected();
+		PdfPackingList pdf = new PdfPackingList();
+		pdf.scientiflic = !ischeck;
+		OrderModel currentOrders =  currentOrder.get(0);
+		List<ProductModel> lstProduct =  orderDetail.getLstProduct();
+		int count =0;
+		for (ProductModel product : lstProduct) {
+			lstProduct.get(count).setTotal("0.00");
+			count++;
+		}
+		orderDetail.setLstProduct(lstProduct);
+		pdf.PrintInvoice(orderDetail ,currentOrders);	
+	}
+	public void changePackingList() throws IOException {
+		
+	}
 	public void actionSearch() throws IOException {
 		System.out.println("key ="+txtKeySearch.getText());
     	ProductDao productDao = new ProductDao();
@@ -992,12 +1106,73 @@ public class OrdersController implements Initializable {
                  return new BooleanCells();
          }
      };
-     TableColumn<OrderModel, Boolean> tw_payment =  new  TableColumn<OrderModel, Boolean>("Payment");
+     
+     Callback<TableColumn<OrderModel, Boolean>, TableCell<OrderModel, Boolean>> booleanCellFactoryIssued = 
+             new Callback<TableColumn<OrderModel, Boolean>, TableCell<OrderModel, Boolean>>() {
+             @Override
+                 public TableCell<OrderModel, Boolean> call(TableColumn<OrderModel, Boolean> p) {
+                     return new BooleanCellsIssued();
+             }
+         };
+
+  
  		tw_payment.setCellValueFactory(new PropertyValueFactory<>("payment"));
 		tw_payment.setCellFactory(booleanCellFactoryPayment);
 		tw_payment.getStyleClass().add("clcenter");
 		tw_payment.setPrefWidth(70.0);
+	 		tw_issued.setCellValueFactory(new PropertyValueFactory<>("issued"));
+	 		tw_issued.setCellFactory(booleanCellFactoryIssued);
+	 		tw_issued.getStyleClass().add("clcenter");
+	 		tw_issued.setPrefWidth(70.0);
+
 		twOrder.setEditable(true);
+		
+		cbFilterScreen.setItems(FXCollections.observableArrayList("Express", "Exotic", "Both"));
+		cbFilterScreen.setValue("Exotic");
+		cbFilterScreen.getSelectionModel().selectedIndexProperty()
+		.addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue ov, Number value, Number new_value) {
+				str_filters = screens[new_value.intValue()];
+				twOrder.setPlaceholder(new Label("Please wait… Searching Database."));
+				twOrder.getItems().clear();
+				Thread thLoadData = new Thread() {
+					@SuppressWarnings("deprecation")
+					public void run() {
+						//twOrder.getItems().removeAll(list);
+						twOrder.getItems().clear();
+						try {
+							list = orderDao.getOrder(str_filters,screen);
+							for (OrderModel element : list) {
+							  //System.out.println(element.getStatus());COMPLETED
+							}
+							twOrder.getItems().clear();
+							twOrder.getItems().addAll(list);
+							twOrder.getSelectionModel().selectFirst();
+							for(int i =0;i< twOrder.getItems().size();i++){
+								//System.out.println(twOrder.getItems().get(i).getStatus());
+							}
+							Platform.runLater(new Runnable() {
+								  @Override
+								  public void run() {
+									  if(list.size()==0){
+										  twOrder.setPlaceholder(new Label("No matching results were found."));
+									  }
+								  }
+								});
+							this.suspend();
+						} catch (ClassNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				};
+
+				thLoadData.start();
+			}
+		});
 		cbFilter.setItems(FXCollections.observableArrayList("Pending", "Packing", "Shipped", "Completed","Pulling"));
 		cbFilter.setValue("Pending");
 		cbFilter.getSelectionModel().selectedIndexProperty()
@@ -1065,15 +1240,14 @@ public class OrdersController implements Initializable {
 		ClientCustomerID.setPrefWidth(90.0);
 		ClientCustomerID.getStyleClass().add("clCusId");
 		ClientCustomerID.setCellFactory(createNumberCellFactory());
-		TableColumn<OrderModel, String> CompanyName = new TableColumn<>("Store");
+	
 		CompanyName.setCellValueFactory(new PropertyValueFactory<>("CompanyName"));
-		CompanyName.setPrefWidth(280.0);
+		CompanyName.setPrefWidth(210.0);
 		CompanyName.setCellFactory(createNumberCellFactory());
-		TableColumn<OrderModel, Float> All_Total = new TableColumn<>("Total($)");
+		TableColumn<OrderModel, String> All_Total = new TableColumn<>("Total($)");
 		All_Total.setCellValueFactory(new PropertyValueFactory<>("All_Total"));
 		All_Total.setPrefWidth(90.0);
 		All_Total.getStyleClass().add("clTotal");
-		TableColumn<OrderModel, String> status = new TableColumn<>("Status");
 		status.setCellValueFactory(new PropertyValueFactory<>("status"));
 		status.setPrefWidth(100.0);
 		status.getStyleClass().add("clStatus");
@@ -1108,24 +1282,34 @@ public class OrdersController implements Initializable {
 				return cell;
 			}
 		});
+		System.out.println(screen);
+	     if(screen.equals("App Java")){
+	    	// tw_payment.
+	    	tw_payment.setVisible(false);
+	    	tw_issued.setVisible(false);
+	    	status.setVisible(false);
+	    	cbFilter.setVisible(false);
+	     }
 		TableColumn<OrderModel, String> Customer_ship = new TableColumn<>("Ship Via");
 		Customer_ship.setCellValueFactory(new PropertyValueFactory<>("Customer_ship"));
 		Customer_ship.setPrefWidth(143.0);
 		Customer_ship.getStyleClass().add("clStatus");
 		Customer_ship.setCellFactory(createNumberCellFactory());
-		TableColumn<OrderModel, String> Customer_email = new TableColumn<>("Email");
-		Customer_email.setCellValueFactory(new PropertyValueFactory<>("Customer_email"));
-		Customer_email.setPrefWidth(220.0);
-		Customer_email.getStyleClass().add("clEmail");
-		Customer_email.setCellFactory(createNumberCellFactory());
+
+		Customer_emails.setCellValueFactory(new PropertyValueFactory<>("Customer_email"));
+		Customer_emails.setPrefWidth(220.0);
+		Customer_emails.getStyleClass().add("clEmail");
+		Customer_emails.setCellFactory(createNumberCellFactory());
+
 		boolean addAll = twOrder.getColumns().addAll(order_id, Customer_date, status,tw_payment, Customer_ship, ClientCustomerID,
-				Customer_email, CompanyName, All_Total);
+				Customer_emails, CompanyName,tw_issued, All_Total);
 		twOrder.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
 				if (event.getCode() == KeyCode.ENTER) {
 					 String status = twOrder.getSelectionModel().getSelectedItems().get(0).getStatus();
-			         if(!status.equals(statusS[3])){
+					 Boolean payment = twOrder.getSelectionModel().getSelectedItems().get(0).getPayment();
+			         if(!status.equals(statusS[3]) && payment == false){
 					// event.consume(); // don't consume the event or else the
 					// values won't be updated;
 					System.out.println("modeEdit: " + modeEdit);
@@ -1135,8 +1319,8 @@ public class OrdersController implements Initializable {
 						try {
 							EditOrder();
 							//r.resize(1267, 913);
-							cscreen = "orderDetail";
-							r.setPrefHeight(913);
+							cscreen = "orderDetails";
+							r.setPrefHeight(860);
 						} catch (ClassNotFoundException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -1183,7 +1367,7 @@ public class OrdersController implements Initializable {
 					}
 					// select next row, but same column as the current selection
 					else if (pos.getRow() < twOrder.getItems().size() - 1) {
-						twOrder.getSelectionModel().clearAndSelect(pos.getRow() + 1, pos.getTableColumn());
+					//	twOrder.getSelectionModel().clearAndSelect(pos.getRow() + 1, pos.getTableColumn());
 					}
 
 				}
@@ -1358,13 +1542,52 @@ public class OrdersController implements Initializable {
 	public void EditOrder() throws ClassNotFoundException, SQLException {
 		currentOrder = twOrder.getSelectionModel().getSelectedItems();
 		Integer in = currentOrder.get(0).getOrder_id();
+		lblEnter.setText("[Enter] Commit Value");
 		System.out.println(in);
 		editOrderId = in;
 		isShowOrdes(false);
 		orderDetail = orderDao.getOrderDetail(editOrderId);
 		showDetail(orderDetail);
 	}
-
+/*	public void showDetail(int orderId) throws ClassNotFoundException, SQLException {
+		//currentOrder = twOrder.getSelectionModel().getSelectedItems();
+		//Integer in = currentOrder.get(0).getOrder_id();
+		//System.out.println(in);
+		editOrderId = orderId;
+		isShowOrdes(false);
+		orderDetail = orderDao.getOrderDetail(editOrderId);
+		showDetail(orderDetail);
+	}*/
+	public void changeIssue(ActionEvent event) throws IOException {
+		System.out.println("changeIssue");
+		Boolean issue = false;
+		if(chkIs.isSelected()){
+			 issue = true;
+		}else{
+			 issue = false;
+		}
+		try {
+			orderDao.updateIssued(editOrderId, issue);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void changePayment(ActionEvent event) throws IOException {
+		System.out.println("changePayment");
+		Boolean payment = false;
+		if(chkpm.isSelected()){
+			payment = true;
+		}else{
+			payment = false;
+		}
+		try {
+			orderDao.updateReadyPayment(editOrderId, payment);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public void showDetail(OrderDetailModel orderDetail) {
 		CustomerModel bill = orderDetail.getCustomer();
 		CustomerModel ship = orderDetail.getShipTo();
@@ -1410,6 +1633,16 @@ public class OrdersController implements Initializable {
 		System.out.println(twOrderDetail.getItems().size());
 		for (int i = 0; i < twOrderDetail.getItems().size(); i++) {
 			twOrderDetail.getItems().remove(i);
+		}
+		if(lstProduct.size()>0){
+			String readyPayment = lstProduct.get(0).getReadyPayment();
+			String issued = lstProduct.get(0).getIssued();
+			if(readyPayment.equals("1")){
+				chkpm.setSelected(true);
+			}
+			if(issued.equals("1")){
+				chkIs.setSelected(true);
+			}
 		}
 		twOrderDetail.getItems().addAll(lstProduct);
 		twOrderDetail.getSelectionModel().selectFirst();
@@ -1469,46 +1702,7 @@ public class OrdersController implements Initializable {
 
 		return factory;
 	}
-	 public void gotoOrders() throws IOException {          
-	        Stage stage = new Stage();
-	        stage.setTitle("Orders");
-	        stage.getIcons().add(new Image("file:resources/images/icon.png"));
-	        FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/Orders.fxml"));
-	        Pane myPane = (Pane)myLoader.load();
-	        
-	        OrdersController controller = (OrdersController) myLoader.getController();
-	 	    controller.setPrevStage(stage);
-	        Scene scene = new Scene(myPane);
-	        stage.setScene(scene);
-	        prevStage.close();
-	        stage.setResizable(false);
-	        stage.show();
-	        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-	            int count = 0;
-	    	    @Override
-	    	    public void handle(KeyEvent evt) {
-	    	        if (evt.getCode().equals(KeyCode.ESCAPE)) {
-	    	        	String temp = controller.getCscreen();
-	    	        	System.out.println(temp);
-	    	        	if(temp.equals("lstOrder")){
-	    	        		prevStage.show();
-	    	        		stage.close();
-	    	        	}else{
-	    	        		count++;
-	    	        		if(count ==1 ){
-		    	        		try {
-		    	        			stage.close();
-									gotoOrders();
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-	    	        		}
-	    	        	}
-	    	        }
-	    	    }
-	    	});
-	     }
+
 	public void gotoHome(ActionEvent event) throws IOException {
 		gotoHome();
 	}
@@ -1606,27 +1800,19 @@ public class OrdersController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-    public void gotoHome() throws IOException {          
-		Stage stage = new Stage();
-		stage.setTitle("Home");
-		stage.getIcons().add(new Image("file:resources/images/icon.png"));
-		FXMLLoader myLoader = new FXMLLoader(getClass().getResource("/application/View/Home.fxml"));
-		Pane myPane = (Pane) myLoader.load();
 
-		HomeController controller = (HomeController) myLoader.getController();
-		controller.setPrevStage(stage);
-		Scene scene = new Scene(myPane);
-		stage.setScene(scene);
-
-		prevStage.close();
-		stage.setResizable(false);
-		stage.show();
-    }
 	public void isShowOrdes(Boolean isShowOrdes) {
 		isShowOrder = isShowOrdes;
 		orders.setVisible(isShowOrdes);
 		editOrder.setVisible(!isShowOrdes);
 		menuItemPrintInvoice.setVisible(!isShowOrdes);
+		lblcp.setVisible(!isShowOrdes);
+		lblcps.setVisible(!isShowOrdes);
+		lblcp1.setVisible(isShowOrdes);
+		pk1.setVisible(!isShowOrdes);
+		pk2.setVisible(!isShowOrdes);
+		pk3.setVisible(!isShowOrdes);
+
 		if (!init) {
 			if (isShowOrdes) {
 				prevStage.setTitle("Orders");
@@ -1653,36 +1839,6 @@ public class OrdersController implements Initializable {
 		return items;
 	}
 
-	public void gotoInvoice() throws IOException {
-		Stage stage = new Stage();
-		stage.setTitle("Create Invoice");
-		stage.getIcons().add(new Image("file:resources/images/icon.png"));
-		FXMLLoader myLoader = new FXMLLoader(getClass().getResource("/application/View/Invoice.fxml"));
-		Pane myPane = (Pane) myLoader.load();
-
-		InvoiceController controller = (InvoiceController) myLoader.getController();
-		controller.setPrevStage(stage);
-		Scene scene = new Scene(myPane);
-		stage.setScene(scene);
-		prevStage.close();
-		stage.setResizable(false);
-		stage.show();
-	}
-    public void gotoCustomer() throws IOException {          
-        Stage stage = new Stage();
-        stage.setTitle("Customer");
-        stage.getIcons().add(new Image("file:resources/images/icon.png"));
-        FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/Customer.fxml"));
-        Pane myPane = (Pane)myLoader.load();
-        
-        CustomerController controller = (CustomerController) myLoader.getController();
- 	    controller.setPrevStage(stage);
-        Scene scene = new Scene(myPane);
-        stage.setScene(scene);
-        prevStage.close();
-        stage.setResizable(false);
-        stage.show();
-     }
 	public Float calTotal(){
 		Float total = (float) 0;
 		int count = twOrderDetail.getItems().size();
@@ -1750,6 +1906,7 @@ public class OrdersController implements Initializable {
         public BooleanCell() {
             checkBox = new CheckBox();
             checkBox.setDisable(true);
+            checkBox.setOpacity(0);
             checkBox.selectedProperty().addListener(new ChangeListener<Boolean> () {
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                     if(isEditing())
@@ -1766,6 +1923,7 @@ public class OrdersController implements Initializable {
             if (isEmpty()) {
                 return;
             }
+            checkBox.setVisible(false);
             checkBox.setDisable(false);
             checkBox.requestFocus();
         }
@@ -1782,6 +1940,11 @@ public class OrdersController implements Initializable {
         public void updateItem(Boolean item, boolean empty) {
             super.updateItem(item, empty);
             if (!isEmpty()) {
+            	if(item == null){
+            		item = true;
+            	}else{
+                    checkBox.setOpacity(1);
+            	}
                 checkBox.setSelected(item);
             }
         }
@@ -1792,6 +1955,8 @@ public class OrdersController implements Initializable {
         public BooleanCells() {
             checkBox = new CheckBox();
             checkBox.setDisable(true);
+            checkBox.setOpacity(0);
+          //  checkBox.setVisible(true);
             checkBox.selectedProperty().addListener(new ChangeListener<Boolean> () {
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 	Boolean checked = isEditing();
@@ -1851,9 +2016,119 @@ public class OrdersController implements Initializable {
             {
             	if(item == null){
             		item = true;
+            	}else{
+                    checkBox.setOpacity(1);
             	}
             	checkBox.setSelected(item);
 
+            }else{
+            	checkBox.setOpacity(0);
+            }
+        }
+    }
+	class BooleanCellsIssued  extends TableCell<OrderModel, Boolean> {
+        private CheckBox checkBox;
+        private Boolean lock = false;
+        public BooleanCellsIssued () {
+            checkBox = new CheckBox();
+            checkBox.setDisable(true);
+          //  checkBox.setVisible(true);
+            checkBox.setOpacity(0);
+            checkBox.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+                    	if(lock){
+                			//checkBox.setDisable(true);
+                			//lock = false;
+                		}
+                    	else if(!lock){
+                    		//lock = true;
+                    		//checkBox.setDisable(false);
+                    	}
+                    }
+                }
+            });
+            checkBox.selectedProperty().addListener(new ChangeListener<Boolean> () {
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                	Boolean checked = isEditing();
+                	//System.out.println(lock);
+                   // if(isEditing()){
+                	if(lock){
+                        String status = twOrder.getSelectionModel().getSelectedItems().get(0).getStatus();
+                       // if(status.equals(statusS[3])){
+                            twOrder.getSelectionModel().getSelectedItems().get(0).setIssued(newValue);
+                            Integer orderId = twOrder.getSelectionModel().getSelectedItems().get(0).getOrder_id();
+                            commitEdit(newValue == null ? false : newValue);
+                            try {
+         						orderDao.updateIssued(orderId,newValue);
+         					} catch (ClassNotFoundException e) {
+         						// TODO Auto-generated catch block
+         						e.printStackTrace();
+         					} catch (SQLException e) {
+         						// TODO Auto-generated catch block
+         						e.printStackTrace();
+         					}
+                            lock = false;
+                            checkBox.setDisable(true);
+                	 }
+                       // }
+                  //  }else{
+                    	
+                  // }
+                }
+            });
+            this.setGraphic(checkBox);
+            this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            this.setEditable(true);
+        }
+        @Override
+        public void startEdit() {
+            super.startEdit();
+            if (isEmpty()) {
+                return;
+            }
+            checkBox.requestFocus();
+            if(lock){
+    			checkBox.setDisable(true);
+    			lock = false;
+    		}
+        	else if(!lock){
+        		lock = true;
+        		checkBox.setDisable(false);
+        	}
+           /* String status = twOrder.getSelectionModel().getSelectedItems().get(0).getStatus();
+            if(status.equals(statusS[3])){
+            	checkBox.setDisable(false);
+                checkBox.requestFocus();
+            	System.out.println("1");
+            }else{
+                checkBox.setDisable(true);
+            }*/
+        }
+        @Override
+        public void cancelEdit() {
+            super.cancelEdit();
+           // checkBox.setDisable(true);
+        }
+        public void commitEdit(Boolean value) {
+            super.commitEdit(value);
+           // checkBox.setDisable(true);
+        }
+        @Override
+        public void updateItem(Boolean item, boolean empty) {
+            super.updateItem(item, empty);
+            if (!isEmpty())
+            {
+            	if(item == null){
+            		item = true;
+            	}else{
+            		 checkBox.setOpacity(1);
+            	}
+            	checkBox.setSelected(item);
+
+            }else{
+            	checkBox.setOpacity(0);
             }
         }
     }

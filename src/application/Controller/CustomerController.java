@@ -3,12 +3,19 @@ package application.Controller;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Dao.CustomerDao;
+import application.Dao.OrderDao;
 import application.Model.CustomerModel;
+import application.Model.OrderModel;
 import application.Model.ProductModel;
+import application.Utill.Menu;
+import application.Utill.PdfCustomer;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -20,10 +27,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
@@ -33,13 +40,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 
-public class CustomerController implements Initializable {
+public class CustomerController extends Menu implements Initializable {
 	@FXML
 	private Label statusCus;
 	@FXML
@@ -128,22 +137,21 @@ public class CustomerController implements Initializable {
 	@FXML
 	private Button btnAdd;
 	@FXML
+	private Button btnReport;
+	@FXML
+	private Button btnReport1;
+	@FXML
+	private Label lblstatuspdf;
+	
+	@FXML
 	private TextField Customer_email;
 	final String[] filter = new String[] { "ID","Name", "Contact", "Phone", "Email" ,"City" };
 	private String str_filters = filter[0];
 	final String[] scouriers = new String[] { "OnTrac", "UPS", "Aeromexico", "Aerounion", "Air Canada", "Alaska Airlines", "American Airlines Cargo","Cathay Pacific Airways", "COPA Airlines", "Delta Air Lines","Southwest Airlines","Southwest Airlines","United Airlines Cargo"};
 	@FXML
-	private MenuItem menuItemOrders;
-	@FXML
 	private ChoiceBox cbFilter;
 	@FXML
 	private ChoiceBox<String> scourier;
-	@FXML
-	private MenuItem menuItemInvoicer;
-	@FXML
-	private MenuItem menuItemHome;
-	@FXML
-	private MenuItem menuItemCustomers;
 	@FXML
 	private TextField keySearch;
 	private Integer  tkey=0;
@@ -151,27 +159,39 @@ public class CustomerController implements Initializable {
 	private Pane paneSearchCus;	
 	@FXML
 	private TableView<CustomerModel> twSearchCus;
+	@FXML
+	private TableView<OrderModel> tw;
+	@FXML
+	private TableColumn<OrderModel, String> tw_orderId;
+	@FXML
+	private TableColumn<OrderModel, String> tw_date;
+	@FXML
+	private TableColumn<OrderModel, String> tw_status;
+	@FXML
+	private TableColumn<OrderModel, Boolean> tw_payment;
+	@FXML
+	private TableColumn<OrderModel, Boolean> tw_issued;
+	@FXML
+	private TableColumn<OrderModel, String> tw_total;
 	
 	@FXML
-	private TableColumn<ProductModel, Boolean> tcs_cus;
+	private TableColumn<CustomerModel, String> tcs_cus;
 	@FXML
-	private TableColumn<ProductModel, Boolean> tcs_name;
+	private TableColumn<CustomerModel, String> tcs_name;
 	@FXML
-	private TableColumn<ProductModel, Boolean> tcs_contact;
+	private TableColumn<CustomerModel, String> tcs_contact;
 	@FXML
-	private TableColumn<ProductModel, Boolean> tcs_phone;
+	private TableColumn<CustomerModel, String> tcs_phone;
 	@FXML
-	private TableColumn<ProductModel, Boolean> tcs_email;
+	private TableColumn<CustomerModel, String> tcs_email;
 	@FXML
-	private TableColumn<ProductModel, Boolean> tcs_city;
-	Stage prevStage;
+	private TableColumn<CustomerModel, String> tcs_city;
+	DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 	private CustomerModel customer;
+	private OrderDao orderDao;
 	public boolean isFixKey = false;
 	public boolean isFixKeys = false;
 	public int isFixKeyn = 0;
-	public void setPrevStage(Stage stage) {
-		this.prevStage = stage;
-	}
 	public void isShowSearchCus(boolean isShow){
 		//if(isShow == true){
 			paneSearchCus.setVisible(isShow);
@@ -179,8 +199,76 @@ public class CustomerController implements Initializable {
 			statusCus.setVisible(!isShow);
 		//}
 	}
+	public void gotoOrdersDetail(List<OrderModel> currentOrder) throws IOException {
+		Stage stage = new Stage();
+		stage.setTitle("Orders Detail");
+		stage.getIcons().add(new Image("file:resources/images/icon.png"));
+		FXMLLoader myLoader = new FXMLLoader(getClass().getResource("/application/View/Orders.fxml"));
+		Pane myPane = (Pane) myLoader.load();
+
+		OrdersController controller = (OrdersController) myLoader.getController();
+		controller.setPrevStage(stage);
+		Scene scene = new Scene(myPane);
+		stage.setScene(scene);
+		controller.setCscreen("orderDetails");
+			try {
+				controller.showDetail(currentOrder);
+			} catch (ClassNotFoundException | SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		//orderDetail
+		prevStage.close();
+		stage.setResizable(false);
+		stage.show();
+	    scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            int count = 0;
+    	    @Override
+    	    public void handle(KeyEvent evt) {
+    	        if (evt.getCode().equals(KeyCode.ESCAPE)) {
+    	        	String temp = controller.getCscreen();
+    	        	System.out.println(temp);
+    	        	if(temp.equals("lstOrder")){
+    	        		prevStage.show();
+    	        		stage.close();
+    	        	}else if(temp.equals("orderDetail")){
+    	        		count++;
+    	        		if(count ==1 ){
+	    	        		try {
+	    	        			stage.close();
+								gotoOrders();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+    	        		}
+    	        	}else if(temp.equals("orderDetails")){
+    	        		prevStage.show();
+    	        		stage.close();
+    	        	}
+    	        }
+    	    }
+    	});
+	}
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		 inits();
+		 Callback<TableColumn<OrderModel, Boolean>, TableCell<OrderModel, Boolean>> booleanCellFactoryPayment = 
+		         new Callback<TableColumn<OrderModel, Boolean>, TableCell<OrderModel, Boolean>>() {
+		         @Override
+		             public TableCell<OrderModel, Boolean> call(TableColumn<OrderModel, Boolean> p) {
+		                 return new BooleanCells();
+		         }
+		     };
+		     
+		     Callback<TableColumn<OrderModel, Boolean>, TableCell<OrderModel, Boolean>> booleanCellFactoryIssued = 
+		             new Callback<TableColumn<OrderModel, Boolean>, TableCell<OrderModel, Boolean>>() {
+		             @Override
+		                 public TableCell<OrderModel, Boolean> call(TableColumn<OrderModel, Boolean> p) {
+		                     return new BooleanCellsIssued();
+		             }
+		         };
+		orderDao = new OrderDao();
 		isShowSearchCus(false);
 		btnAdd.setVisible(false);
 		this.bill_name.textProperty().addListener(new TextFieldListener(this.bill_name));
@@ -220,8 +308,70 @@ public class CustomerController implements Initializable {
 		this.NetDue.textProperty().addListener(new TextFieldListener(this.NetDue));
 		this.Price.textProperty().addListener(new TextFieldListener(this.Price));
 		this.CreditLimit.textProperty().addListener(new TextFieldListener(this.CreditLimit));
-		this.Tax.textProperty().addListener(new TextFieldListener(this.Tax));
-		menuItemInvoicer.setAccelerator(KeyCombination.keyCombination("Ctrl+I"));
+		this.Tax.textProperty().addListener(new TextFieldListener(this.Tax));		
+		tw_payment.setCellFactory(booleanCellFactoryPayment);
+		tw_issued.setCellFactory(booleanCellFactoryIssued);
+		
+		tw_orderId.setCellValueFactory(new PropertyValueFactory<>("order_id"));
+		tw_date.setCellValueFactory(new PropertyValueFactory<>("Customer_date"));
+		tw_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+		tw_payment.setCellValueFactory(new PropertyValueFactory<>("payment"));
+		tw_issued.setCellValueFactory(new PropertyValueFactory<>("issued"));
+		tw_total.setCellValueFactory(new PropertyValueFactory<>("All_Total"));
+		//tw.setPlaceholder(new Label("Please wait… Searching Database."));
+		TableColumn<OrderModel, Integer> indexCols = new TableColumn<OrderModel, Integer>("#");
+		indexCols.setCellFactory(new Callback<TableColumn<OrderModel, Integer>, TableCell<OrderModel, Integer>>() {
+			@Override
+			public TableCell<OrderModel, Integer> call(TableColumn<OrderModel, Integer> param) {
+				return new TableCell<OrderModel, Integer>() {
+					@Override
+					protected void updateItem(Integer item, boolean empty) {
+						super.updateItem(item, empty);
+
+						if (this.getTableRow() != null) {
+
+							int index = this.getTableRow().getIndex();
+
+							if (index < tw.getItems().size()) {
+								int rowNum = index + 1;
+								setText(String.valueOf(rowNum));
+							} else {
+								setText("");
+							}
+
+						} else {
+							setText("");
+						}
+
+					}
+				};
+			}
+		});
+		indexCols.setPrefWidth(45.0);
+		indexCols.getStyleClass().add("clNo");
+		tw.addEventFilter(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				if (event.getCode() == KeyCode.ENTER) {
+					int  orderId = tw.getSelectionModel().getSelectedItems().get(0).getOrder_id();
+					List<OrderModel> currentOrder  = tw.getSelectionModel().getSelectedItems();
+					System.out.println(orderId);
+					try {
+						gotoOrdersDetail(currentOrder);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				if (event.getCode() == KeyCode.PAGE_DOWN) {
+					keySearch.requestFocus();
+				}
+				if (event.getCode() == KeyCode.PAGE_UP) {
+					bill_cus_id.requestFocus();
+				}
+			}
+		});
+		tw.getColumns().add(0, indexCols); // number column is at
 		tcs_cus.setCellValueFactory(new PropertyValueFactory<>("CustomerID"));
 		tcs_name.setCellValueFactory(new PropertyValueFactory<>("CompanyName"));
 		tcs_contact.setCellValueFactory(new PropertyValueFactory<>("Contact"));
@@ -260,8 +410,10 @@ public class CustomerController implements Initializable {
 		    @Override
 		    public void handle(KeyEvent event) {
 		      if(event.getCode() == KeyCode.PAGE_DOWN){
-		    	  
-		      }else{   	
+		    	  tw.requestFocus();
+		      }else if(event.getCode() == KeyCode.PAGE_UP){   	
+		    	  keySearch.requestFocus();
+		      }else{
 		    	  gotoSearchCus();
 		      }
 		    }
@@ -366,6 +518,36 @@ public class CustomerController implements Initializable {
 						    	}
 						    	Customer_email.setText(bill.getEmail());
 						    	bill_cus_id.requestFocus();
+						    	// process customer id show order
+						    	tw.setPlaceholder(new Label("Please wait… Searching Database."));
+						    	Thread thLoadData = new Thread() {
+									@SuppressWarnings("deprecation")
+									public void run() {
+										try {
+											List<OrderModel> lstOrder = orderDao.getOrderByOrderId(c.getCustomerID());
+											tw.getItems().clear();
+											tw.getItems().addAll(lstOrder);
+											if(lstOrder.size() == 0){
+												Platform.runLater(new Runnable() {
+													  @Override
+													  public void run() {
+															tw.setPlaceholder(new Label("Currently customer not available order."));
+
+													  }
+													});
+											}
+											this.suspend();
+										} catch (ClassNotFoundException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										} catch (SQLException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									}
+								};
+
+								thLoadData.start();
 							} else {
 								customer = new CustomerModel();
 							}
@@ -410,6 +592,18 @@ public class CustomerController implements Initializable {
 		      }
 		   }
 		}); 
+		keySearch.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+		       
+		    @Override
+		    public void handle(KeyEvent event) {
+		    	try {
+					actionSearchCus();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		   }
+		}); 
 		keySearch.focusedProperty().addListener(new ChangeListener<Boolean>()
 		{
 		    @Override
@@ -425,61 +619,22 @@ public class CustomerController implements Initializable {
 		        }
 		    }
 		});
-		menuItemInvoicer.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					gotoInvoice();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+		cbFilter.focusedProperty().addListener(new ChangeListener<Boolean>()
+		{
+		    @Override
+		    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
+		    {
+		        if (newPropertyValue)
+		        {
+		        	isShowSearchCus(true);
+		        }
+		        else
+		        {
+		        	isShowSearchCus(false);
+		        }
+		    }
 		});
-		menuItemOrders.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));
 
-		menuItemOrders.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				//isShowOrdes(true);
-				try {
-					gotoOrders();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		menuItemCustomers.setAccelerator(KeyCombination.keyCombination("Ctrl+U"));
-
-		menuItemCustomers.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					gotoCustomer();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		menuItemHome.setAccelerator(KeyCombination.keyCombination("Ctrl+H"));
-
-		menuItemHome.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					gotoHome();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
 		cbFilter.setItems(FXCollections.observableArrayList("ID", "Customer Name", "Contact", "Phone", "Email" ,"City"));
 		cbFilter.setValue("ID");
 		cbFilter.getSelectionModel().selectedIndexProperty()
@@ -507,12 +662,22 @@ public class CustomerController implements Initializable {
 				 tranferCus();
 			}
 		});
-		try {
-			actionSearchCus();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		Thread thLoadData = new Thread() {
+			@SuppressWarnings("deprecation")
+			public void run() {
+				try {
+					actionSearchCus();
+					this.suspend();
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+
+		thLoadData.start();
 /*		keySearch.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
 		       
 		    @Override
@@ -534,6 +699,9 @@ public class CustomerController implements Initializable {
 		    	  if(event.getCode() == KeyCode.PAGE_DOWN){
 		    		  bill_cus_id.requestFocus();
 			      }
+		    	  if(event.getCode() == KeyCode.PAGE_UP){
+		    		  tw.requestFocus();
+			      }
 		      }
 		   }
 		});  
@@ -542,6 +710,8 @@ public class CustomerController implements Initializable {
 
 	}
 	public void actionSearchCus() throws IOException {
+		 twSearchCus.getItems().clear();
+		 twSearchCus.setPlaceholder(new Label("Please wait… Searching Database."));
 		  System.out.println("key ="+keySearch.getText());
 		  System.out.println("key ="+str_filters);
 	  	  CustomerDao customerDao = new CustomerDao();
@@ -555,6 +725,16 @@ public class CustomerController implements Initializable {
 	  		twSearchCus.getItems().clear();
 	  		twSearchCus.getItems().addAll(lstCustomer);
 	  		twSearchCus.getSelectionModel().select(0);
+	  		Platform.runLater(new Runnable() {
+				  @Override
+				  public void run() {
+						int count = twSearchCus.getItems().size();
+						twSearchCus.refresh();
+						if(count == 0){
+							twSearchCus.setPlaceholder(new Label("No matching results were found."));
+						}
+				  }
+				});
 			} catch (ClassNotFoundException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -665,12 +845,102 @@ public class CustomerController implements Initializable {
 	public void addCustomer(ActionEvent event) throws IOException {
 		addCustomer();
 	}
+	public void Report(ActionEvent event) throws IOException {
+		Report();
+	}
+	public void Report1(ActionEvent event) throws IOException {
+		Report1();
+	}
 	public void addCustomers(KeyEvent event) throws IOException {
 		if(event.getCode() == KeyCode.ENTER){
 			addCustomer();
 		}
 	}
+	public void Report() throws IOException { 
+		btnReport.setDisable(true);
+		btnReport.setText("Generate Aging Report");
+		Thread thLoadData = new Thread() {
+			@SuppressWarnings("deprecation")
+			public void run() {
+					PdfCustomer pdf = new PdfCustomer();
+					Date date = new Date();
+					String tddate = dateFormat.format(date);
+					//LocalDate curentDate = LOCAL_DATE(cudate);
+					
+					List<OrderModel> lstOrder;
+					try {
+						lstOrder = orderDao.getOrderCustomerSale();
+							pdf.Print(lstOrder,tddate);
+						    Platform.runLater(new Runnable() {
+								  @Override
+								  public void run() {
+									    btnReport.setDisable(false);
+									    btnReport.setText("Aging Report");
+								  }
+							});
+					} catch (ClassNotFoundException | SQLException  | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						btnReport.setDisable(false);
+					    btnReport.setText("Aging Report");
+					}
+;
 
+			}
+		};
+
+		thLoadData.start();		
+	}
+	public void Report1() throws IOException { 
+		Boolean check = true;
+		if(customer == null){
+			check = false;
+		}else{
+			if(customer.getCustomerID().equals("")){
+				check = false;
+			}
+		}
+		if(check == false){
+			lblstatuspdf.setText("Please select a customer");
+		}else{
+			lblstatuspdf.setText("");
+			btnReport1.setDisable(true);
+			btnReport1.setText("Generate Open Receivables Report");
+			System.out.println("tttt:"+customer.getCustomerID());
+			Thread thLoadData = new Thread() {
+				@SuppressWarnings("deprecation")
+				public void run() {
+						PdfCustomer pdf = new PdfCustomer();
+						Date date = new Date();
+						String tddate = dateFormat.format(date);
+						//LocalDate curentDate = LOCAL_DATE(cudate);
+						
+						List<OrderModel> lstOrder;
+						try {
+							lstOrder = orderDao.getOrderCustomerSale(customer.getCustomerID());
+								pdf.Prints(lstOrder,tddate);
+								Platform.runLater(new Runnable() {
+									  @Override
+									  public void run() {
+										    btnReport1.setDisable(false);
+										    btnReport1.setText("Open Receivables Report");
+									  }
+								});
+
+						} catch (ClassNotFoundException | SQLException  | IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							btnReport.setDisable(false);
+						    btnReport.setText("Aging Report");
+						}
+	;
+	
+				}
+			};
+	
+			thLoadData.start();		
+		}
+	}
 	public void addCustomer() throws IOException { 
 		// validate field
 		boolean vali = true;//validateAddCus();
@@ -846,72 +1116,176 @@ public class CustomerController implements Initializable {
 				}
 		}
 	}
-    public void gotoHome() throws IOException {          
-		Stage stage = new Stage();
-		stage.setTitle("Home");
-		stage.getIcons().add(new Image("file:resources/images/icon.png"));
-		FXMLLoader myLoader = new FXMLLoader(getClass().getResource("/application/View/Home.fxml"));
-		Pane myPane = (Pane) myLoader.load();
 
-		HomeController controller = (HomeController) myLoader.getController();
-		controller.setPrevStage(stage);
-		Scene scene = new Scene(myPane);
-		stage.setScene(scene);
+	class BooleanCells extends TableCell<OrderModel, Boolean> {
+        private CheckBox checkBox;
+        private Boolean lock = true;
+        public BooleanCells() {
+            checkBox = new CheckBox();
+            checkBox.setDisable(true);
+            checkBox.selectedProperty().addListener(new ChangeListener<Boolean> () {
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                	Boolean checked = isEditing();
+                    if(isEditing()){
+                     /*   String status = twOrder.getSelectionModel().getSelectedItems().get(0).getStatus();
+                        if(status.equals(statusS[3])){
+                            twOrder.getSelectionModel().getSelectedItems().get(0).setPayment(newValue);
+                            Integer orderId = twOrder.getSelectionModel().getSelectedItems().get(0).getOrder_id();
+                            commitEdit(newValue == null ? false : newValue);
+                            try {
+         						orderDao.updatePayment(orderId,newValue);
+         					} catch (ClassNotFoundException e) {
+         						// TODO Auto-generated catch block
+         						e.printStackTrace();
+         					} catch (SQLException e) {
+         						// TODO Auto-generated catch block
+         						e.printStackTrace();
+         					}
+                        }*/
+                    }else{
+                    	
+                    }
+                }
+            });
+            this.setGraphic(checkBox);
+            this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            this.setEditable(true);
+        }
+        @Override
+        public void startEdit() {
+            super.startEdit();
+            if (isEmpty()) {
+                return;
+            }
+        /*    String status = twOrder.getSelectionModel().getSelectedItems().get(0).getStatus();
+            if(status.equals(statusS[3])){
+            	checkBox.setDisable(false);
+                checkBox.requestFocus();
+            	System.out.println("1");
+            }else{
+                checkBox.setDisable(true);
+            }*/
+        }
+        @Override
+        public void cancelEdit() {
+            super.cancelEdit();
+            checkBox.setDisable(true);
+        }
+        public void commitEdit(Boolean value) {
+            super.commitEdit(value);
+            checkBox.setDisable(true);
+        }
+        @Override
+        public void updateItem(Boolean item, boolean empty) {
+            super.updateItem(item, empty);
+            if (!isEmpty())
+            {
+            	if(item == null){
+            		item = true;
+            	}
+            	checkBox.setSelected(item);
 
-		prevStage.close();
-		stage.setResizable(false);
-		stage.show();
+            }
+        }
     }
+	class BooleanCellsIssued  extends TableCell<OrderModel, Boolean> {
+        private CheckBox checkBox;
+        private Boolean lock = false;
+        public BooleanCellsIssued () {
+            checkBox = new CheckBox();
+            checkBox.setDisable(true);
+            checkBox.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+                    	if(lock){
+                			//checkBox.setDisable(true);
+                			//lock = false;
+                		}
+                    	else if(!lock){
+                    		//lock = true;
+                    		//checkBox.setDisable(false);
+                    	}
+                    }
+                }
+            });
+            checkBox.selectedProperty().addListener(new ChangeListener<Boolean> () {
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                	Boolean checked = isEditing();
+                	System.out.println(isEditing());
+                   // if(isEditing()){
+                    /*    String status = twOrder.getSelectionModel().getSelectedItems().get(0).getStatus();
+                       // if(status.equals(statusS[3])){
+                            twOrder.getSelectionModel().getSelectedItems().get(0).setIssued(newValue);
+                            Integer orderId = twOrder.getSelectionModel().getSelectedItems().get(0).getOrder_id();
+                            commitEdit(newValue == null ? false : newValue);
+                            try {
+         						orderDao.updateIssued(orderId,newValue);
+         					} catch (ClassNotFoundException e) {
+         						// TODO Auto-generated catch block
+         						e.printStackTrace();
+         					} catch (SQLException e) {
+         						// TODO Auto-generated catch block
+         						e.printStackTrace();
+         					}
+                            lock = false;
+                            checkBox.setDisable(true);*/
+                       // }
+                  //  }else{
+                    	
+                  // }
+                }
+            });
+            this.setGraphic(checkBox);
+            this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            this.setEditable(true);
+        }
+        @Override
+        public void startEdit() {
+            super.startEdit();
+            if (isEmpty()) {
+                return;
+            }
+         /*   checkBox.requestFocus();
+            if(lock){
+    			checkBox.setDisable(true);
+    			lock = false;
+    		}
+        	else if(!lock){
+        		lock = true;
+        		checkBox.setDisable(false);
+        	}*/
+           /* String status = twOrder.getSelectionModel().getSelectedItems().get(0).getStatus();
+            if(status.equals(statusS[3])){
+            	checkBox.setDisable(false);
+                checkBox.requestFocus();
+            	System.out.println("1");
+            }else{
+                checkBox.setDisable(true);
+            }*/
+        }
+        @Override
+        public void cancelEdit() {
+            super.cancelEdit();
+           // checkBox.setDisable(true);
+        }
+        public void commitEdit(Boolean value) {
+            super.commitEdit(value);
+           // checkBox.setDisable(true);
+        }
+        @Override
+        public void updateItem(Boolean item, boolean empty) {
+            super.updateItem(item, empty);
+            if (!isEmpty())
+            {
+            	if(item == null){
+            		item = true;
+            	}
+            	checkBox.setSelected(item);
 
-
-	
-
-	public void gotoOrders() throws IOException {
-		Stage stage = new Stage();
-		stage.setTitle("Orders");
-		stage.getIcons().add(new Image("file:resources/images/icon.png"));
-		FXMLLoader myLoader = new FXMLLoader(getClass().getResource("/application/View/Orders.fxml"));
-		Pane myPane = (Pane) myLoader.load();
-
-		OrdersController controller = (OrdersController) myLoader.getController();
-		controller.setPrevStage(stage);
-		Scene scene = new Scene(myPane);
-		stage.setScene(scene);
-		prevStage.close();
-		stage.setResizable(false);
-		stage.show();
-	}
-
-	public void gotoInvoice() throws IOException {
-		Stage stage = new Stage();
-		stage.setTitle("Create Invoice");
-		stage.getIcons().add(new Image("file:resources/images/icon.png"));
-		FXMLLoader myLoader = new FXMLLoader(getClass().getResource("/application/View/Invoice.fxml"));
-		Pane myPane = (Pane) myLoader.load();
-
-		CustomerController controller = (CustomerController) myLoader.getController();
-		controller.setPrevStage(stage);
-		Scene scene = new Scene(myPane);
-		stage.setScene(scene);
-		prevStage.close();
-		stage.setResizable(false);
-		stage.show();
-	}
-    public void gotoCustomer() throws IOException {          
-        Stage stage = new Stage();
-        stage.setTitle("Customer");
-        stage.getIcons().add(new Image("file:resources/images/icon.png"));
-        FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/Customer.fxml"));
-        Pane myPane = (Pane)myLoader.load();
-        
-        CustomerController controller = (CustomerController) myLoader.getController();
- 	    controller.setPrevStage(stage);
-        Scene scene = new Scene(myPane);
-        stage.setScene(scene);
-        prevStage.close();
-        stage.setResizable(false);
-        stage.show();
-     }
+            }
+        }
+    }
 	class EditingCell extends TableCell<ProductModel, String> {
 	    private TextField textField;
 	    private String id = "";

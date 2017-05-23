@@ -134,24 +134,47 @@ public class PdfSales {
 	}
 	public void getBody(Document document) throws MalformedURLException, IOException, DocumentException {
 		if(type.equals("sumary")){
-			PdfPTable tblProduct = new PdfPTable(4);
+			PdfPTable tblProduct = new PdfPTable(7);
 			tblProduct.setWidthPercentage(100);
-			tblProduct.setWidths(new float[] { 15,15,35,35 });
+			//tblProduct.setWidths(new float[] { 15,15,23,23,24 });
+//			tblProduct.setWidths(new float[] { 15,15,35,35 });
+			tblProduct.setWidths(new float[] { 15,15,15,15,15,10,15 });
+
 			Float totalP = 0.f;
+			Float totalS = 0.f;
 			Float totalC = 0.f;
+			Float totalD = 0.f;
+			Float totalT = 0.f;
+			Float totalN = 0.f;
 			for (SalesModel sale : lstSale) {
 				PdfPCell date = getCell(sale.getCustomer_date(), font, 10, 0);
 				date.setBorderWidthLeft(1);
 				date.setBorderColorLeft(BaseColor.DARK_GRAY);
 				tblProduct.addCell(date);
 				tblProduct.addCell(getCellCN(sale.getDay(), font, 10, 0));
-				tblProduct.addCell(getCellR(sale.getTotal_pending(), font, 10, 0));
+				//tblProduct.addCell(getCellR(sale.getTotal_pending(), font, 10, 0));
+				tblProduct.addCell(getCellR(sale.getTotal_sales(), font, 10, 0));
+				
 				PdfPCell totalc = getCellR(sale.getTotal_complete(), font, 10, 0);
-				totalc.setBorderWidthRight(1);
-				totalc.setBorderColorRight(BaseColor.DARK_GRAY);
 				tblProduct.addCell(totalc);
+				
+				PdfPCell totald = getCellR(sale.getTotal_discount(), font, 10, 0);
+				tblProduct.addCell(totald);
+				
+				PdfPCell totalt = getCellR(sale.getTotal_tax(), font, 10, 0);
+				tblProduct.addCell(totalt);
+				
+				PdfPCell totaln = getCellR(sale.getTotal_net_sales(), font, 10, 0);
+				totaln.setBorderWidthRight(1);
+				totaln.setBorderColorRight(BaseColor.DARK_GRAY);
+				tblProduct.addCell(totaln);
+				
 				totalP = totalP + Float.parseFloat(sale.getTotal_pending().replace("$", "").replace(",", ""));
+				totalS = totalS + Float.parseFloat(sale.getTotal_sales().replace("$", "").replace(",", ""));
 				totalC = totalC + Float.parseFloat(sale.getTotal_complete().replace("$", "").replace(",", ""));
+				totalD = totalD + Float.parseFloat(sale.getTotal_discount().replace("$", "").replace(",", ""));
+				totalT = totalT + Float.parseFloat(sale.getTotal_tax().replace("$", "").replace(",", ""));
+				totalN = totalN + Float.parseFloat(sale.getTotal_net_sales().replace("$", "").replace(",", ""));
 	
 			}
 			PdfPCell date = getCell("", font, 10, 0);
@@ -164,19 +187,39 @@ public class PdfSales {
 			PdfPCell day = getCellCN("", font, 10, 0);
 			day.setBorderWidthBottom(1);
 			day.setBorderColorBottom(BaseColor.DARK_GRAY);
-			tblProduct.addCell(day);
+			tblProduct.addCell(day);			
 			
-			PdfPCell tp = getCellRR("$"+String.format ("%,.2f",totalP), font, 10, 0);
+		/*	PdfPCell tp = getCellRR("$"+String.format ("%,.2f",totalP), font, 10, 0);
 			tp.setBorderWidthBottom(1);
 			tp.setBorderColorBottom(BaseColor.DARK_GRAY);
-			tblProduct.addCell(tp);
+			tblProduct.addCell(tp);*/
+			
+			PdfPCell ts = getCellRR("$"+String.format ("%,.2f",totalS), font, 10, 0);
+			ts.setBorderWidthBottom(1);
+			ts.setBorderColorBottom(BaseColor.DARK_GRAY);
+			tblProduct.addCell(ts);
 			
 			PdfPCell totalc = getCellRR("$"+String.format ("%,.2f",totalC), font, 10, 0);
-			totalc.setBorderWidthRight(1);
-			totalc.setBorderColorRight(BaseColor.DARK_GRAY);
 			totalc.setBorderWidthBottom(1);
 			totalc.setBorderColorBottom(BaseColor.DARK_GRAY);
 			tblProduct.addCell(totalc);
+			
+			PdfPCell totald = getCellRR("$"+String.format ("%,.2f",totalD), font, 10, 0);
+			totald.setBorderWidthBottom(1);
+			totald.setBorderColorBottom(BaseColor.DARK_GRAY);
+			tblProduct.addCell(totald);
+			
+			PdfPCell totalt = getCellRR("$"+String.format ("%,.2f",totalT), font, 10, 0);
+			totalt.setBorderWidthBottom(1);
+			totalt.setBorderColorBottom(BaseColor.DARK_GRAY);
+			tblProduct.addCell(totalt);
+			
+			PdfPCell totaln = getCellRR("$"+String.format ("%,.2f",totalN), font, 10, 0);
+			totaln.setBorderWidthBottom(1);
+			totaln.setBorderColorBottom(BaseColor.DARK_GRAY);
+			totaln.setBorderWidthRight(1);
+			totaln.setBorderColorRight(BaseColor.DARK_GRAY);
+			tblProduct.addCell(totaln);
 			
 			document.add(tblProduct);
 		}
@@ -460,13 +503,18 @@ public class PdfSales {
 		Paragraph paragraph1s = new Paragraph();
 		paragraph1s.setSpacingBefore(2);
 		document.add(paragraph1s);
-		PdfPTable tblProduct = new PdfPTable(4);
+		PdfPTable tblProduct = new PdfPTable(7);
 		tblProduct.setWidthPercentage(100);
 		tblProduct.addCell(getCellC("DATE", font, 12, 1,1,1,1,1));
 		tblProduct.addCell(getCellC("DAY", font, 12, 1,0,1,1,1));
-		tblProduct.addCell(getCellC("PENDING ORDER TOTAL", font, 12, 1,0,1,1,1));
-		tblProduct.addCell(getCellC("COMPLETED ORDER TOTAL", font, 12, 1,0,1,1,1));
-		tblProduct.setWidths(new float[] { 15, 15,35,35 });
+		//tblProduct.addCell(getCellC("PENDING TOTAL", font, 12, 1,0,1,1,1));
+		tblProduct.addCell(getCellC("SALES TOTAL", font, 12, 1,0,1,1,1));
+		tblProduct.addCell(getCellC("COMPLETED", font, 12, 1,0,1,1,1));
+		tblProduct.addCell(getCellC("DISCOUNT", font, 12, 1,0,1,1,1));
+		tblProduct.addCell(getCellC("TAX", font, 12, 1,0,1,1,1));
+		tblProduct.addCell(getCellC("NET SALES", font, 12, 1,0,1,1,1));
+		//tblProduct.setWidths(new float[] { 15, 15,23,23,24 });
+		tblProduct.setWidths(new float[] { 15,15,15,15,15,10,15 });
 		if(type.equals("sumary")){
 			document.add(tblProduct);
 		}
@@ -497,6 +545,7 @@ public class PdfSales {
 		pcell2.addElement(getText("To Date: " +toDate, font, 12, 1));
 		PdfPCell pcell3 = new PdfPCell();
 		pcell3.addElement(getText(String.format("Page No. %d", writer.getPageNumber()), font, 12, 1));
+		System.out.println("--------"+writer.getPageNumber());
 		pcell3.setBorder(Rectangle.NO_BORDER);
 		pcell2.setBorder(Rectangle.NO_BORDER);
 		pcell1.setBorder(Rectangle.NO_BORDER);

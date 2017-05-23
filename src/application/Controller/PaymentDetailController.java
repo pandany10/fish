@@ -12,10 +12,12 @@ import application.Model.CardModel;
 import application.Model.CustomerModel;
 import application.Model.OrderDetailModel;
 import application.Model.ProductModel;
+import application.Utill.Menu;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -36,14 +38,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
-public class PaymentDetailController implements Initializable {
+public class PaymentDetailController extends Menu implements Initializable {
 	public boolean stateEdit = false; 
 	public int orderId = 0;
-	Stage prevStage;
-	
-
 	@FXML
 	private TextField txtCus;
 	@FXML
@@ -65,6 +65,9 @@ public class PaymentDetailController implements Initializable {
 	@FXML
 	private TextField txtShipVia;
 	@FXML
+	private TextField txtCheckN;
+	
+	@FXML
 	private TextField txtEmail;	
 	@FXML
 	private TextField txtTotal;	
@@ -83,7 +86,8 @@ public class PaymentDetailController implements Initializable {
 	private RadioButton optPayPal;
 	@FXML
 	private RadioButton optCash;
-	
+	@FXML
+	private RadioButton optStripe;
 	
 	@FXML
 	private TableView<CardModel> tp;
@@ -125,14 +129,10 @@ public class PaymentDetailController implements Initializable {
 	
 	private OrderDao orderDao;
 	private CardDao cardDao;
-	
-	
-	public void setPrevStage(Stage stage) {
-		this.prevStage = stage;
-	}
 		
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		inits();
 		//tp.setEditable(true);
 		//tp.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		//tp.getSelectionModel().setCellSelectionEnabled(true);
@@ -147,6 +147,20 @@ public class PaymentDetailController implements Initializable {
 		        	Float amountPaid = Float.parseFloat(txtPaid.getText());
 		        	try {
 						orderDao.updateAmoutPaid(orderId, amountPaid);
+					} catch (ClassNotFoundException | SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        }
+
+		    }
+		});
+		txtCheckN.textProperty().addListener(new ChangeListener<String>() {
+		    @Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+		        if(newValue.length()>0){  
+		        	String txtCheckNs = txtCheckN.getText();
+		        	try {
+						orderDao.updateCheckN(orderId, txtCheckNs);
 					} catch (ClassNotFoundException | SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -194,6 +208,7 @@ public class PaymentDetailController implements Initializable {
 						  public void run() {
 							  txtTotal.setText(String.format("%.2f", lstProduct.get(0).getAll_Total()));
 							  txtPaid.setText(String.format("%.2f", lstProduct.get(0).getAmoutPaid()));
+							  txtCheckN.setText(lstProduct.get(0).getChecknumber());
 							  showPaymentMethod(lstProduct.get(0).getPaymentMethod());
 							  if(!txtTotal.getText().equals(txtPaid.getText())){
 								  chkPartial.setSelected(true);
@@ -229,6 +244,8 @@ public class PaymentDetailController implements Initializable {
 			optPayPal.setSelected(true);
 		}else if(input.equals("Cash")){
 			optCash.setSelected(true);
+		}else if(input.equals("Stripe")){
+			optStripe.setSelected(true);
 		}
 	}
 	public void ShowCus(CustomerModel customer){
@@ -363,6 +380,7 @@ public class PaymentDetailController implements Initializable {
 			optCreditMeno.setSelected(false);
 			optPayPal.setSelected(false);
 			optCash.setSelected(false);
+			optStripe.setSelected(false);
 			paymentMethod = "Check";
 		}
 		if(optCredit.isSelected()){
@@ -370,6 +388,7 @@ public class PaymentDetailController implements Initializable {
 			optCreditMeno.setSelected(false);
 			optPayPal.setSelected(false);
 			optCash.setSelected(false);
+			optStripe.setSelected(false);
 			paymentMethod = "Credit/Debit Card";
 		}
 		if(optCreditMeno.isSelected()){
@@ -377,6 +396,7 @@ public class PaymentDetailController implements Initializable {
 			optCheck.setSelected(false);
 			optPayPal.setSelected(false);
 			optCash.setSelected(false);
+			optStripe.setSelected(false);
 			paymentMethod = "Credit Memo";
 		}
 		if(optPayPal.isSelected()){
@@ -384,6 +404,7 @@ public class PaymentDetailController implements Initializable {
 			optCreditMeno.setSelected(false);
 			optCheck.setSelected(false);
 			optCash.setSelected(false);
+			optStripe.setSelected(false);
 			paymentMethod = "PayPal";
 		}
 		if(optCash.isSelected()){
@@ -391,7 +412,16 @@ public class PaymentDetailController implements Initializable {
 			optCreditMeno.setSelected(false);
 			optPayPal.setSelected(false);
 			optCheck.setSelected(false);
+			optStripe.setSelected(false);
 			paymentMethod = "Cash";
+		}
+		if(optStripe.isSelected()){
+			optCredit.setSelected(false);
+			optCreditMeno.setSelected(false);
+			optPayPal.setSelected(false);
+			optCheck.setSelected(false);
+			optCash.setSelected(false);
+			paymentMethod = "Stripe";
 		}
 		try {
 			orderDao.updatePaymentMethod(orderId, paymentMethod);

@@ -32,6 +32,7 @@ import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import application.Model.CustomerModel;
+import application.Model.ExpressModel;
 import application.Model.OrderDetailModel;
 import application.Model.OrderInfoModel;
 import application.Model.OrderModel;
@@ -45,11 +46,14 @@ public class Pdf {
 	private CustomerModel ship;
 	private OrderInfoModel orderInfo;
 	private List<ProductModel> lstProduct;
+	private String logos ="pdf/images/fishlogo_bw.png";
+	private String footers ="1924 E Maple Ave, Suite A, El Segundo California 90245, USA Tel: 310-648-7258 Fax: 310-648-7611";
+	private String footers1 ="";
+
 	public class HeaderFooterPageEvent extends PdfPageEventHelper {
 		PdfTemplate total;
 	   public void onOpenDocument(PdfWriter writer, Document document) {
             total = writer.getDirectContent().createTemplate(30, 16);
-
         }
 	    public void onStartPage(PdfWriter writer,Document document) {
 	    	try {
@@ -104,7 +108,96 @@ public class Pdf {
 			e.printStackTrace();
 		}
 	}
+	public void PrintInvoiceExpress(OrderDetailModel orderDetails, OrderModel currentOrders,ExpressModel expressModel,String chlSL)
+			throws MalformedURLException, IOException {
+		if(expressModel.getLogo() != null){
+			if(!expressModel.getLogo().equals("")){
+				logos = expressModel.getLogo().replace(" ", "%20");
+				logos = logos.replace(" ", "%20");
+				logos = logos.replace(" ", "%20");
+				logos = logos.replace(" ", "%20");
+			}
+		}
+		if(expressModel.getStoreId() != null){
+			footers = expressModel.getStoreName()+", "+expressModel.getAddress1()+", "+expressModel.getCity()+", "+expressModel.getState()+", "+expressModel.getZipCode()+", "+expressModel.getPhoneNumber();
+		}
+		if(chlSL.equals("1")){
+			footers1 ="I agree for a substitute of a size smaller or larger";	
+		}
+		orderDetail = orderDetails;
+		currentOrder = currentOrders;
+		bill = orderDetail.getCustomer();
+		ship = orderDetails.getShipTo();
+		orderInfo = orderDetails.getOrderInfo();
+		lstProduct = orderDetails.getLstProduct();
+		Document document = new Document(PageSize.A4, 10, 10, 10, 20);
+		try {
+			PdfWriter writer = PdfWriter.getInstance(document,
+					new FileOutputStream("pdf/invoice/" + currentOrder.getOrder_id() + ".pdf"));
+			Rectangle rect = new Rectangle(30, 30, 550, 800);
+	        writer.setBoxSize("art", rect);
+			HeaderFooterPageEvent event = new HeaderFooterPageEvent();
+			writer.setPageEvent(event);
+			document.open();
+			//getHeader(document);
+			//getHeader1(document);
+			getBody(document);
+			document.close();
+			if (Desktop.isDesktopSupported()) {
+				try {
+					File myFile = new File("pdf/invoice/" + currentOrder.getOrder_id() + ".pdf");
+					Desktop.getDesktop().open(myFile);
+				} catch (IOException ex) {
+					// no application registered for PDFs
+				}
+			}
 
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public String PrintInvoices(OrderDetailModel orderDetails, OrderModel currentOrders)
+			throws MalformedURLException, IOException {
+		String filexx = "";
+		orderDetail = orderDetails;
+		currentOrder = currentOrders;
+		bill = orderDetail.getCustomer();
+		ship = orderDetails.getShipTo();
+		orderInfo = orderDetails.getOrderInfo();
+		lstProduct = orderDetails.getLstProduct();
+		Document document = new Document(PageSize.A4, 10, 10, 10, 20);
+		try {
+			PdfWriter writer = PdfWriter.getInstance(document,
+					new FileOutputStream("pdf/invoice/" + currentOrder.getOrder_id() + ".pdf"));
+			Rectangle rect = new Rectangle(30, 30, 550, 800);
+	        writer.setBoxSize("art", rect);
+			HeaderFooterPageEvent event = new HeaderFooterPageEvent();
+			writer.setPageEvent(event);
+			document.open();
+			//getHeader(document);
+			//getHeader1(document);
+			getBody(document);
+			document.close();
+			filexx = "pdf/invoice/" + currentOrder.getOrder_id() + ".pdf";
+			return filexx;
+
+		/*	if (Desktop.isDesktopSupported()) {
+				try {
+					File myFile = new File("pdf/invoice/" + currentOrder.getOrder_id() + ".pdf");
+					Desktop.getDesktop().open(myFile);
+				} catch (IOException ex) {
+					// no application registered for PDFs
+				}
+			}*/
+
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//return filexx;
+		return filexx;
+	}
 	public Paragraph getText(String content, String font, Integer size, Integer style) {
 		Paragraph paragraph = new Paragraph(content,
 				FontFactory.getFont(font, size, style, new CMYKColor(0, 0, 0, 255)));
@@ -136,7 +229,7 @@ public class Pdf {
 			tblProduct.addCell(sku);
 			tblProduct.addCell(getCellCN(product.getQty(), font, 10, 0));
 			tblProduct.addCell(getCellCN(product.getSize(), font, 10, 0));
-			tblProduct.addCell(getCell(product.getName(), font, 10, 0));
+			tblProduct.addCell(getCell(product.getName(), font, 8, 0));
 			tblProduct.addCell(getCell(product.getScientific(), font, 10, 0));
 			tblProduct.addCell(getCellR(product.getPrice(), font, 10, 0));
 			tblProduct.addCell(getCellR(product.getDisc() + "%", font, 10, 0));
@@ -146,6 +239,14 @@ public class Pdf {
 			tblProduct.addCell(total);
 		}
 		document.add(tblProduct);
+		PdfPTable tblProducts = new PdfPTable(1);
+		tblProducts.setWidthPercentage(100);
+		tblProducts.setWidths(new float[] { 100});
+		PdfPCell total = getCellR("", font, 10, 0);
+		total.setBorderWidthRight(1);
+		total.setBorderColorRight(BaseColor.DARK_GRAY);
+		tblProducts.addCell(total);
+		//document.add(tblProducts);
 		PdfPTable tblFootProduct = new PdfPTable(3);
 		tblFootProduct.setWidthPercentage(100);
 		PdfPCell left = new PdfPCell();
@@ -175,7 +276,7 @@ public class Pdf {
 		left.setBorderWidthLeft(1);
 		left.setRowspan(6);
 		tblFootProduct.addCell(left);
-		Float totalAll = currentOrder.getAll_Total();
+		Float totalAll =  Float.parseFloat(currentOrder.getAll_Total());
 		Float surcharge = currentOrder.getSurcharge();
 		Float salesDisc = Float.valueOf(bill.getSalesDisc())/100;
 		Float subTotal1 = totalAll - surcharge;
@@ -355,19 +456,30 @@ public class Pdf {
 		document.add(tblProduct);
 	}
 	public void getFooter(PdfWriter writer,Document document) throws MalformedURLException, IOException, DocumentException {
-		
+        if(!footers1.equals("")){
+        	PdfContentByte cb1 = writer.getDirectContent();
+            ColumnText.showTextAligned(cb1, Element.ALIGN_CENTER, footer1(),
+                (document.right() - document.left()) / 2 + document.leftMargin(),
+                document.bottom(), 0);
+        }
 		PdfContentByte cb = writer.getDirectContent();
         ColumnText.showTextAligned(cb, Element.ALIGN_CENTER, footer(),
             (document.right() - document.left()) / 2 + document.leftMargin(),
             document.bottom()-10, 0);
 	}
 	private Phrase footer() {
-	    Phrase p = new Phrase("1924 E Maple Ave, Suite A, El Segundo California 90245, USA Tel: 310-648-7258 Fax: 310-648-7611",
+	    Phrase p = new Phrase(footers,
 				FontFactory.getFont(font, 10, Font.ITALIC, new CMYKColor(0, 0, 0, 255)));
 	    return p;
 	}
+	private Phrase footer1() {
+	    Phrase p = new Phrase(footers1,
+				FontFactory.getFont(font, 12, Font.BOLD, new CMYKColor(0, 0, 0, 255)));
+	    return p;
+	}
 	public void getHeader(PdfWriter writer,Document document) throws MalformedURLException, IOException, DocumentException {
-		Image logo = Image.getInstance("pdf/images/fishlogo_bw.png");
+		//Image logo = Image.getInstance(logos);
+		Image logo = Image.getInstance(logos);
 		logo.scaleAbsolute(137.5f, 73.75f);
 
 		PdfPTable header = new PdfPTable(3);
@@ -379,7 +491,7 @@ public class Pdf {
 		PdfPCell pcell2 = new PdfPCell();
 		pcell2.addElement(getText("Invoice Date: " + currentOrder.getCustomer_date(), font, 12, 1));
 		PdfPCell pcell3 = new PdfPCell();
-		pcell3.addElement(getText(String.format("Page No. %d", writer.getPageNumber()), font, 12, 1));
+		pcell3.addElement(getText(String.format("Page No. %d", writer.getPageNumber()), font, 12, 1)); 
 		pcell3.setBorder(Rectangle.NO_BORDER);
 		pcell2.setBorder(Rectangle.NO_BORDER);
 		pcell1.setBorder(Rectangle.NO_BORDER);

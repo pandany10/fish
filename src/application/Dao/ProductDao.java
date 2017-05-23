@@ -6,10 +6,109 @@ import java.util.ArrayList;
 import java.util.List;
 
 import application.DBConnection;
-import application.Model.CustomerModel;
 import application.Model.ProductModel;
 
 public class ProductDao {
+	public List<ProductModel> getListProductSearchs1(int offset,String key,String type) throws ClassNotFoundException, SQLException{
+		int limit = 50000;
+		List<ProductModel> lstProduct = new ArrayList<>();
+		String sql = "SELECT t1.id, t1.sku,t1.size,t1.name,t1.lot,t1.price FROM exoticre_order.masterProduct t1 left join exoticre_order.test t2 on t2.sku = t1.sku  left join exoticre_order.products t3 on t1.sku = t3.sku limit "+offset+","+limit+";";
+		final String[] filter = new String[]{ "Sku", "Name", "Size", "Lot" ,"Price" };
+		
+		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
+		 while (rs.next()) {
+			 ProductModel product = new ProductModel();
+             String sku = rs.getString("sku");
+             Integer qty = 1;
+             String size = rs.getString("size");
+             String name = rs.getString("name");
+             String lots = rs.getString("lot");
+             lots = lots.replace("/Lot", "");
+             Integer lot = 1;
+             String scientific = "";//rs.getString("scientific");
+             if(lots.equals("")){
+            	 
+             }else{
+            	lots = lots.replace("STICK ", "");
+            	lot = Integer.parseInt(lots.replace("/Lot", ""));
+             }
+             Integer addon = 0;
+             Float price = rs.getFloat("price");
+             Float prices = rs.getFloat("prices");
+             /*if(rs.getString("skus") != null){
+            	 price = prices; 
+             }*/
+             Integer disc =  0;
+             Float total = price*lot*qty ;
+             //System.out.println(sku+" "+ name+" "+size+" "+price);
+             Integer ido = rs.getInt("id");
+             product.setIdo(ido);
+             product.setScientific(scientific);
+             product.setSku(sku);
+             product.setQty(String.valueOf(qty));
+             product.setSize(size);
+             product.setName(name);
+             product.setLot(String.valueOf(lot));
+             product.setAddon(String.valueOf(addon));
+             product.setPrice(String.format("%.2f", price));
+             product.setDisc(String.valueOf(disc));
+             product.setTotal(String.format("%.2f", total));
+             lstProduct.add(product); 
+         
+         }
+		return lstProduct;
+		
+	}
+	public List<ProductModel> getListProductSearchs(int offset,String key,String type) throws ClassNotFoundException, SQLException{
+		int limit = 1000;
+		List<ProductModel> lstProduct = new ArrayList<>();
+		String sql = "SELECT t1.id, t1.sku,t1.size,t1.name,t1.lot,t1.price, t2.sku  as skus,t2.price  as prices,t3.scientific  FROM exoticre_order.masterProduct t1 left join exoticre_order.test t2 on t2.sku = t1.sku  left join exoticre_order.products t3 on t1.sku = t3.sku limit "+offset+","+limit+";";
+		final String[] filter = new String[]{ "Sku", "Name", "Size", "Lot" ,"Price" };
+		
+		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
+		 while (rs.next()) {
+			 ProductModel product = new ProductModel();
+             String sku = rs.getString("sku");
+             Integer qty = 1;
+             String size = rs.getString("size");
+             String name = rs.getString("name");
+             String lots = rs.getString("lot");
+             lots = lots.replace("/Lot", "");
+             Integer lot = 1;
+             String scientific = rs.getString("scientific");
+             if(lots.equals("")){
+            	 
+             }else{
+            	lots = lots.replace("STICK ", "");
+            	lot = Integer.parseInt(lots.replace("/Lot", ""));
+             }
+             Integer addon = 0;
+             Float price = rs.getFloat("price");
+             Float prices = rs.getFloat("prices");
+             if(rs.getString("skus") != null){
+            	 price = prices; 
+             }
+             Integer disc =  0;
+             Float total = price*lot*qty ;
+             //System.out.println(sku+" "+ name+" "+size+" "+price);
+             Integer ido = rs.getInt("id");
+             product.setIdo(ido);
+             product.setScientific(scientific);
+             product.setSku(sku);
+             product.setQty(String.valueOf(qty));
+             product.setSize(size);
+             product.setName(name);
+             product.setLot(String.valueOf(lot));
+             product.setAddon(String.valueOf(addon));
+             product.setPrice(String.format("%.2f", price));
+             product.setDisc(String.valueOf(disc));
+             product.setTotal(String.format("%.2f", total));
+             lstProduct.add(product); 
+         
+         }
+		return lstProduct;
+		
+	}
 	public List<ProductModel> getListProductSearchs(String key,String type) throws ClassNotFoundException, SQLException{
 		List<ProductModel> lstProduct = new ArrayList<>();
 		String sql = "SELECT t1.id, t1.sku,t1.size,t1.name,t1.lot,t1.price, t2.sku  as skus,t2.price  as prices,t3.scientific  FROM exoticre_order.masterProduct t1 left join exoticre_order.test t2 on t2.sku = t1.sku  left join exoticre_order.products t3 on t1.sku = t3.sku where LOWER(t1.sku) like LOWER('%"+key+"%')  limit 0,300;";
@@ -67,6 +166,94 @@ public class ProductDao {
              lstProduct.add(product); 
          
          }
+		return lstProduct;
+		
+	}
+	public List<ProductModel> getListProductSearchExpress(String key,int limit) throws ClassNotFoundException, SQLException{
+		System.out.println("limit: "+limit);
+		List<ProductModel> lstProduct = new ArrayList<>();
+		int count = 0;
+		 String sql1 = "SELECT * FROM exoticre_order.products t1 where grxp = 'NOC' and (t1.sku like '%"+key+"%' or LOWER(t1.description) like LOWER('%"+key+"%'))  limit "+limit+";";
+		 ResultSet rs1 = DBConnection.getConnection().createStatement().executeQuery(sql1);
+		 while (rs1.next()) {
+			 ProductModel product = new ProductModel();
+             String sku = rs1.getString("sku");
+             Integer qty = 1;
+             String size = rs1.getString("size");
+             String name = rs1.getString("description");
+             String lots = rs1.getString("lot");
+             lots = lots.replace("/Lot", "");
+             String scientific = rs1.getString("scientific");
+             Integer lot = 1;
+             if(lots.equals("")){
+            	 
+             }else{
+            	// lot = Integer.parseInt(lots.replace("/Lot", ""));
+             }
+             Integer addon = 0;
+             Float price = rs1.getFloat("price");
+             Integer disc =  0;
+             Float total = price*lot*qty ;
+             //System.out.println(sku+" "+ name+" "+size+" "+price);
+             if(size == null){
+            	 size = "";
+             }
+             product.setSku(sku);
+             product.setScientific(scientific);
+             product.setQty(String.valueOf(qty));
+             product.setSize(size);
+             product.setName(name);
+             product.setLot(String.valueOf(lot));
+             product.setAddon(String.valueOf(addon));
+             product.setPrice(String.format("%.2f", price));
+             product.setDisc(String.valueOf(disc));
+             product.setCommission(false);
+             product.setTotal(String.format("%.2f", total));
+             lstProduct.add(product); 
+             count++;
+         }
+		 limit = limit - count;
+		String sql = "SELECT t1.sku,t1.size,t1.name,t1.lot,t1.price, t2.sku  as skus,t2.price  as prices,t3.scientific  FROM exoticre_order.masterProduct t1 left join exoticre_order.testExpress t2 on t2.sku = t1.sku left join exoticre_order.products t3 on t1.sku = t3.sku where t1.sku like '%"+key+"%' or LOWER(t1.name) like LOWER('%"+key+"%')  limit "+limit+";";
+		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
+		 while (rs.next()) {
+			 ProductModel product = new ProductModel();
+             String sku = rs.getString("sku");
+             Integer qty = 1;
+             String size = rs.getString("size");
+             String name = rs.getString("name");
+             String lots = rs.getString("lot");
+             lots = lots.replace("/Lot", "");
+             String scientific = rs.getString("scientific");
+             Integer lot = 1;
+             if(lots.equals("")){
+            	 
+             }else{
+            	// lot = Integer.parseInt(lots.replace("/Lot", ""));
+             }
+             Integer addon = 0;
+             Float price = rs.getFloat("price");
+             Float prices = rs.getFloat("prices");
+             if(rs.getString("skus") != null){
+            	 price = prices; 
+             }
+             Integer disc =  0;
+             Float total = price*lot*qty ;
+             //System.out.println(sku+" "+ name+" "+size+" "+price);
+             
+             product.setSku(sku);
+             product.setScientific(scientific);
+             product.setQty(String.valueOf(qty));
+             product.setSize(size);
+             product.setName(name);
+             product.setLot(String.valueOf(lot));
+             product.setAddon(String.valueOf(addon));
+             product.setPrice(String.format("%.2f", price));
+             product.setDisc(String.valueOf(disc));
+             product.setTotal(String.format("%.2f", total));
+             //lstProduct.add(product); 
+         
+         }
+		
 		return lstProduct;
 		
 	}
@@ -202,7 +389,7 @@ public class ProductDao {
 	}
 	public List<ProductModel> getListProductByOrderId(Integer order_id) throws ClassNotFoundException, SQLException{
 		List<ProductModel> lstProduct = new ArrayList<>();
-		String sql = "SELECT t1.*,t3.scientific FROM exoticre_order.orders t1  left join exoticre_order.products t3 on t1.Product_Sku = t3.sku  where order_id = "+order_id+" and t3.scientific != 'null'";
+		String sql = "SELECT t1.*,t3.scientific,t3.grxp FROM exoticre_order.orders t1  left join exoticre_order.products t3 on t1.Product_Sku = t3.sku  where order_id = "+order_id;
 		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
 		 while (rs.next()) {
 			 ProductModel product = new ProductModel();
@@ -221,6 +408,82 @@ public class ProductDao {
              String scientific = rs.getString("scientific");
              String paymentMethod = rs.getString("paymentMethod");
              Float amoutPaid = rs.getFloat("amoutPaid");
+             String checknumber = rs.getString("checknumber");
+             String readyPayment = rs.getString("readyPayment");
+             String issued = rs.getString("issued");
+             String grxp = rs.getString("grxp");
+             if(grxp == null){
+            	 grxp = "";
+             }
+             Integer ExpressCommisson =  rs.getInt("ExpressCommisson");
+             if(commission == true){
+            	 ExpressCommisson = 0;
+             }
+             if(checknumber == null){
+            	 checknumber = "";
+             }
+             if(amoutPaid == 0.00){
+            	 amoutPaid = alltotal;
+             }
+             if(disc == 0){
+            	// Float subTotal = price*(lot*qty + addon);
+            	// disc =  (int)Math.round(((total-subTotal)/subTotal)*100);
+             }
+             Integer id = rs.getInt("id");
+             product.setGrxp(grxp);
+             product.setId(id);
+             product.setScientific(scientific);
+             product.setSku(sku);
+             product.setQty(String.valueOf(qty));
+             
+             product.setSize(size);
+             product.setName(name);
+             product.setLot(String.valueOf(lot));
+             product.setAddon(String.valueOf(addon));
+             product.setPrice(String.format("%.2f", price));
+             product.setDisc(String.valueOf(disc));
+             product.setTotal(String.format("%.2f", total));
+             product.setAll_Total(alltotal);
+             product.setSurcharge(surcharge);
+             product.setCommission(commission);
+             product.setAmoutPaid(amoutPaid);
+             product.setPaymentMethod(paymentMethod);
+             product.setChecknumber(checknumber);
+             product.setReadyPayment(readyPayment);
+             product.setIssued(issued);
+             product.setExpressCommisson(String.valueOf(ExpressCommisson));
+             lstProduct.add(product); 
+         }
+		return lstProduct;
+	}
+	public List<ProductModel> getListProductByOrderIdExpress(Integer order_id) throws ClassNotFoundException, SQLException{
+		List<ProductModel> lstProduct = new ArrayList<>();
+		String sql = "SELECT t1.* FROM exoticre_order.orders t1  where order_id = "+order_id+"";
+		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
+		 while (rs.next()) {
+			 ProductModel product = new ProductModel();
+             String sku = rs.getString("Product_Sku");
+             Integer qty = rs.getInt("Item");
+             String size = rs.getString("Size");
+             String name = rs.getString("Product_name");
+             Integer lot = rs.getInt("Lot");
+             Integer addon = rs.getInt("Addon");
+             Float price = rs.getFloat("Price");
+             Integer disc =  rs.getInt("disc");
+             Float total = rs.getFloat("Total");
+             Float alltotal = rs.getFloat("All_Total");
+             Float surcharge = rs.getFloat("surcharge");
+             Boolean commission = rs.getBoolean("commission");
+             String scientific = "";//rs.getString("scientific");
+             String paymentMethod = rs.getString("paymentMethod");
+             Float amoutPaid = rs.getFloat("amoutPaid");
+             String checknumber = rs.getString("checknumber");
+             String readyPayment = rs.getString("readyPayment");
+             String issued = rs.getString("issued");
+             String chlSL = rs.getString("chlSL");
+             if(checknumber == null){
+            	 checknumber = "";
+             }
              if(amoutPaid == 0.00){
             	 amoutPaid = alltotal;
              }
@@ -246,6 +509,10 @@ public class ProductDao {
              product.setCommission(commission);
              product.setAmoutPaid(amoutPaid);
              product.setPaymentMethod(paymentMethod);
+             product.setChecknumber(checknumber);
+             product.setReadyPayment(readyPayment);
+             product.setIssued(issued);
+             product.setChlSL(chlSL);
              lstProduct.add(product); 
          }
 		return lstProduct;

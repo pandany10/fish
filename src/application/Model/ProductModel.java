@@ -16,7 +16,43 @@ public class ProductModel {
 	private Float surcharge;
 	private String scientific;
 	private String readyPayment ="0";
+	private String checknumber ="";
+	private String issued ="0";
+	private String  ExpressCommisson;
+	private String chlSL;
 	
+	private String grxp="";
+	
+	public String getGrxp() {
+		return grxp;
+	}
+	public void setGrxp(String grxp) {
+		this.grxp = grxp;
+	}
+	public String getChlSL() {
+		return chlSL;
+	}
+	public void setChlSL(String chlSL) {
+		this.chlSL = chlSL;
+	}
+	public String getExpressCommisson() {
+		return ExpressCommisson;
+	}
+	public void setExpressCommisson(String expressCommisson) {
+		ExpressCommisson = expressCommisson;
+	}
+	public String getIssued() {
+		return issued;
+	}
+	public void setIssued(String issued) {
+		this.issued = issued;
+	}
+	public String getChecknumber() {
+		return checknumber;
+	}
+	public void setChecknumber(String checknumber) {
+		this.checknumber = checknumber;
+	}
 	private Float amoutPaid;
 	private String paymentMethod;
 	

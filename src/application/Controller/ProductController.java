@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 
 import application.Dao.ProductDao;
 import application.Model.ProductModel;
+import application.Utill.Menu;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -35,9 +36,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
-public class ProductController implements Initializable {
+public class ProductController extends Menu implements Initializable {
 	public boolean stateEdit = false; 
-	Stage prevStage;
 	@FXML
 	private TableView<ProductModel> twResultSearch;
 	@FXML
@@ -72,12 +72,12 @@ public class ProductController implements Initializable {
 	
 	final String[] filterPro = new String[] { "Sku", "Name", "Size", "Lot" ,"Price" };
 	public String str_filters = filterPro[0];;
-	
-	public void setPrevStage(Stage stage) {
-		this.prevStage = stage;
-	}
+	Thread thLoadData;
+	public Boolean chk = false;
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		inits();
 		this.asku.textProperty().addListener(new TextFieldListener(this.asku));
 		this.aname.textProperty().addListener(new TextFieldListener(this.aname));
 		this.asize.textProperty().addListener(new TextFieldListener(this.asize));
@@ -147,7 +147,7 @@ public class ProductController implements Initializable {
 				}
 			}
 		});
-	/*	TableColumn<ProductModel, Integer> indexCol = new TableColumn<ProductModel, Integer>("#");
+		TableColumn<ProductModel, Integer> indexCol = new TableColumn<ProductModel, Integer>("#");
 		indexCol.setCellFactory(new Callback<TableColumn<ProductModel, Integer>, TableCell<ProductModel, Integer>>() {
 			@Override
 			public TableCell<ProductModel, Integer> call(TableColumn<ProductModel, Integer> param) {
@@ -178,7 +178,7 @@ public class ProductController implements Initializable {
 		indexCol.setPrefWidth(45.0);
 		indexCol.getStyleClass().add("clNo");
 		twResultSearch.getColumns().add(0, indexCol); // number column is at
-*/		// index 0
+		// index 0
 		twResultSearch.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		// single cell selection mode
 		twResultSearch.getSelectionModel().setCellSelectionEnabled(true);
@@ -237,11 +237,11 @@ public class ProductController implements Initializable {
 			}
 		});
 		// init list product
-		Thread thLoadData = new Thread() {
+		thLoadData = new Thread() {
 			@SuppressWarnings("deprecation")
 			public void run() {
 				try {
-					actionSearch();
+					getDynamic(0);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -365,7 +365,10 @@ public class ProductController implements Initializable {
 		statusAdd.setText(text);
 		return validate;
 	}
-	public void actionSearch() throws IOException {          
+	@SuppressWarnings("deprecation")
+	public void actionSearch() throws IOException {  
+		chk = true;
+		twResultSearch.setPlaceholder(new Label("Please wait… Searching Database."));
 		System.out.println("key ="+keySearch.getText());
     	ProductDao productDao = new ProductDao();
     	try {
@@ -379,30 +382,50 @@ public class ProductController implements Initializable {
     		twResultSearch.getItems().clear();
     		twResultSearch.getItems().addAll(lstProduct);
     		twResultSearch.getSelectionModel().select(0);
+    		int count = twResultSearch.getItems().size();
+    		twResultSearch.refresh();
+			if(count == 0){
+				twResultSearch.setPlaceholder(new Label("No matching results were found."));
+			}
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 }
-	public void gotoHome(ActionEvent event) throws IOException {
-		gotoHome();
-	}
-	public void gotoHome() throws IOException {          
-			Stage stage = new Stage();
-			stage.setTitle("Home");
-			stage.getIcons().add(new Image("file:resources/images/icon.png"));
-			FXMLLoader myLoader = new FXMLLoader(getClass().getResource("/application/View/Home.fxml"));
-			Pane myPane = (Pane) myLoader.load();
-
-			HomeController controller = (HomeController) myLoader.getController();
-			controller.setPrevStage(stage);
-			Scene scene = new Scene(myPane);
-			stage.setScene(scene);
-
-			prevStage.close();
-			stage.setResizable(false);
-			stage.show();
-	}
+	public void getDynamic(int offset) throws IOException {  
+		twResultSearch.setPlaceholder(new Label("Please wait… Searching Database."));
+		System.out.println("key ="+keySearch.getText());
+    	ProductDao productDao = new ProductDao();
+    	try {
+    		if(!chk){
+    		long start = System.nanoTime();    
+    		
+    		List<ProductModel> lstProduct = productDao.getListProductSearchs(offset,keySearch.getText(),str_filters);
+    		long elapsedTime = System.nanoTime() - start;
+    		double seconds = (double)elapsedTime / 1000000000.0;
+    		System.out.println("selconds: "+seconds);
+    		// show result
+    		if(offset ==0){
+    			twResultSearch.getItems().clear();
+    		}
+    		twResultSearch.getItems().addAll(lstProduct);
+    		twResultSearch.getSelectionModel().select(0);
+    		int count = lstProduct.size();
+    		twResultSearch.refresh();
+				if(count == 0){
+					if(offset ==0){
+						twResultSearch.setPlaceholder(new Label("No matching results were found."));	
+					}
+				}else{
+					getDynamic(lstProduct.size());
+				}
+    		}
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+}
+	
 	class EditingCell extends TableCell<ProductModel, String> {
 
 	    private TextField textField;

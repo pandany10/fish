@@ -5,8 +5,16 @@ public class SalesModel {
 	private String Customer_date ="";
 	private String Day="";
 	private String total_pending="";
+	private String total_sales="";
 	private String total_complete="";
+	private String total_discount="";
+	private String total_tax="";
+	private String total_net_sales="";
+	
 	private String status="";
+	private String paymentMethod="";
+	private String issued="";
+	
 	//
 	private String inv="";
 	private String intDate="";
@@ -14,6 +22,54 @@ public class SalesModel {
 	private String invTotal="";
 	private String invNon="";
 	
+	public String getTotal_discount() {
+		return total_discount;
+	}
+
+	public void setTotal_discount(String total_discount) {
+		this.total_discount = total_discount;
+	}
+
+	public String getTotal_tax() {
+		return total_tax;
+	}
+
+	public void setTotal_tax(String total_tax) {
+		this.total_tax = total_tax;
+	}
+
+	public String getTotal_net_sales() {
+		return total_net_sales;
+	}
+
+	public void setTotal_net_sales(String total_net_sales) {
+		this.total_net_sales = total_net_sales;
+	}
+
+	public String getIssued() {
+		return issued;
+	}
+
+	public void setIssued(String issued) {
+		this.issued = issued;
+	}
+
+	public String getTotal_sales() {
+		return total_sales;
+	}
+
+	public void setTotal_sales(String total_sales) {
+		this.total_sales = total_sales;
+	}
+
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+
 	public String getInv() {
 		return inv;
 	}

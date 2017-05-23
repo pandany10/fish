@@ -14,6 +14,7 @@ import application.Model.CustomerModel;
 import application.Model.InvoiceModel;
 import application.Model.OrderInfoModel;
 import application.Model.ProductModel;
+import application.Utill.Menu;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,9 +22,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContentDisplay;
@@ -37,35 +36,31 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
-public class InvoiceController implements Initializable {
+public class InvoiceController  extends Menu implements Initializable {
 	@FXML
-	private TableView<ProductModel> twOrderDetail;
+	public TableView<ProductModel> twOrderDetail;
 	@FXML
 	private TableView<ProductModel> twResultSearch;
 	@FXML
-	private TableView<CustomerModel> twSearchCus;
-	@FXML
-	private MenuItem menuItemCustomers;
+	public TableView<CustomerModel> twSearchCus;
+
 	@FXML
 	private MenuItem menuItemsave;
-	@FXML
-	private MenuItem menuItemInvoicer;
+
 	@FXML
 	private MenuItem newLine;
 	
 	@FXML
-	private TextField bill_cus_id;
+	public TextField bill_cus_id;
 	@FXML
 	private TextField bill_name;
 	@FXML
@@ -108,8 +103,10 @@ public class InvoiceController implements Initializable {
 	private TextField ponumber;
 	@FXML
 	private TextField salsperson;
+	
 	@FXML
-	private TextField txtKeySearch;	
+	public TextField txtKeySearch;
+	
 	@FXML
 	private TextField fish_boxes;
 	@FXML
@@ -144,7 +141,7 @@ public class InvoiceController implements Initializable {
 	public TextField txtKeySearchCus;
 	
 	@FXML
-	private TableColumn<ProductModel, String> twd_sku1;
+	public TableColumn<ProductModel, String> twd_sku1;
 	
 	@FXML
 	private TableColumn<ProductModel, String> twd_qty;
@@ -195,8 +192,7 @@ public class InvoiceController implements Initializable {
 	private OrderDao orderDao;
 	private Boolean isSave = false;
 	private Integer order_id;
-	@FXML
-	private MenuItem menuItemOrders;
+
 	@FXML
 	private MenuItem menuItemHome;
 	@FXML
@@ -209,8 +205,9 @@ public class InvoiceController implements Initializable {
 	private ChoiceBox fSearchP;
 	@FXML
 	private CheckBox chkpm;
+	@FXML
+	private CheckBox chkIs;
 	
-	Stage prevStage;
 	@FXML
 	private Pane searchProduct;
 	@FXML
@@ -222,11 +219,12 @@ public class InvoiceController implements Initializable {
 	
 	public boolean stateEdit = false;
 	
-	private CustomerModel customer;
-	public void setPrevStage(Stage stage) {
-		this.prevStage = stage;
+	public CustomerModel customer;
+	
+	public void setTxtKeySearch() {
+		txtKeySearch.setText("");
 	}
-	final String[] filterCus = new String[] { "Name", "Contact", "Phone", "Email" ,"City" };
+	final String[] filterCus = new String[] { "ID","Name", "Contact", "Phone", "Email" ,"City" };
 	final int[] fSearchPs = new int[] { 100, 200, 300, 500 ,1000};
 	private String str_filters = filterCus[0];
 	private int str_fSearchPs = fSearchPs[0];
@@ -239,9 +237,10 @@ public class InvoiceController implements Initializable {
 	}
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		inits();
 		isShowSearchCus(false);
 		bill_cus_id.requestFocus();
-		cbFilterCus.setItems(FXCollections.observableArrayList("Customer Name", "Contact", "Phone", "Email" ,"City"));
+		cbFilterCus.setItems(FXCollections.observableArrayList("Customer ID","Customer Name", "Contact", "Phone", "Email" ,"City"));
 		fSearchP.setItems(FXCollections.observableArrayList("100", "200", "300", "500" ,"1000"));
 		fSearchP.setValue("100");
 		fSearchP.getSelectionModel().selectedIndexProperty()
@@ -257,7 +256,7 @@ public class InvoiceController implements Initializable {
 				}
 			}
 		});
-		cbFilterCus.setValue("Customer Name");
+		cbFilterCus.setValue("Customer ID");
 		cbFilterCus.getSelectionModel().selectedIndexProperty()
 		.addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue ov, Number value, Number new_value) {
@@ -272,7 +271,7 @@ public class InvoiceController implements Initializable {
 			}
 		});
 		try {
-			actionSearchCus();
+			actionSearchCusInit();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -298,10 +297,15 @@ public class InvoiceController implements Initializable {
 		    public void handle(KeyEvent event) {
 		      if(event.getCode() == KeyCode.DOWN){
 		    	  twSearchCus.requestFocus();
-		      }else{ 
-		    	  if(event.getCode() == KeyCode.PAGE_DOWN){
+		      }else if(event.getCode() == KeyCode.PAGE_DOWN){
 		    		  focusSkuTwD();
-			      }
+		      }else{
+		    	  	try {
+						actionSearchCus();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 		      }
 		   }
 		});  
@@ -396,7 +400,7 @@ public class InvoiceController implements Initializable {
 			}
            }
        });
-		menuItemSearch.setAccelerator(KeyCombination.keyCombination("Ctrl+F"));
+		menuItemSearch.setAccelerator(KeyCombination.keyCombination("Ctrl+T"));
 		 
 		menuItemSearch.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -405,6 +409,7 @@ public class InvoiceController implements Initializable {
               System.out.println("search...");
               showPopup(false);
               txtKeySearch.requestFocus();
+              txtKeySearch.setText("");
              
            }
        });
@@ -417,20 +422,7 @@ public class InvoiceController implements Initializable {
         	   txtKeySearchCus.requestFocus();
            }
        });
-		menuItemInvoicer.setAccelerator(KeyCombination.keyCombination("Ctrl+I"));
 
-		menuItemInvoicer.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					gotoInvoice();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
 		menuItemHome.setAccelerator(KeyCombination.keyCombination("Ctrl+H"));
 
 		menuItemHome.setOnAction(new EventHandler<ActionEvent>() {
@@ -445,20 +437,7 @@ public class InvoiceController implements Initializable {
 				}
 			}
 		});
-		menuItemCustomers.setAccelerator(KeyCombination.keyCombination("Ctrl+U"));
 
-		menuItemCustomers.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					gotoCustomer();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
 		txtKeySearch.textProperty().addListener(new ChangeListener<String>() {
 		    @Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 		        if(newValue.length()>0){        	
@@ -587,7 +566,7 @@ public class InvoiceController implements Initializable {
 		    @Override
 		    public void handle(KeyEvent event) {
 		      if(event.getCode() == KeyCode.ENTER){
-		    	  bill_name.requestFocus();
+		    	//  bill_name.requestFocus();
 		      }
 		    }
 		});
@@ -703,7 +682,12 @@ public class InvoiceController implements Initializable {
 		      }
 		    }
 		});
-
+		 Platform.runLater(new Runnable() {
+		        @Override
+		        public void run() {
+		    		txtKeySearchCus.requestFocus();
+		        }
+		    });
 	}
 	public void showPopup(Boolean isShow){
 		editOrder.setVisible(true);
@@ -743,34 +727,6 @@ public class InvoiceController implements Initializable {
 	                    }
 	                };
 	    
-		menuItemOrders.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));
-
-		menuItemOrders.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					gotoOrders();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		menuItemInvoicer.setAccelerator(KeyCombination.keyCombination("Ctrl+I"));
-
-		menuItemInvoicer.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					gotoInvoice();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
 		tcs_cus.setCellValueFactory(new PropertyValueFactory<>("CustomerID"));
 		tcs_name.setCellValueFactory(new PropertyValueFactory<>("CompanyName"));
 		tcs_contact.setCellValueFactory(new PropertyValueFactory<>("Contact"));
@@ -1445,22 +1401,6 @@ public class InvoiceController implements Initializable {
 		statusAddnewCus.setText(msg);
 		return vali;
 	}
-    public void gotoHome() throws IOException {          
-		Stage stage = new Stage();
-		stage.setTitle("Home");
-		stage.getIcons().add(new Image("file:resources/images/icon.png"));
-		FXMLLoader myLoader = new FXMLLoader(getClass().getResource("/application/View/Home.fxml"));
-		Pane myPane = (Pane) myLoader.load();
-
-		HomeController controller = (HomeController) myLoader.getController();
-		controller.setPrevStage(stage);
-		Scene scene = new Scene(myPane);
-		stage.setScene(scene);
-
-		prevStage.close();
-		stage.setResizable(false);
-		stage.show();
-    }
 
 	/**
 	 * Insert a new default row to the table, select a cell of it and scroll to
@@ -1521,6 +1461,7 @@ public class InvoiceController implements Initializable {
 				product.setTotal(twOrderDetail.getItems().get(i).getTotal());
 				product.setCommission(twOrderDetail.getItems().get(i).getCommission());
 				product.setReadyPayment(chkpm.isSelected()==true?"1":"0");
+				product.setIssued(chkIs.isSelected()==true?"1":"0");
 				invoice.setOrderInfo(orderInfoModel);
 				invoice.setProduct(product);
 				if(product.getTotal() != null){
@@ -1531,14 +1472,23 @@ public class InvoiceController implements Initializable {
 				// listOrder.add(invoice);
 			}
 			System.out.println(order_id);
-
-			isSave = true;
 			try {
-				gotoOrdersTemp();
+				gotoSendEmail(order_id);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			isSave = true;
+/*			try {
+				if(chkIs.isSelected()){
+					gotoOrders();
+				}else{
+					gotoOrdersTemp();	
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 		} else {
 
 		}
@@ -1627,62 +1577,8 @@ public class InvoiceController implements Initializable {
 
 	}
 
-	public void gotoOrders() throws IOException {
-		Stage stage = new Stage();
-		stage.setTitle("Orders");
-		stage.getIcons().add(new Image("file:resources/images/icon.png"));
-		FXMLLoader myLoader = new FXMLLoader(getClass().getResource("/application/View/Orders.fxml"));
-		Pane myPane = (Pane) myLoader.load();
 
-		OrdersController controller = (OrdersController) myLoader.getController();
-		controller.setPrevStage(stage);
-		Scene scene = new Scene(myPane);
-		stage.setScene(scene);
-		prevStage.close();
-		stage.setResizable(false);
-		stage.show();
-	}
-	   public void gotoOrdersTemp() throws IOException {          
-	        Stage stage = new Stage();
-	        stage.setTitle("Orders Temporary");
-	        stage.getIcons().add(new Image("file:resources/images/icon.png"));
-	        FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/Orders.fxml"));
-	        Pane myPane = (Pane)myLoader.load();
-	        
-	        OrdersController controller = (OrdersController) myLoader.getController();
-	 	    controller.setPrevStage(stage);
-	 	    controller.setScreen("App Java");
-	        Scene scene = new Scene(myPane);
-	        stage.setScene(scene);
-	        prevStage.close();
-	        stage.setResizable(false);
-	        stage.show();
-	        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-	    	    @Override
-	    	    public void handle(KeyEvent evt) {
-	    	        if (evt.getCode().equals(KeyCode.ESCAPE)) {
-	    	        		prevStage.show();
-	    	        		stage.close();
-	    	        }
-	    	    }
-	    	});
-	 }
-	public void gotoInvoice() throws IOException {
-		Stage stage = new Stage();
-		stage.setTitle("Create Invoice");
-		stage.getIcons().add(new Image("file:resources/images/icon.png"));
-		FXMLLoader myLoader = new FXMLLoader(getClass().getResource("/application/View/Invoice.fxml"));
-		Pane myPane = (Pane) myLoader.load();
 
-		InvoiceController controller = (InvoiceController) myLoader.getController();
-		controller.setPrevStage(stage);
-		Scene scene = new Scene(myPane);
-		stage.setScene(scene);
-		prevStage.close();
-		stage.setResizable(false);
-		stage.show();
-	}
-	
 	class EditingCell extends TableCell<ProductModel, String> {
 
 	    private TextField textField;
@@ -1821,9 +1717,11 @@ public class InvoiceController implements Initializable {
 	//
 	class BooleanCell extends TableCell<ProductModel, Boolean> {
         private CheckBox checkBox;
+        
         public BooleanCell() {
             checkBox = new CheckBox();
             checkBox.setDisable(true);
+           // checkBox.setOpacity(0);
             checkBox.selectedProperty().addListener(new ChangeListener<Boolean> () {
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                     if(isEditing())
@@ -1856,6 +1754,11 @@ public class InvoiceController implements Initializable {
         public void updateItem(Boolean item, boolean empty) {
             super.updateItem(item, empty);
             if (!isEmpty()) {
+            	if(item == null){
+            		//item = true;
+            	}else{
+            		// checkBox.setOpacity(1);
+            	}
                 checkBox.setSelected(item);
 /*                String sku = twOrderDetail.getSelectionModel().getSelectedItem().getSku();
                 if(sku !=  null){
@@ -1959,6 +1862,7 @@ public class InvoiceController implements Initializable {
 	}
 	public void actionSearchCus() throws IOException {
 	  System.out.println("key ="+txtKeySearchCus.getText());
+	  if(!txtKeySearchCus.getText().equals("")){
   	  CustomerDao customerDao = new CustomerDao();
   	  try {
   		long start = System.nanoTime();    
@@ -1974,24 +1878,29 @@ public class InvoiceController implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		};
+	  }
 	}
+	public void actionSearchCusInit() throws IOException {
+		  System.out.println("key ="+txtKeySearchCus.getText());
+	  	  CustomerDao customerDao = new CustomerDao();
+	  	  try {
+	  		long start = System.nanoTime();    
+	  		List<CustomerModel> lstCustomer = customerDao.getLstCustomerSearch(txtKeySearchCus.getText(),"Name");
+	  		long elapsedTime = System.nanoTime() - start;
+	  		double seconds = (double)elapsedTime / 1000000000.0;
+	  		System.out.println("selconds: "+seconds);
+	  		// show result
+	  		twSearchCus.getItems().clear();
+	  		twSearchCus.getItems().addAll(lstCustomer);
+	  		twSearchCus.getSelectionModel().select(0);
+			} catch (ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			};
+		}
     public void actionSearchCus(EventHandler event) throws IOException {          
     	actionSearchCus();
     }
-    public void gotoCustomer() throws IOException {          
-        Stage stage = new Stage();
-        stage.setTitle("Customer");
-        stage.getIcons().add(new Image("file:resources/images/icon.png"));
-        FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/Customer.fxml"));
-        Pane myPane = (Pane)myLoader.load();
-        
-        CustomerController controller = (CustomerController) myLoader.getController();
- 	    controller.setPrevStage(stage);
-        Scene scene = new Scene(myPane);
-        stage.setScene(scene);
-        prevStage.close();
-        stage.setResizable(false);
-        stage.show();
-     }
+
 	
 }

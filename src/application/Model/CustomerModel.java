@@ -1,6 +1,8 @@
 package application.Model;
 
 public class CustomerModel {
+	private String 	stripe_user_id ="";
+
 	private String 	CustomerID ="";
 	private String 	CompanyName="";
 	private String 	Address="";
@@ -48,6 +50,12 @@ public class CustomerModel {
 	
 	private Integer Tax =0;
 	
+	public String getStripe_user_id() {
+		return stripe_user_id;
+	}
+	public void setStripe_user_id(String stripe_user_id) {
+		this.stripe_user_id = stripe_user_id;
+	}
 	public Float getYTDSales() {
 		return YTDSales;
 	}

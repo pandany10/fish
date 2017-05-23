@@ -15,7 +15,17 @@ public class SalesDao {
 
 	public List<SalesModel> getSale(String fromDate,String toDate,String type) throws ClassNotFoundException, SQLException{
 		List<SalesModel> lstSale = new ArrayList<>();
-		String sql = "SELECT * FROM orders WHERE Customer_date>='"+fromDate+"' AND Customer_date<='"+toDate+"' GROUP BY order_id ORDER BY Customer_date";
+		String status1 = "";
+		if(type.endsWith("Express")){
+			status1 = "1";
+		}
+		if(type.endsWith("Exotic")){
+			status1 = "0";
+		}
+		String sql = "SELECT t1.*,t2.Tax FROM orders t1 left join customerfishpro t2 on t1.ClientCustomerID = t2.CustomerID WHERE Customer_date>='"+fromDate+"' AND Customer_date<='"+toDate+"'  AND isExpress ='"+status1+"' GROUP BY order_id ORDER BY Customer_date";
+		if(type.endsWith("Both")){
+			 sql = "SELECT t1.*,t2.Tax FROM orders t1 left join customerfishpro t2 on t1.ClientCustomerID = t2.CustomerID WHERE Customer_date>='"+fromDate+"' AND Customer_date<='"+toDate+"'   GROUP BY order_id ORDER BY Customer_date";
+		}
 		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
 		List<SalesModel> lst = new ArrayList<>();
 		 while (rs.next()) {
@@ -24,7 +34,17 @@ public class SalesDao {
             // String Day = "";
              String total = rs.getString("All_Total");
              String status = rs.getString("status");
+             String paymentMethod = rs.getString("paymentMethod");
+             Float amoutPaid = rs.getFloat("amoutPaid");
+             String amountPaids = String.format ("%,.2f",amoutPaid);
              String order_id = rs.getString("order_id");
+             String issued = rs.getString("issued");
+             int  Tax = rs.getInt("Tax");
+			 int  Disc = rs.getInt("disc");
+			 String Taxs = String.format ("%,.2f",(Tax*Float.parseFloat(total)/100));
+			 String Discs = String.format ("%,.2f",(Disc*Float.parseFloat(total)/100));
+			 String NetSales = String.format ("%,.2f",Float.parseFloat(total) -((Disc+Tax)*Float.parseFloat(total)/100));
+			// System.out.println(Taxs+" --  "+Discs);
              salesModel.setCustomer_date(Customer_date);
              int leng  = Customer_date.length();
              int index1= Customer_date.indexOf(".");
@@ -38,14 +58,23 @@ public class SalesDao {
              }else{
             	 Day = LOCAL_DATEDOT(Customer_date).getDayOfWeek().toString();
              }
+             salesModel.setTotal_discount(Discs);
+             salesModel.setTotal_tax(Taxs);
+             salesModel.setTotal_net_sales(NetSales);
+             salesModel.setIssued(issued);
+             salesModel.setPaymentMethod(paymentMethod);
              salesModel.setStatus(status);
              salesModel.setDay(Day);
-             salesModel.setTotal_pending("");
-             salesModel.setTotal_complete("");
-             if(status.toLowerCase().equals("completed")){
-            	 salesModel.setTotal_complete(total);
+             salesModel.setTotal_pending("0.00");
+             salesModel.setTotal_complete("0.00");
+             salesModel.setTotal_sales("0.00");
+             if(issued.toLowerCase().equals("1")){
+            	 salesModel.setTotal_sales(total);
              }
-             if(status.toLowerCase().equals("pending")){
+             if(!paymentMethod.toLowerCase().equals("")){
+            	 salesModel.setTotal_complete(amountPaids);
+             }
+             if(paymentMethod.toLowerCase().equals("")){
             	 salesModel.setTotal_pending(total);
              }
            //  System.out.println(order_id);
@@ -74,7 +103,17 @@ public class SalesDao {
 			 saleModel.setEmail(email);
 			 lstS.add(saleModel);
 		 }
-		String sql = "SELECT * FROM orders WHERE Customer_date>='"+fromDate+"' AND Customer_date<='"+toDate+"' GROUP BY saleperson_email ORDER BY saleperson_email";
+			String status1 = "";
+			if(type.endsWith("Express")){
+				status1 = "1";
+			}
+			if(type.endsWith("Exotic")){
+				status1 = "0";
+			}
+			String sql = "SELECT * FROM orders WHERE Customer_date>='"+fromDate+"' AND Customer_date<='"+toDate+"'   AND isExpress ='"+status1+"' GROUP BY saleperson_email ORDER BY saleperson_email";
+			if(type.endsWith("Both")){
+				 sql = "SELECT * FROM orders WHERE Customer_date>='"+fromDate+"' AND Customer_date<='"+toDate+"'   GROUP BY saleperson_email ORDER BY saleperson_email";
+			}
 		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
 		List<String> lst = new ArrayList<>();
 		 while (rs.next()) {
@@ -102,7 +141,10 @@ public class SalesDao {
 			 SalesModel salesModel = new SalesModel();
 			 salesModel.setInvCusName("SALESPERSON COMMISSION REPORT FOR CODE - "+saleModele.getScode());
 			 lstSale.add(salesModel);
-			 String sql1 = "SELECT t1.* , t2.CompanyName FROM orders t1 left join customerfishpro t2 on t1.ClientCustomerID = t2.CustomerID WHERE  saleperson_email ='"+saleModele.getEmail()+"' AND Customer_date>='"+fromDate+"' AND Customer_date<='"+toDate+"' GROUP BY order_id ORDER BY Customer_date";
+			 	String sql1 = "SELECT t1.* , t2.CompanyName,t2.Tax FROM orders t1 left join customerfishpro t2 on t1.ClientCustomerID = t2.CustomerID WHERE  saleperson_email ='"+saleModele.getEmail()+"' AND Customer_date>='"+fromDate+"' AND Customer_date<='"+toDate+"'   AND isExpress ='"+status1+"' GROUP BY order_id ORDER BY Customer_date";
+				if(type.endsWith("Both")){
+				 	sql1 = "SELECT t1.* , t2.CompanyName,t2.Tax FROM orders t1 left join customerfishpro t2 on t1.ClientCustomerID = t2.CustomerID WHERE  saleperson_email ='"+saleModele.getEmail()+"' AND Customer_date>='"+fromDate+"' AND Customer_date<='"+toDate+"'   GROUP BY order_id ORDER BY Customer_date";
+				}
 			 ResultSet rs1 = DBConnection.getConnection().createStatement().executeQuery(sql1);
 			 Float total =(float) 0.00;
 			 Float totalNon =(float) 0.00;
@@ -113,6 +155,9 @@ public class SalesDao {
 				 String Customer_date = rs1.getString("Customer_date");
 				 String CustomerName = rs1.getString("CompanyName");
 				 String All_Total = rs1.getString("All_Total");
+				 int  Tax = rs1.getInt("Tax");
+				 int  Disc = rs1.getInt("disc");
+				 System.out.println(Tax+" --  "+Disc);
 				 Float totalNonNode =(float) 0.00;
 				 totalNonNode = Float.parseFloat(All_Total);
 				 salesModels.setInv(order_id);
@@ -162,26 +207,58 @@ public class SalesDao {
 	}
 	public SalesModel getTotalSale(List<SalesModel> lst,String date){
 		SalesModel salesModels = new SalesModel();
+		salesModels.setTotal_pending("0.00");
+		salesModels.setTotal_complete("0.00");
+		salesModels.setTotal_sales("0.00");
+		salesModels.setTotal_discount("0.00");
+		salesModels.setTotal_tax("0.00");
+		salesModels.setTotal_net_sales("0.00");
 		for (SalesModel salesModel : lst) {
 			if(salesModel.getCustomer_date().equals(date)){
 				salesModels.setCustomer_date(salesModel.getCustomer_date());
 				salesModels.setDay(salesModel.getDay());
-				salesModels.setTotal_pending("0");
-				salesModels.setTotal_complete("0");
-				String status = salesModel.getStatus();
-				 if(status.toLowerCase().equals("completed")){
-					 String sub = salesModel.getTotal_complete();
+				String paymentMethod = salesModel.getPaymentMethod();
+				String issued = salesModel.getIssued();
+				if(issued.toLowerCase().equals("1")){
+					 String sub = salesModels.getTotal_sales();
+					 Float total = Float.parseFloat(sub);
+					 Float totals = Float.parseFloat(salesModel.getTotal_sales());
+					 Float totals1 = total + totals;
+					 salesModels.setTotal_sales( String.format ("%.2f",totals1));
+					 
+					 String subd = salesModels.getTotal_discount();
+					 Float totald = Float.parseFloat(subd);
+					 Float totalsd = Float.parseFloat(salesModel.getTotal_discount());
+					 Float totals1d = totald + totalsd;
+					 salesModels.setTotal_discount( String.format ("%.2f",totals1d));
+					 
+					 String subt = salesModels.getTotal_tax();
+					 Float totalt = Float.parseFloat(subd);
+					 Float totalst = Float.parseFloat(salesModel.getTotal_tax());
+					 Float totals1t = totalt + totalst;
+					 salesModels.setTotal_discount( String.format ("%.2f",totals1t));
+					 
+					 String subn = salesModels.getTotal_net_sales();
+					 Float totaln = Float.parseFloat(subd);
+					 String totalsns = salesModel.getTotal_net_sales().replace(",", "");
+					 Float totalsn = Float.parseFloat(totalsns);
+					 Float totals1n = totaln + totalsn;
+					 salesModels.setTotal_net_sales( String.format ("%.2f",totals1n));
+					 
+	             }
+				 if(!paymentMethod.toLowerCase().equals("")){
+					 String sub = salesModels.getTotal_complete();
 					 Float total = Float.parseFloat(sub);
 					 Float totals = Float.parseFloat(salesModel.getTotal_complete());
 					 Float totals1 = total + totals;
-					 salesModels.setTotal_complete(totals1.toString());
+					 salesModels.setTotal_complete( String.format ("%.2f",totals1));
 	             }
-	             if(status.toLowerCase().equals("pending")){
-	            	 String sub = salesModel.getTotal_pending();
+	             if(paymentMethod.toLowerCase().equals("")){
+	            	 String sub = salesModels.getTotal_pending();
 					 Float total = Float.parseFloat(sub);
 					 Float totals = Float.parseFloat(salesModel.getTotal_pending());
 					 Float totals1 = total + totals;
-					 salesModels.setTotal_pending(totals1.toString());
+					 salesModels.setTotal_pending( String.format ("%.2f",totals1));
 	             }	
 			 }	
 		}

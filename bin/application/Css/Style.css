@@ -1,3 +1,15 @@
+@font-face {
+    font-family: javas;
+    src: url('helvetica-normal-58f8ea49d7897.ttf');
+}
+.table-row-cell:selected {
+   -fx-background-color: steelblue !important;
+   -fx-text-fill: white !important;
+}
+.root{
+    -fx-font-size: 9pt;
+	-fx-font-family: javas;
+}
 .clTotal{
 	-fx-alignment: center-right;
 	-fx-font-weight:  bold;
@@ -38,4 +50,7 @@
 }
 .boderblue{
 	-fx-border-color: #1f2aee;
+}
+.underlines{
+	-fx-underline: true;
 }

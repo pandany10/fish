@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 
 import application.Dao.SalesDao;
 import application.Model.SalesModel;
-import application.Utill.Pdf;
+import application.Utill.Menu;
 import application.Utill.PdfSales;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -41,9 +41,8 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class SalesController implements Initializable {
+public class SalesController extends Menu implements Initializable {
 	public boolean stateEdit = false; 
-	Stage prevStage;
 	@FXML
 	private TableView<SalesModel> twSummary;
 	@FXML
@@ -56,6 +55,14 @@ public class SalesController implements Initializable {
 	private TableColumn<SalesModel, String> tws_total_pending; 
 	@FXML
 	private TableColumn<SalesModel, String> tws_total_complete; 
+	@FXML
+	private TableColumn<SalesModel, String> tws_total_sales; 
+	@FXML
+	private TableColumn<SalesModel, String> tws_discount;
+	@FXML
+	private TableColumn<SalesModel, String> tws_tax;
+	@FXML
+	private TableColumn<SalesModel, String> tws_net_sales;
 	
 	@FXML
 	private TableColumn<SalesModel, String> tcInv; 
@@ -95,23 +102,32 @@ public class SalesController implements Initializable {
 	
 	@FXML
 	private Label lblTcomplete;
+	@FXML
+	private Label lblTdiscount;
+	@FXML
+	private Label lblTtax;
+	@FXML
+	private Label lblTnet_sales;
 	
 	@FXML
 	private Button btnPrint;
 	
 	@FXML
 	private ChoiceBox filterDate;
+	@FXML
+	private ChoiceBox filterSite;
+	
 	final String[] filterDates = new String[] { "Day", "Week", "Month", "Year" };
+	final String[] filterSites = new String[] { "Express", "Exotic", "Both" };
 	final String[] lstDayofWeek = new String[] { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY","THURSDAY","FRIDAY","SATURDAY" };
 	private String str_filters = filterDates[1];
-	
+	private String str_filtersite = filterSites[0];
+
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 	DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 	DateFormat dateFormatSql = new SimpleDateFormat("yyyy-MM-dd");
 	SalesDao saleDao = new SalesDao();
-	public void setPrevStage(Stage stage) {
-		this.prevStage = stage;
-	}
+
 	public static final LocalDate LOCAL_DATE (String dateString){
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 	    LocalDate localDate = LocalDate.parse(dateString, formatter);
@@ -119,6 +135,7 @@ public class SalesController implements Initializable {
 	}
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		 inits();
 		//init param
 		///dpFromDate.showingProperty();
 		//dpFromDate.setShowWeekNumbers(true);
@@ -131,6 +148,17 @@ public class SalesController implements Initializable {
 				str_filters = filterDates[new_value.intValue()];
 				System.out.println("--"+str_filters);
 				calculatorDate(str_filters);
+			}
+		});
+		filterSite.setItems(FXCollections.observableArrayList("Express", "Exotic", "Both" ));
+		filterSite.setValue("Express");
+		filterSite.getSelectionModel().selectedIndexProperty()
+		.addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue ov, Number value, Number new_value) {
+				str_filtersite = filterSites[new_value.intValue()];
+				System.out.println("--"+str_filtersite);
+				//calculatorDate(str_filters);
+				processData();
 			}
 		});
 		/*Calendar c = Calendar.getInstance();
@@ -148,7 +176,10 @@ public class SalesController implements Initializable {
 		tws_day.setCellValueFactory(new PropertyValueFactory<>("Day"));
 		tws_total_pending.setCellValueFactory(new PropertyValueFactory<>("total_pending"));
 		tws_total_complete.setCellValueFactory(new PropertyValueFactory<>("total_complete"));
-		
+		tws_total_sales.setCellValueFactory(new PropertyValueFactory<>("total_sales"));
+		tws_discount.setCellValueFactory(new PropertyValueFactory<>("total_discount"));
+		tws_tax.setCellValueFactory(new PropertyValueFactory<>("total_tax"));
+		tws_net_sales.setCellValueFactory(new PropertyValueFactory<>("total_net_sales"));
 		
 		tcInv.setCellValueFactory(new PropertyValueFactory<>("inv"));
 		tcDate.setCellValueFactory(new PropertyValueFactory<>("intDate"));
@@ -208,11 +239,14 @@ public class SalesController implements Initializable {
 				twSummary.requestFocus();
 				lblTpending.setText("");
 				lblTcomplete.setText("");
+				lblTdiscount.setText("");
+				lblTtax.setText("");
+				lblTnet_sales.setText("");
 				Thread thLoadDatas = new Thread() {
 					@SuppressWarnings("deprecation")
 					public void run() {
 						try {
-							List<SalesModel> lstSale = saleDao.getSale(fromDate, toDate, type);
+							List<SalesModel> lstSale = saleDao.getSale(fromDate, toDate, str_filtersite);
 							twSummary.getItems().addAll(lstSale);
 							twSummary.getSelectionModel().select(0);
 							calTotal();
@@ -233,7 +267,7 @@ public class SalesController implements Initializable {
 			@SuppressWarnings("deprecation")
 			public void run() {
 				try {
-					List<SalesModel> lstSale = saleDao.getSales(fromDate, toDate, type);	
+					List<SalesModel> lstSale = saleDao.getSales(fromDate, toDate, str_filtersite);	
 					twSales.getItems().addAll(lstSale);
 					twSales.getSelectionModel().select(0);
 					Platform.runLater(new Runnable() {
@@ -351,31 +385,62 @@ public class SalesController implements Initializable {
 	
 	public void calTotal(){
 		Float totalP = (float) 0;
+		Float totalS = (float) 0;
 		Float totalC = (float) 0;
+		Float totalD = (float) 0;
+		Float totalT = (float) 0;
+		Float totalN = (float) 0;
 		int count = twSummary.getItems().size();
 		for(int i =0;i<count;i++){
 			String sub = twSummary.getItems().get(i).getTotal_pending();
 			String subs = twSummary.getItems().get(i).getTotal_complete();
+			String subss = twSummary.getItems().get(i).getTotal_sales();
+			String subd = twSummary.getItems().get(i).getTotal_discount();
+			String subt = twSummary.getItems().get(i).getTotal_tax();
+			String subn = twSummary.getItems().get(i).getTotal_net_sales();
 			if(sub != null && !sub.isEmpty()){
 				totalP = totalP + Float.parseFloat(sub.replace("$", "").replace(",", ""));
 			}
 			if(subs != null && !subs.isEmpty()){
 				totalC = totalC + Float.parseFloat(subs.replace("$", "").replace(",", ""));
 			}
+			if(subss != null && !subss.isEmpty()){
+				totalS = totalS + Float.parseFloat(subss.replace("$", "").replace(",", ""));
+			}
+			if(subd != null && !subd.isEmpty()){
+				totalD = totalD + Float.parseFloat(subd.replace("$", "").replace(",", ""));
+			}
+			if(subt != null && !subt.isEmpty()){
+				totalT = totalT + Float.parseFloat(subt.replace("$", "").replace(",", ""));
+			}
+			if(subn != null && !subn.isEmpty()){
+				totalN = totalN + Float.parseFloat(subn.replace("$", "").replace(",", ""));
+			}
 			twSummary.getItems().get(i).setTotal_pending("$"+String.format ("%,.2f",Float.parseFloat(sub.replace("$", "").replace(",", ""))));
 			twSummary.getItems().get(i).setTotal_complete("$"+String.format ("%,.2f",Float.parseFloat(subs.replace("$", "").replace(",", ""))));
+			twSummary.getItems().get(i).setTotal_sales("$"+String.format ("%,.2f",Float.parseFloat(subss.replace("$", "").replace(",", ""))));
+			twSummary.getItems().get(i).setTotal_discount("$"+String.format ("%,.2f",Float.parseFloat(subd.replace("$", "").replace(",", ""))));
+			twSummary.getItems().get(i).setTotal_tax("$"+String.format ("%,.2f",Float.parseFloat(subt.replace("$", "").replace(",", ""))));
+			twSummary.getItems().get(i).setTotal_net_sales("$"+String.format ("%,.2f",Float.parseFloat(subn.replace("$", "").replace(",", ""))));
 			twSummary.refresh();
 		}
 		String txtTpending = "$"+String.format ("%,.2f",totalP);
+		String txtTsales = "$"+String.format ("%,.2f",totalS);
 		String txtTcom = "$"+String.format ("%,.2f",totalC);
-		System.out.println(txtTpending);
+		String txtTD = "$"+String.format ("%,.2f",totalD);
+		String txtTT = "$"+String.format ("%,.2f",totalT);
+		String txtTN = "$"+String.format ("%,.2f",totalN);
+		System.out.println(txtTsales);
 		System.out.println(txtTcom);
 
 		Platform.runLater(new Runnable() {
 			  @Override
 			  public void run() {
-					lblTpending.setText(txtTpending);
+					lblTpending.setText(txtTsales);
 					lblTcomplete.setText(txtTcom);  
+					lblTdiscount.setText(txtTD);  
+					lblTtax.setText(txtTT);  
+					lblTnet_sales.setText(txtTN);  
 					btnPrint.setDisable(false);
 					int count = twSummary.getItems().size();
 					if(count == 0){
@@ -439,6 +504,9 @@ public class SalesController implements Initializable {
 		twSummary.setVisible(!isShow);
 		lblTpending.setVisible(!isShow);
 		lblTcomplete.setVisible(!isShow);
+		lblTdiscount.setVisible(!isShow);
+		lblTtax.setVisible(!isShow);
+		lblTnet_sales.setVisible(!isShow);
 	}
 	public void gotoHome(ActionEvent event) throws IOException {
 		gotoHome();

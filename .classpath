@@ -5,8 +5,12 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
 	<classpathentry kind="lib" path="C:/Users/bannk/lib/mysql-connector-java-5.1.37.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bannk/lib/org.json.jar"/>
 	<classpathentry kind="lib" path="C:/Users/bannk/lib/sun.misc.BASE64Decoder.jar"/>
 	<classpathentry kind="lib" path="D:/DONGOI/itextpdf-5.3.0.jar"/>
+	<classpathentry kind="lib" path="D:/12/json-20090211.jar"/>
+	<classpathentry kind="lib" path="D:/gson-2.2.2.jar"/>
+	<classpathentry kind="lib" path="D:/stripe-java-4.3.0.jar"/>
+	<classpathentry kind="lib" path="D:/activation.jar"/>
+	<classpathentry kind="lib" path="D:/mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

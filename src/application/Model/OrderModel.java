@@ -1,7 +1,15 @@
 package application.Model;
 
 public class OrderModel {
-
+	private String customerId = "";
+	private String customerName;
+	private String customerContact;
+	private String customerPhone;
+	private String customerTerms;
+	private String customerSalesperson;
+	
+	
+	
 	private Integer no;
 	private String Customer_date;
 	private String status;
@@ -10,11 +18,87 @@ public class OrderModel {
 	private String ClientCustomerID;
 	private String Customer_email;
 	private String CompanyName;
-	private Float All_Total;
+	private String All_Total;
 	private Float surcharge;
 	private Boolean payment;
+	private Boolean issued;
+	private String payments;
+	private String paymentMethod;
+	private String amoutPaid;
+	private String amoutUnPaid;
 	
-
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+	public String getAmoutPaid() {
+		return amoutPaid;
+	}
+	public void setAmoutPaid(String amoutPaid) {
+		this.amoutPaid = amoutPaid;
+	}
+	public String getAmoutUnPaid() {
+		return amoutUnPaid;
+	}
+	public void setAmoutUnPaid(String amoutUnPaid) {
+		this.amoutUnPaid = amoutUnPaid;
+	}
+	public String getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+	public String getCustomerName() {
+		return customerName;
+	}
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+	public String getCustomerContact() {
+		return customerContact;
+	}
+	public void setCustomerContact(String customerContact) {
+		this.customerContact = customerContact;
+	}
+	public String getCustomerPhone() {
+		return customerPhone;
+	}
+	public void setCustomerPhone(String customerPhone) {
+		this.customerPhone = customerPhone;
+	}
+	public String getCustomerTerms() {
+		return customerTerms;
+	}
+	public void setCustomerTerms(String customerTerms) {
+		this.customerTerms = customerTerms;
+	}
+	public String getCustomerSalesperson() {
+		return customerSalesperson;
+	}
+	public void setCustomerSalesperson(String customerSalesperson) {
+		this.customerSalesperson = customerSalesperson;
+	}
+	public Boolean getIssued() {
+		return issued;
+	}
+	public void setIssued(Boolean issued) {
+		this.issued = issued;
+	}
+	public String getAll_Total() {
+		return All_Total;
+	}
+	public void setAll_Total(String all_Total) {
+		All_Total = all_Total;
+	}
+	public String getPayments() {
+		return payments;
+	}
+	public void setPayments(String payments) {
+		this.payments = payments;
+	}
 	public Boolean getPayment() {
 		return payment;
 	}
@@ -93,17 +177,10 @@ public class OrderModel {
 		CompanyName = companyName;
 	}
 
-	public Float getAll_Total() {
-		return All_Total;
-	}
-
-	public void setAll_Total(Float all_Total) {
-		All_Total = all_Total;
-	}
 
 	public OrderModel() {}
 
-    public  OrderModel(Integer No, String Customer_date,String status,String Customer_ship, Integer order_id, String ClientCustomerID,String Customer_email, String CompanyName,Float All_Total,Float surcharge ,Boolean payment) {
+    public  OrderModel(Integer No, String Customer_date,String status,String Customer_ship, Integer order_id, String ClientCustomerID,String Customer_email, String CompanyName,String All_Total,Float surcharge ,Boolean payment) {
     	setNo(No);
     	setCustomer_date(Customer_date);
     	setStatus(status);
@@ -112,7 +189,7 @@ public class OrderModel {
     	setClientCustomerID(ClientCustomerID);
     	setCustomer_email(Customer_email);
     	setCompanyName(CompanyName);
-    	setAll_Total(All_Total);
+    	this.setAll_Total(All_Total);
     	setSurcharge(surcharge);
     	setPayment(payment);
     }

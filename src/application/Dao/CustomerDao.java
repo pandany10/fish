@@ -26,6 +26,9 @@ public class CustomerDao {
 			 Customer.setSalesperson(rs.getString("Salesperson"));
 			 Customer.setCarrier(rs.getString("carrier"));
 			 Customer.setEmail(rs.getString("Customer_email"));
+			 Customer.setStripe_user_id(rs.getString("stripe_user_id"));
+			 Customer.setSaleEmail(rs.getString("saleperson_email"));
+			 //stripe_user_id
 			 String sl =rs.getString("SalesDisc");
 			 Customer.setShippingCost(rs.getFloat("ShippingCost"));
 			 if(sl.equals("") || sl == null){
@@ -256,6 +259,80 @@ public class CustomerDao {
 			 Customer.setTax(rs.getInt("Tax"));
              LstCustomer.add(Customer);
          }
+		return LstCustomer;
+	}
+	public List<CustomerModel> getLstCustomerForExpress() throws ClassNotFoundException, SQLException {
+		List<CustomerModel> LstCustomer = new ArrayList<>();
+		String sql ="SELECT t1.* , t2.* FROM  exoticre_order.customerfishpro t1 left join exoticre_order.salesperson t2 on t1.Salesperson = t2.scode left join exoticre_order.orders t3 on t1.CustomerID = t3.ClientCustomerID  where  t3.isExpress = '1' group by t1.CustomerID";
+		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
+		 while (rs.next()) {
+			 CustomerModel Customer = new CustomerModel();
+			 Customer.setCustomerID(rs.getString("CustomerID"));
+			 Customer.setCompanyName(rs.getString("CompanyName"));
+			 Customer.setAddress(rs.getString("Address"));
+			 Customer.setAddress2(rs.getString("Address2"));
+			 Customer.setCity(rs.getString("City"));
+			 Customer.setStates(rs.getString("States"));
+			 Customer.setZip(rs.getString("Zip"));
+			 Customer.setPhone1(rs.getString("Phone1"));
+			 String Terms =rs.getString("Terms");
+			 if(Terms.equals("null")){
+				 Terms = ""; 
+			 }
+			 Customer.setTerms(Terms);
+			 Customer.setCarrier(rs.getString("carrier"));
+			 Customer.setSalesperson(rs.getString("Salesperson"));
+			 Customer.setEmail(rs.getString("Email"));
+			 Customer.setSaleEmail(rs.getString("email"));
+			 Customer.setShippingCost(rs.getFloat("ShippingCost"));
+			 String sl =rs.getString("SalesDisc");
+			 if(sl.equals("") || sl == null){
+				 sl = "0"; 
+			 }
+			 Customer.setSalesDisc(sl);
+			 
+			 Customer.setCountry(rs.getString("Country"));
+			 //Customer.setCountry(rs.getString("Phone1"));
+			 Customer.setPhone2(rs.getString("Phone2"));
+			 Customer.setCellphone(rs.getString("Cellphone"));
+			 Customer.setFax(rs.getString("FaxNo"));
+			 Customer.setCountry(rs.getString("Country"));
+			// Customer.setCountry(rs.getString("Country"));
+			 Customer.setDestination(rs.getString("Destin"));
+			 Customer.setAlrportCode(rs.getString("alrportcode"));
+			 Customer.setTime(rs.getString("times"));
+			 Customer.setContact(rs.getString("Contact"));
+			 Customer.setContact2(rs.getString("contact2"));
+			 Customer.setEMail(rs.getString("Email"));
+			 Customer.setEMail2(rs.getString("email2"));
+			 Customer.setTitle(rs.getString("Title"));
+			 Customer.setTitle2(rs.getString("title2"));
+			 Customer.setWebsite(rs.getString("Website"));
+			 Customer.setComments(rs.getString("Comments"));
+			 Float Balance =rs.getFloat("Balance");
+			 if(Balance == null){
+				 Balance = (float) 0; 
+			 }
+			 Float Credit =rs.getFloat("Credit");
+			 if(Credit == null){
+				 Credit = (float) 0; 
+			 }
+			 Customer.setCurrBal(Balance);
+			 Customer.setOpnCred(Credit);
+			 Customer.setYTDSales(rs.getFloat("YTDSales"));
+			 Customer.setLstSales1(rs.getFloat("LstSale"));
+			 Customer.setLstPmt1(rs.getFloat("LstPmt"));
+			 Customer.setEntered(rs.getString("Entered"));
+			 Customer.setLstSales2(rs.getString("LstSaleDate"));
+			 Customer.setLstPmt2(rs.getString("LstPmtDate"));
+			 //Customer.setCountry(rs.getString("Terms"));
+			 Customer.setNetDue(rs.getString("NetDue"));
+			 Customer.setPrice(rs.getString("Price"));
+			 Customer.setCreditLimit(rs.getFloat("CreditLimit"));
+			 Customer.setSalesDisc(rs.getString("SalesDisc"));
+			 Customer.setTax(rs.getInt("Tax"));
+            LstCustomer.add(Customer);
+        }
 		return LstCustomer;
 	}
 	public List<CustomerModel> getLstCustomerSearch(String key, String type) throws ClassNotFoundException, SQLException {
