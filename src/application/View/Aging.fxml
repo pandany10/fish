@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="r" prefHeight="753.0" prefWidth="1267.0" stylesheets="@../Css/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller.AgingController">
+   <children>
+      <MenuBar fx:id="menuBar" layoutY="2.0" prefHeight="25.0" prefWidth="1266.0">
+        <menus>
+
+            <Menu mnemonicParsing="false" text="File">
+              <items>
+                <MenuItem fx:id="menuItemOrders" mnemonicParsing="false" text="Orders" />
+              </items>
+              <items>
+                <MenuItem fx:id="menuItemOrdersTemp" mnemonicParsing="false" onAction="#gotoOrdersTemp" text="Orders Temporary" visible="false" />
+              </items>
+              <items>
+                <MenuItem fx:id="menuItemExpress" mnemonicParsing="false" text="Express Orders" />
+              </items>
+              <items>
+                <MenuItem fx:id="menuItemCustomers" mnemonicParsing="false" text="Customers" />
+              </items>
+              <items>
+                <MenuItem fx:id="menuItemProducts" mnemonicParsing="false" text="Products" />
+              </items>
+              <items>
+                <MenuItem fx:id="menuItemReports" mnemonicParsing="false" text="Reports" />
+              </items>
+              <items>
+                <MenuItem fx:id="menuItemInvoicer" mnemonicParsing="false" text="Invoicer" />
+              </items>
+              <items>
+                <MenuItem fx:id="menuItemPayment" mnemonicParsing="false" text="Payment" />
+              </items>
+                <items>
+              <MenuItem fx:id="menuItemAccounting" mnemonicParsing="false" text="Accounting" />
+            </items>
+              <items>
+                <MenuItem fx:id="menuItemLogout" mnemonicParsing="false" onAction="#gotoLogin" text="Logout" />
+              </items>
+              <items>
+                <MenuItem fx:id="menuItemInvoicers" mnemonicParsing="false" text="Invoicer" visible="false" />
+              </items>
+
+
+            <items>
+              <MenuItem fx:id="menuItemOrderss" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemCustomerss" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>            
+            <items>
+              <MenuItem fx:id="menuItemProductss" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>            
+            <items>
+              <MenuItem fx:id="menuItemReportss" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemPayments" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemExpresss" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemLogouts" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemAccountings" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemPaymentExpresss" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemQuits" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemQuit" mnemonicParsing="false" text="Quit" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemPaymentExpress" mnemonicParsing="false" text="Express Payment" />
+            </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+      <Pane layoutY="27.0" prefHeight="724.0" prefWidth="1267.0">
+         <children>
+            <TableView fx:id="twCus" layoutY="35.0" onMouseClicked="#explanCustomer" prefHeight="183.0" prefWidth="1266.0">
+               <columns>
+                  <TableColumn fx:id="tws_cus" prefWidth="99.0" text="CUST#">
+                     <styleClass>
+                        <String fx:value="clcenter" />
+                        <String fx:value="clbold" />
+                     </styleClass></TableColumn>
+                  <TableColumn fx:id="tws_cus_name" prefWidth="441.0" text="CUSTOMER NAME">
+                     <styleClass>
+                        <String fx:value="clcenter" />
+                        <String fx:value="clbold" />
+                     </styleClass></TableColumn>
+                  <TableColumn fx:id="tws_term" minWidth="0.0" prefWidth="128.0" text="TERMS">
+                     <styleClass>
+                        <String fx:value="clcenter" />
+                        <String fx:value="clbold" />
+                     </styleClass></TableColumn>
+                  <TableColumn fx:id="tws_slsmn" minWidth="0.0" prefWidth="106.0" text="SLSMN">
+                     <styleClass>
+                        <String fx:value="clcenter" />
+                        <String fx:value="clbold" />
+                     </styleClass></TableColumn>
+                  <TableColumn fx:id="tws_phone" prefWidth="215.0" text="PHONE">
+                     <styleClass>
+                        <String fx:value="clcenter" />
+                        <String fx:value="clbold" />
+                     </styleClass>
+                  </TableColumn>
+                  <TableColumn fx:id="tws_contact" prefWidth="273.0" text="CONTACT">
+                     <styleClass>
+                        <String fx:value="clcenter" />
+                        <String fx:value="clbold" />
+                     </styleClass>
+                  </TableColumn>
+               </columns>
+            </TableView>
+            <Label fx:id="statusAdd" alignment="TOP_RIGHT" layoutX="804.0" layoutY="8.0" prefHeight="17.0" prefWidth="447.0" textFill="#0f0fe1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Pane fx:id="footer" layoutX="4.0" layoutY="669.0" onMouseEntered="#mouseEnter" onMouseExited="#mouseEnter" prefHeight="55.0" prefWidth="1260.0">
+               <effect>
+                  <Blend />
+               </effect>
+               <children>
+                  <Label layoutX="1151.0" layoutY="-2.0" prefHeight="25.0" prefWidth="90.0" text="uit F12">
+                     <effect>
+                        <Blend />
+                     </effect>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="1140.0" layoutY="-2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="Q">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="991.0" layoutY="-2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="L">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="998.0" layoutY="-2.0" prefHeight="25.0" prefWidth="81.0" text="ogout F11">
+                     <effect>
+                        <Blend />
+                     </effect>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="837.0" layoutY="-2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" text="E">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="845.0" layoutY="-2.0" prefHeight="25.0" prefWidth="12.0" style="-: ;" styleClass="underlines" text="x">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="718.0" layoutY="-2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="A">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="633.0" layoutY="-2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="B">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="545.0" layoutY="-2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="I">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="459.0" layoutY="-2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="R">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="345.0" layoutY="-1.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="P">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="230.0" layoutY="-1.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="C">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="96.0" layoutY="-1.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="E">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="7.0" layoutY="-1.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="O">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="728.0" layoutY="-2.0" prefHeight="25.0" prefWidth="106.0" text="ccounting F9">
+                     <effect>
+                        <Blend />
+                     </effect>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="104.0" layoutY="-1.0" prefHeight="25.0" prefWidth="123.0" text="xpress Orders F3">
+                     <effect>
+                        <Blend />
+                     </effect>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="852.0" layoutY="-2.0" prefHeight="25.0" prefWidth="138.0" text="press Payment F10">
+                     <effect>
+                        <Blend />
+                     </effect>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="641.0" layoutY="-2.0" prefHeight="25.0" prefWidth="74.0" text="illing F8">
+                     <effect>
+                        <Blend />
+                     </effect>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="549.0" layoutY="-2.0" prefHeight="25.0" prefWidth="81.0" text="nvoicer F7">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="468.0" layoutY="-2.0" prefHeight="25.0" prefWidth="74.0" text="eport F6">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="353.0" layoutY="-1.0" prefHeight="25.0" prefWidth="92.0" text="roducts F5">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="239.0" layoutY="-1.0" prefHeight="25.0" prefWidth="98.0" text="ustomers F4">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="18.0" layoutY="-1.0" prefHeight="25.0" prefWidth="74.0" text="rders F2">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="8.0" layoutY="27.0" prefHeight="25.0" prefWidth="193.0" text="[Pg Up] Previous Section">
+                     <effect>
+                        <Blend />
+                     </effect>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="229.0" layoutY="27.0" prefHeight="25.0" prefWidth="218.0" text="[Pg Dn] Next Section">
+                     <effect>
+                        <Blend />
+                     </effect>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="458.0" layoutY="27.0" prefHeight="25.0" prefWidth="288.0" text="[ArrowKeys] Move Up, Down">
+                     <effect>
+                        <Blend />
+                     </effect>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblEnter" layoutX="837.0" layoutY="27.0" prefHeight="25.0" prefWidth="108.0" text="[Esc] Go Back">
+                     <effect>
+                        <Blend />
+                     </effect>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <TableView fx:id="twInvoice" layoutY="246.0" prefHeight="421.0" prefWidth="1266.0">
+               <columns>
+                  <TableColumn fx:id="twi_invoice" prefWidth="99.0" styleClass="clcenter" text="INVOICE" />
+                  <TableColumn fx:id="twi_date" prefWidth="153.0" styleClass="clcenter" text="DATE" />
+                  <TableColumn fx:id="twi_total" minWidth="0.0" prefWidth="199.0" text="TOTAL">
+                     <styleClass>
+                        <String fx:value="clright" />
+                        <String fx:value="clbold" />
+                     </styleClass>
+                  </TableColumn>
+                  <TableColumn fx:id="twi_paid" minWidth="0.0" prefWidth="424.0" text="PAID">
+                     <styleClass>
+                        <String fx:value="clright" />
+                        <String fx:value="clbold" />
+                     </styleClass>
+                  </TableColumn>
+                  <TableColumn fx:id="twi_unpaid" prefWidth="370.0" text="UNPAID">
+                     <styleClass>
+                        <String fx:value="clright" />
+                        <String fx:value="clbold" />
+                     </styleClass>
+                  </TableColumn>
+               </columns>
+            </TableView>
+            <Label fx:id="lblcus" alignment="TOP_LEFT" layoutX="1.0" layoutY="217.0" prefHeight="30.0" prefWidth="815.0" style="-fx-font-size: 20; -fx-font-weight: bold;" styleClass="clbold">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Label alignment="CENTER" layoutX="272.0" layoutY="30.0" prefHeight="30.0" prefWidth="771.0" style="-fx-font-size: 20; -fx-font-weight: bold;" styleClass="clbold" text="EXOTIC REEF IMPORTS, INC. OPEN RECEIVABLES REPORT">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

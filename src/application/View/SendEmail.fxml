@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="aphome" prefHeight="613.0" prefWidth="1122.0" stylesheets="@../Css/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller.EmailController">
+   <children>
+      <MenuBar fx:id="menuBar" layoutY="2.0" prefHeight="25.0" prefWidth="1121.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem fx:id="menuItemOrders" mnemonicParsing="false" text="Orders" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemOrdersTemp" mnemonicParsing="false" onAction="#gotoOrdersTemp" text="Orders Temporary" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemExpress" mnemonicParsing="false" text="Express Orders" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemCustomers" mnemonicParsing="false" text="Customers" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemProducts" mnemonicParsing="false" text="Products" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemReports" mnemonicParsing="false" text="Reports" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemInvoicer" mnemonicParsing="false" text="Invoicer" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemInvoicers" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemPayment" mnemonicParsing="false" text="Payment" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemAccounting" mnemonicParsing="false" text="Accounting" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemLogout" mnemonicParsing="false" onAction="#gotoLogin" text="Logout" />
+            </items>
+
+            <items>
+              <MenuItem fx:id="menuItemOrderss" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemCustomerss" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>            
+            <items>
+              <MenuItem fx:id="menuItemProductss" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>            
+            <items>
+              <MenuItem fx:id="menuItemReportss" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemPayments" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemExpresss" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemLogouts" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemAccountings" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemPaymentExpresss" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemQuits" mnemonicParsing="false" text="Invoicer" visible="false" />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemQuit" mnemonicParsing="false" text="Quit"  />
+            </items>
+            <items>
+              <MenuItem fx:id="menuItemPaymentExpress" mnemonicParsing="false" text="Express Payment"  />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <Pane fx:id="footer" layoutX="1.0" layoutY="613.0" onMouseEntered="#mouseEnter" onMouseExited="#mouseEnter" prefHeight="47.0" prefWidth="1121.0">
+         <effect>
+            <Blend />
+         </effect>
+         <children>
+            <Label layoutX="7.0" layoutY="1.0" prefHeight="25.0" prefWidth="92.0" text="(O) Orders   ">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="273.0" layoutY="1.0" prefHeight="25.0" prefWidth="125.0" text="(U) Customer">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="413.0" layoutY="2.0" prefHeight="25.0" prefWidth="92.0" text="(P) Products">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="542.0" layoutY="1.0" prefHeight="25.0" prefWidth="92.0" text="(R) Report">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="636.0" layoutY="1.0" prefHeight="25.0" prefWidth="106.0" text="(I,F8) Invoicer">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="746.0" layoutY="1.0" prefHeight="25.0" prefWidth="92.0" text="(E) Payment">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <effect>
+                  <Blend />
+               </effect>
+            </Label>
+            <Label layoutX="1026.0" layoutY="1.0" prefHeight="25.0" prefWidth="92.0" text="(L) Logout">
+               <effect>
+                  <Blend />
+               </effect>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="479.0" layoutY="25.0" prefHeight="25.0" prefWidth="138.0" text="(TAB) move next">
+               <effect>
+                  <Blend />
+               </effect>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="620.0" layoutY="25.0" prefHeight="25.0" prefWidth="179.0" text="(Shift+Tab) move preview">
+               <effect>
+                  <Blend />
+               </effect>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="112.0" layoutY="1.0" prefHeight="25.0" prefWidth="138.0" text="(K) Express Orders">
+               <effect>
+                  <Blend />
+               </effect>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="859.0" layoutY="1.0" prefHeight="25.0" prefWidth="106.0" text="(K) Express order">
+               <effect>
+                  <Blend />
+               </effect>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="319.0" layoutY="25.0" prefHeight="25.0" prefWidth="106.0" text="(A) Accounting">
+               <effect>
+                  <Blend />
+               </effect>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <TextField fx:id="txtTo" disable="true" layoutX="99.0" layoutY="97.0" prefHeight="25.0" prefWidth="928.0" text="info@exoticreefimports.com;" />
+      <Label alignment="CENTER" layoutX="294.0" layoutY="35.0" prefHeight="27.0" prefWidth="547.0" styleClass="clbold" text="SEND EMAIL  AFTER CREATE INVOICE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="7.0" layoutY="97.0" prefHeight="27.0" prefWidth="84.0" text="To:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="7.0" layoutY="127.0" prefHeight="27.0" prefWidth="84.0" text="CC:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtCC" layoutX="99.0" layoutY="127.0" prefHeight="25.0" prefWidth="471.0" text="orders@exoticreefimports.com;" />
+      <TextArea fx:id="txtBody" layoutX="99.0" layoutY="171.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="365.0" prefWidth="928.0" wrapText="true" />
+      <Label layoutX="7.0" layoutY="169.0" prefHeight="27.0" prefWidth="84.0" text="Body:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="8.0" layoutY="559.0" prefHeight="27.0" prefWidth="84.0" text="Attach:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtAttach" disable="true" layoutX="99.0" layoutY="560.0" prefHeight="25.0" prefWidth="226.0" />
+      <Button fx:id="btnSend" layoutX="965.0" layoutY="561.0" mnemonicParsing="false" onAction="#sendEmail" prefHeight="25.0" prefWidth="63.0" text="Send">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Label fx:id="lblorder" alignment="CENTER" layoutX="273.0" layoutY="64.0" prefHeight="27.0" prefWidth="547.0" styleClass="clbold" text="Order ID : 1234">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblstatus" layoutX="542.0" layoutY="568.0" prefHeight="17.0" prefWidth="415.0" textFill="#2d07eb">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

@@ -1,0 +1,30 @@
+    <MenuBar fx:id="menuBar" layoutY="2.0" prefHeight="25.0" prefWidth="1046.0">
+        <menus>
+		  <Menu mnemonicParsing="false" text="File">
+		    <items>
+		      <MenuItem fx:id="menuItemOrders" mnemonicParsing="false" text="Orders" />
+		    </items>
+		    <items>
+		      <MenuItem fx:id="menuItemOrdersTemp" mnemonicParsing="false" onAction="#gotoOrdersTemp" text="Orders Temporary" visible="false" />
+		    </items>
+		    <items>
+		      <MenuItem fx:id="menuItemCustomers" mnemonicParsing="false" text="Customers" />
+		    </items>
+		    <items>
+		      <MenuItem fx:id="menuItemProducts" mnemonicParsing="false" text="Products" />
+		    </items>
+		    <items>
+		      <MenuItem fx:id="menuItemReports" mnemonicParsing="false" text="Reports" />
+		    </items>
+		    <items>
+		      <MenuItem fx:id="menuItemInvoicer" mnemonicParsing="false" text="Invoicer" />
+		    </items>
+		    <items>
+		      <MenuItem fx:id="menuItemPayment" mnemonicParsing="false" text="Payment" />
+		    </items>
+		    <items>
+		      <MenuItem fx:id="menuItemLogout" mnemonicParsing="false" onAction="#gotoLogin" text="Logout" />
+		    </items>
+		 </Menu>
+     </menus>
+   </MenuBar>

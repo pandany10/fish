@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="98.0" prefWidth="610.0" stylesheets="@../Css/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller.AccoutingHomeController2">
+   <children>
+      <Label alignment="TOP_LEFT" layoutX="69.0" layoutY="14.0" prefHeight="30.0" prefWidth="192.0" style="-fx-font-size: 20; -fx-font-weight: bold;" styleClass="clbold" text="Would you like to ">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnkok" layoutX="294.0" layoutY="61.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="52.0" text="Ok" />
+      <Button fx:id="btncancle" layoutX="379.0" layoutY="61.0" mnemonicParsing="false" text="Cancel" />
+      <TextField fx:id="tx" layoutX="205.0" layoutY="61.0" prefHeight="25.0" prefWidth="52.0" text="E" />
+      <Label alignment="TOP_LEFT" layoutX="254.0" layoutY="14.0" prefHeight="30.0" prefWidth="69.0" style="-fx-font-size: 20; -fx-font-weight: bold;" styleClass="clbold" text="mail, ">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label alignment="TOP_LEFT" layoutX="318.0" layoutY="14.0" prefHeight="30.0" prefWidth="69.0" style="-fx-font-size: 20; -fx-font-weight: bold;" styleClass="clbold" text="rint or ">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label alignment="TOP_LEFT" layoutX="380.0" layoutY="14.0" prefHeight="30.0" prefWidth="21.0" style="-fx-font-size: 20; -fx-font-weight: bold;" text="V">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+         <styleClass>
+            <String fx:value="clbold" />
+            <String fx:value="underlines" />
+         </styleClass>
+      </Label>
+      <Label alignment="TOP_LEFT" layoutX="394.0" layoutY="14.0" prefHeight="30.0" prefWidth="178.0" style="-fx-font-size: 20; -fx-font-weight: bold;" styleClass="clbold" text="iew the report?">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label alignment="TOP_LEFT" layoutX="243.0" layoutY="14.0" prefHeight="30.0" prefWidth="21.0" style="-fx-font-size: 20; -fx-font-weight: bold;" text="E">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+         <styleClass>
+            <String fx:value="clbold" />
+            <String fx:value="underlines" />
+         </styleClass>
+      </Label>
+      <Label alignment="TOP_LEFT" layoutX="305.0" layoutY="14.0" prefHeight="30.0" prefWidth="21.0" style="-fx-font-size: 20; -fx-font-weight: bold;" text="P">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+         <styleClass>
+            <String fx:value="clbold" />
+            <String fx:value="underlines" />
+         </styleClass>
+      </Label>
+   </children>
+</AnchorPane>
