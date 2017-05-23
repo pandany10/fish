@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException, SQLException {
+		
 		   primaryStage.getIcons().add(new Image("file:resources/images/icon.png"));
 		   primaryStage.setTitle("FishPro v2");
 		   DBConnection.connect(); // connect db
