@@ -330,11 +330,11 @@
                   <TableColumn fx:id="twi_date" prefWidth="169.0" styleClass="clcenter" text="DATE" />
                   <TableColumn fx:id="twi_chk" minWidth="0.0" prefWidth="234.0" text="CHK/REF">
                      <styleClass>
-                        <String fx:value="clright" />
+                        <String fx:value="clcenter" />
                         <String fx:value="clbold" />
                      </styleClass>
                   </TableColumn>
-                  <TableColumn fx:id="twi_paid" minWidth="0.0" prefWidth="206.0" text="INVOICE">
+                  <TableColumn fx:id="twi_invoices" minWidth="0.0" prefWidth="206.0" text="INVOICE">
                      <styleClass>
                         <String fx:value="clright" />
                         <String fx:value="clbold" />

@@ -78,7 +78,7 @@ public class HistoryController extends Menu implements Initializable {
 	@FXML
 	private TableColumn<OrderModel, String> twi_chk;
 	@FXML
-	private TableColumn<OrderModel, String> twi_paid;
+	private TableColumn<OrderModel, String> twi_invoices;
 	@FXML
 	private TableColumn<OrderModel, String> twi_payment;
 	@FXML
@@ -337,7 +337,10 @@ public class HistoryController extends Menu implements Initializable {
 		twi_date.setCellValueFactory(new PropertyValueFactory<>("Customer_date"));
 		twi_chk.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
 		//twi_total.setCellValueFactory(new PropertyValueFactory<>("All_Total"));
-		twi_paid.setCellValueFactory(new PropertyValueFactory<>("amoutPaid"));
+		twi_payment.setCellValueFactory(new PropertyValueFactory<>("amoutPaid"));
+		twi_invoices.setCellValueFactory(new PropertyValueFactory<>("All_Total"));
+		
+		twi_discount.setCellValueFactory(new PropertyValueFactory<>("disc"));
 		//twi_unpaid.setCellValueFactory(new PropertyValueFactory<>("amoutUnPaid"));
 		twi_invoice.setCellFactory(column -> { 
 		        return new TableCell<OrderModel, Integer>() {
@@ -387,18 +390,25 @@ public class HistoryController extends Menu implements Initializable {
 							Float total = 0.f;
 							Float totalP = 0.f;
 							Float totalUP = 0.f;
+							Float totalDS = 0.f;
+
 							OrderModel or = new OrderModel();
 							for (OrderModel order : lstOrder) {
 								total = total + Float.parseFloat(order.getAll_Total().replace(",", ""));
 								totalP = totalP + Float.parseFloat(order.getAmoutPaid().replace(",", ""));
 								totalUP = totalUP + Float.parseFloat(order.getAmoutUnPaid().replace(",", ""));
+								totalDS = totalDS + Float.parseFloat(order.getDisc().replace(",", ""));
+
 								order.setAll_Total("$"+order.getAll_Total());
 								order.setAmoutPaid("$"+order.getAmoutPaid());
 								order.setAmoutUnPaid("$"+order.getAmoutUnPaid());
+								order.setDisc("$"+order.getDisc());
+
 							}
 							or.setAll_Total("$"+String.format ("%,.2f",total));
 							or.setAmoutPaid("$"+String.format ("%,.2f",totalP));
 							or.setAmoutUnPaid("$"+String.format ("%,.2f",totalUP));
+							or.setDisc("$"+String.format ("%,.2f",totalDS));
 							or.setCustomer_date("");
 							
 							lstOrder.add(or);

@@ -366,7 +366,7 @@ public class PdfCustomer {
 			Float totalUP = 0.f;
 			int col = 9;
 			if(isLedger == true){
-				col = 5;
+				col = 7;
 			}
 			PdfPTable tblProducto = new PdfPTable(col);
 			if(isLedger == false){
@@ -595,7 +595,8 @@ public class PdfCustomer {
 
 			}else{
 				tblProducto.setWidthPercentage(100);
-				tblProducto.setWidths(new float[] { 10,10,10,35,35 });
+				tblProducto.setWidths(new float[] { 13,13,17,13,13,13,18 });
+				//tmr continues
 				for (OrderModel order : lstOrder) {
 					count++;
 				}
@@ -978,14 +979,16 @@ public class PdfCustomer {
 		paragraph1s.setSpacingBefore(2);
 		document.add(paragraph1s);
 		if(isLedger == true){
-			PdfPTable tblProduct = new PdfPTable(5);
+			PdfPTable tblProduct = new PdfPTable(7);
 			tblProduct.setWidthPercentage(100);
-			tblProduct.addCell(getCellC("DATE", font, 8, 1,1,1,1,1));
+			tblProduct.addCell(getCellC("INVOICE #", font, 8, 1,1,1,1,1));
+			tblProduct.addCell(getCellC("DATE", font, 8, 1,0,1,1,1));
+			tblProduct.addCell(getCellC("CHK/REF", font, 8, 1,0,1,1,1));
 			tblProduct.addCell(getCellC("INVOICE", font, 8, 1,0,1,1,1));
-			tblProduct.addCell(getCellC("AMOUNT", font, 8, 1,0,1,1,1));
-			tblProduct.addCell(getCellC("PAID", font, 8, 1,0,1,1,1));
-			tblProduct.addCell(getCellC("UNPAID", font, 8, 1,0,1,1,1));
-			tblProduct.setWidths(new float[] { 10,10,10,35,35 });
+			tblProduct.addCell(getCellC("PAYMENT", font, 8, 1,0,1,1,1));
+			tblProduct.addCell(getCellC("DISCOUNT", font, 8, 1,0,1,1,1));
+			tblProduct.addCell(getCellC("BALANCE FWD", font, 8, 1,0,1,1,1));
+			tblProduct.setWidths(new float[] { 13,13,17,13,13,13,18 });
 			document.add(tblProduct);
 		}else{
 			PdfPTable tblProduct = new PdfPTable(9);

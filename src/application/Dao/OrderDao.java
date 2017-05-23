@@ -179,7 +179,7 @@ public class OrderDao {
 	}
 	public List<OrderModel> getOrderCustomerSale1(String Customerid) throws ClassNotFoundException, SQLException{
 		List<OrderModel> lstOrder = new ArrayList<>();
-		String sql = "SELECT * FROM exoticre_order.customerfishpro t1 inner join exoticre_order.orders t2 on t1.CustomerID = t2.ClientCustomerID WHERE t1.CompanyName != '' and t2.ClientCustomerID = '"+Customerid+"' GROUP BY t2.order_id order by t1.CompanyName asc limit 20000;";
+		String sql = "SELECT * FROM exoticre_order.customerfishpro t1 inner join exoticre_order.orders t2 on t1.CustomerID = t2.ClientCustomerID WHERE t1.CompanyName != '' and t2.ClientCustomerID = '"+Customerid+"'  GROUP BY t2.order_id order by t1.CompanyName asc limit 20000;";
 		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
 		while (rs.next()) {
 			String email = rs.getString("Email");
@@ -208,7 +208,17 @@ public class OrderDao {
 			order.setCustomerPhone(customerPhone);
 			order.setCustomerTerms(customerTerms);
 			order.setCustomerSalesperson(customerSalesperson);
-			
+			String sqlsSub = "SELECT Total,disc FROM exoticre_order.orders WHERE order_id = '"+order_id+"'  limit 500;";
+			ResultSet rs1 = DBConnection.getConnection().createStatement().executeQuery(sqlsSub);
+			Float totalDisc = 0.00f;
+			while (rs1.next()) {
+				Float Total = rs.getFloat("Total");
+				Integer disc = rs.getInt("disc");
+				Float subdisc = (Total*disc)/100;
+				totalDisc = totalDisc + subdisc;
+			}
+			String totalDiscs = String.format ("%.2f", totalDisc);
+			order.setDisc(totalDiscs);
 			order.setOrder_id(order_id);
 			order.setCustomer_date(Customer_date);
 			order.setAll_Total(All_Totals);
@@ -219,8 +229,7 @@ public class OrderDao {
             if((!paymentMethod.equals("") && amoutPaid != 0.00)){
             	payments1 = "YES";
             }*/
-            order.setPayments(paymentMethod);
-
+            order.setPaymentMethod(paymentMethod);          
 			lstOrder.add(order);
 		}
 		return lstOrder;

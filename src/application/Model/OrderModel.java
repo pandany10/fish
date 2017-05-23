@@ -26,7 +26,14 @@ public class OrderModel {
 	private String paymentMethod;
 	private String amoutPaid;
 	private String amoutUnPaid;
+	private String disc;
 	
+	public String getDisc() {
+		return disc;
+	}
+	public void setDisc(String disc) {
+		this.disc = disc;
+	}
 	public String getPaymentMethod() {
 		return paymentMethod;
 	}
