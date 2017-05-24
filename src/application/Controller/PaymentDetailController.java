@@ -75,6 +75,8 @@ public class PaymentDetailController extends Menu implements Initializable {
 	@FXML
 	private TextField txtPaid;	
 	@FXML
+	private TextField txtpaids;	
+	@FXML
 	private CheckBox chkPartial;	
 	@FXML
 	private RadioButton optCheck;
@@ -208,6 +210,7 @@ public class PaymentDetailController extends Menu implements Initializable {
 						  public void run() {
 							  txtTotal.setText(String.format("%.2f", lstProduct.get(0).getAll_Total()));
 							  txtPaid.setText(String.format("%.2f", lstProduct.get(0).getAmoutPaid()));
+							  txtpaids.setText(String.format("%.2f", lstProduct.get(0).getAmoutPaid()));
 							  txtCheckN.setText(lstProduct.get(0).getChecknumber());
 							  showPaymentMethod(lstProduct.get(0).getPaymentMethod());
 							  if(!txtTotal.getText().equals(txtPaid.getText())){

@@ -18,7 +18,6 @@ import application.Model.OrderModel;
 import application.Model.ProductModel;
 
 public class OrderDao {
-	//SELECT * FROM exoticre_order.customerfishpro t1 inner join exoticre_order.orders t2 on t1.CustomerID = t2.ClientCustomerID WHERE t1.CompanyName != "" and t2.amoutPaid != t2.All_Total  and t2.status != "COMPLETED" GROUP BY t2.order_id order by t1.CompanyName asc limit 20000;
 	public List<OrderModel> getOrderCustomerSale() throws ClassNotFoundException, SQLException{
 		List<OrderModel> lstOrder = new ArrayList<>();
 		String sql = "SELECT * FROM exoticre_order.customerfishpro t1 inner join exoticre_order.orders t2 on t1.CustomerID = t2.ClientCustomerID WHERE t1.CompanyName != '' and t2.amoutPaid != t2.All_Total  and t2.status != 'COMPLETED' GROUP BY t2.order_id order by t1.CompanyName asc limit 20000;";
@@ -60,7 +59,7 @@ public class OrderDao {
 	}
 	public List<OrderModel> getOrderCustomerSale(String Customerid) throws ClassNotFoundException, SQLException{
 		List<OrderModel> lstOrder = new ArrayList<>();
-		String sql = "SELECT * FROM exoticre_order.customerfishpro t1 inner join exoticre_order.orders t2 on t1.CustomerID = t2.ClientCustomerID WHERE t1.CompanyName != '' and t2.amoutPaid != t2.All_Total  and t2.status != 'COMPLETED' and t2.amoutPaid = '0.00' and t2.ClientCustomerID = '"+Customerid+"' GROUP BY t2.order_id order by t1.CompanyName asc limit 20000;";
+		String sql = "SELECT * FROM exoticre_order.customerfishpro t1 inner join exoticre_order.orders t2 on t1.CustomerID = t2.ClientCustomerID WHERE t1.CompanyName != '' and t2.amoutPaid != t2.All_Total  and t2.status != 'COMPLETED' and t2.amoutPaid = '0.00' and t2.ClientCustomerID = '"+Customerid+"' GROUP BY t2.order_id order by t2.Date desc limit 20000;";
 		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
 		while (rs.next()) {
 			String email = rs.getString("Email");
@@ -179,7 +178,7 @@ public class OrderDao {
 	}
 	public List<OrderModel> getOrderCustomerSale1(String Customerid) throws ClassNotFoundException, SQLException{
 		List<OrderModel> lstOrder = new ArrayList<>();
-		String sql = "SELECT * FROM exoticre_order.customerfishpro t1 inner join exoticre_order.orders t2 on t1.CustomerID = t2.ClientCustomerID WHERE t1.CompanyName != '' and t2.ClientCustomerID = '"+Customerid+"'  GROUP BY t2.order_id order by t1.CompanyName asc limit 20000;";
+		String sql = "SELECT * FROM exoticre_order.customerfishpro t1 inner join exoticre_order.orders t2 on t1.CustomerID = t2.ClientCustomerID WHERE t1.CompanyName != '' and t2.ClientCustomerID = '"+Customerid+"'  GROUP BY t2.order_id order by t2.Date desc limit 20000;";
 		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
 		while (rs.next()) {
 			String email = rs.getString("Email");
@@ -661,6 +660,7 @@ public class OrderDao {
 				+ "  WHERE order_id = "+order_id;       
 		int status = DBConnection.getConnection().createStatement().executeUpdate(sql1);
 		System.out.println("update payment Method: "+status);
+		// for new payment
 		return true;
 	}
 	public Boolean updateAmoutPaid(Integer order_id,Float amountPaid) throws ClassNotFoundException, SQLException {
@@ -669,6 +669,7 @@ public class OrderDao {
 				+ "  WHERE order_id = "+order_id;       
 		int status = DBConnection.getConnection().createStatement().executeUpdate(sql1);
 		System.out.println("update amount Paid: "+status);
+		// for new payment
 		return true;
 	}
 	public Boolean updateCheckN(Integer order_id,String  txtCheckN) throws ClassNotFoundException, SQLException {

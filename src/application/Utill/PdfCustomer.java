@@ -355,6 +355,12 @@ public class PdfCustomer {
 		//paragraph.setAlignment(Element.ALIGN_RIGHT);
 		return paragraph;
 	}
+	public Paragraph getRCText(String content, String font, Integer size, Integer style) {
+		Paragraph paragraph = new Paragraph(content,
+				FontFactory.getFont(font, size, style, BaseColor.RED));
+		paragraph.setAlignment(Element.ALIGN_CENTER);
+		return paragraph;
+	}
 	public void getBody(Document document) throws MalformedURLException, IOException, DocumentException {
 		//if(type.equals("sumary")){
 			String customerId = "";
@@ -596,7 +602,7 @@ public class PdfCustomer {
 			}else{
 				tblProducto.setWidthPercentage(100);
 				tblProducto.setWidths(new float[] { 13,13,17,13,13,13,18 });
-				//tmr continues
+			
 				for (OrderModel order : lstOrder) {
 					count++;
 				}
@@ -607,7 +613,7 @@ public class PdfCustomer {
 					}else{
 						if(((!customerIds.equals(order.getCustomerId()))  || (count == counts))){
 							customerIds = order.getCustomerId();
-							PdfPCell date = getRCell("TOTAL:", font,7, 0);
+							PdfPCell date = getRCCell("TOTAL:", font,7, 0);
 							date.setBorderWidthLeft(1);
 							date.setBorderColorLeft(BaseColor.DARK_GRAY);
 							date.setBorderColorBottom(BaseColor.DARK_GRAY);
@@ -618,26 +624,24 @@ public class PdfCustomer {
 							day.setBorderWidthBottom(1);
 							day.setBorderColorBottom(BaseColor.DARK_GRAY);
 							tblProducto.addCell(day);			
-							
-						/*	PdfPCell tp = getCellRR("$"+String.format ("%,.2f",totalP), font, 10, 0);
-							tp.setBorderWidthBottom(1);
-							tp.setBorderColorBottom(BaseColor.DARK_GRAY);
-							tblProduct.addCell(tp);*/
-							
+							tblProducto.addCell(day);			
+
 							PdfPCell ts = getCellRR("$"+String.format ("%,.2f",total), font, 7, 0);
 							ts.setBorderWidthBottom(1);
 							ts.setBorderColorBottom(BaseColor.DARK_GRAY);
 							tblProducto.addCell(ts);
 							
-							//PdfPCell totalc = getCellRR("", font, 7, 0);
 							PdfPCell totalc = getCellRR("$"+String.format ("%,.2f",totalP), font, 7, 0);
-
+							totalc.setBorderColorBottom(BaseColor.DARK_GRAY);
 							totalc.setBorderWidthBottom(1);
 							tblProducto.addCell(totalc);
 							
+							PdfPCell totalDis = getCellRR("$"+String.format ("%,.2f",totalUP), font, 7, 0);
+							totalDis.setBorderWidthBottom(1);
+							totalDis.setBorderColorBottom(BaseColor.DARK_GRAY);
+							tblProducto.addCell(totalDis);
 							
-					//		PdfPCell totaln = getCellRR("", font, 7, 0);
-							PdfPCell totaln = getCellRR("$"+String.format ("%,.2f",totalUP), font, 7, 0);
+							PdfPCell totaln = getCellRR("", font, 7, 0);
 
 							totaln.setBorderWidthBottom(1);
 							totaln.setBorderColorBottom(BaseColor.DARK_GRAY);
@@ -650,9 +654,9 @@ public class PdfCustomer {
 							totalP = 0.f;
 							totalUP = 0.f;
 							
-							tblProducto = new PdfPTable(5);
+							tblProducto = new PdfPTable(7);
 							tblProducto.setWidthPercentage(100);
-							tblProducto.setWidths(new float[] { 10,10,10,35,35 });
+							tblProducto.setWidths(new float[] { 13,13,17,13,13,13,18 });
 
 						}
 					}
@@ -703,30 +707,35 @@ public class PdfCustomer {
 					}
 					
 					
-					PdfPCell cusid = getCellCN(order.getOrder_id()+"", font,7, 0);
-					PdfPCell cusName = getCellCN(order.getCustomer_date(), font,7, 0);
+					PdfPCell invoice = getCellCN(order.getOrder_id()+"", font,7, 0);
+					PdfPCell date = getCellCN(order.getCustomer_date(), font,7, 0);
 
-					cusName.setBorderWidthLeft(1);
-					cusName.setBorderColorLeft(BaseColor.DARK_GRAY);
-					tblProducto.addCell(cusName);
+					invoice.setBorderWidthLeft(1);
+					invoice.setBorderColorLeft(BaseColor.DARK_GRAY);
 					
-					tblProducto.addCell(cusid);					
+					tblProducto.addCell(invoice);
+					tblProducto.addCell(date);	
 					
-					PdfPCell cusSale = getCellR("$"+order.getAll_Total(), font, 7, 0);
-					tblProducto.addCell(cusSale);	
+					PdfPCell chkref = getCellR(order.getPaymentMethod(), font, 7, 0);
+					tblProducto.addCell(chkref);	
 					
-					PdfPCell totalc = getCellR("$"+order.getAmoutPaid(), font, 7, 0);
-					tblProducto.addCell(totalc);
+					PdfPCell invoices = getCellR("$"+order.getAll_Total(), font, 7, 0);
+					tblProducto.addCell(invoices);	
 					
+					PdfPCell payment = getCellR("$"+order.getAmoutPaid(), font, 7, 0);
+					tblProducto.addCell(payment);
 					
-					PdfPCell totaln = getCellR("$"+order.getAmoutUnPaid(), font, 7, 0);
-					totaln.setBorderWidthRight(1);
-					totaln.setBorderColorRight(BaseColor.DARK_GRAY);
-					tblProducto.addCell(totaln);
+					PdfPCell discount = getCellR("$"+order.getDisc(), font, 7, 0);
+					tblProducto.addCell(discount);
+					
+					PdfPCell blanceFWD = getCellR("", font, 7, 0);
+					blanceFWD.setBorderWidthRight(1);
+					blanceFWD.setBorderColorRight(BaseColor.DARK_GRAY);
+					tblProducto.addCell(blanceFWD);
 					
 					total = total + Float.parseFloat(order.getAll_Total().replace(",", ""));
 					totalP = totalP + Float.parseFloat(order.getAmoutPaid().replace(",", ""));
-					totalUP = totalUP + Float.parseFloat(order.getAmoutUnPaid().replace(",", ""));
+					totalUP = totalUP + Float.parseFloat(order.getDisc().replace(",", ""));
 					
 
 				}
@@ -907,6 +916,15 @@ public class PdfCustomer {
 		cell.setBorder(Rectangle.NO_BORDER);
 		return cell;
 	}
+	public PdfPCell getRCCell(String text, String font, Integer size, Integer style ) {
+		PdfPCell cell = new PdfPCell();
+		cell.addElement(getRCText(text, font, size, style));
+		cell.setUseAscender(true);
+		cell.setUseDescender(false);
+		cell.setPadding(2);
+		cell.setBorder(Rectangle.NO_BORDER);
+		return cell;
+	}
 	public PdfPCell getCellFix(String text, String font, Integer size, Integer style ) {
 		PdfPCell cell = new PdfPCell();
 		cell.addElement(getText(text, font, size, style));
@@ -920,28 +938,7 @@ public class PdfCustomer {
 		PdfPTable header1 = new PdfPTable(3);
 		header1.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
 		header1.setWidthPercentage(100);
-		//PdfPCell mid = new PdfPCell();
-		//mid.addElement(getText("", font, 12, 0));
-		//mid.setBorder(Rectangle.NO_BORDER);
-		//mid.setRowspan(6);
-		//header1.addCell(getCell("BILL TO:", font, 14, 1));
-		//header1.addCell(mid);
-		//header1.addCell(getCell("SHIP TO:", font, 14, 1));
 
-		/*header1.addCell(getCell(bill.getCompanyName(), font, 12, 0));
-		header1.addCell(getCell(ship.getCompanyName(), font, 12, 0));
-
-		header1.addCell(getCell(bill.getAddress(), font, 12, 0));
-		header1.addCell(getCell(ship.getAddress(), font, 12, 0));
-
-		header1.addCell(getCell(bill.getAddress2(), font, 12, 0));
-		header1.addCell(getCell(ship.getAddress2(), font, 12, 0));
-
-		header1.addCell(getCell(bill.getCity() + ", " + bill.getStates() + " " + bill.getZip(), font, 12, 0));
-		header1.addCell(getCell(ship.getCity() + ", " + ship.getStates() + " " + ship.getZip(), font, 12, 0));
-
-		header1.addCell(getCell(bill.getPhone1(), font, 12, 0));
-		header1.addCell(getCell(ship.getPhone1(), font, 12, 0));*/
 		header1.setWidths(new float[] { 40, 20, 40 });
 		document.add(header1);
 		
@@ -957,24 +954,6 @@ public class PdfCustomer {
 		body.addCell(getCellC("P O NUMBER", font, 12, 1,0,1,1,1));
 		body.addCell(getCellC("ORDER NUMBER", font, 12, 1,0,1,1,1));
 
-		/*body.addCell(getCellC(currentOrder.getCustomer_date(), font, 12, 0,1,0,1,1));
-		body.addCell(getCellC(orderInfo.getCustomer_ship(), font, 12, 0,0,0,1,1));
-		body.addCell(getCellC(orderInfo.getFob(), font, 12, 0,0,0,1,1));
-		body.addCell(getCellC(orderInfo.getPonumber() + "", font, 12, 0,0,0,1,1));
-		body.addCell(getCellC(currentOrder.getOrder_id() + "", font, 12, 0,0,0,1,1));
-
-		body.addCell(getCellC("DUE DATE", font, 12, 1,1,0,1,1));
-		body.addCell(getCellC("TERMS ", font, 12, 1,0,0,1,1));
-		body.addCell(getCellC("SALESPERSON ", font, 12, 1,0,0,1,1));
-		body.addCell(getCellC("ARRIVE", font, 12, 1,0,0,1,1));
-		body.addCell(getCellC("TRACKING NUMBER", font, 12, 1,0,0,1,1));
-
-		body.addCell(getCellC(currentOrder.getCustomer_date(), font, 12, 0,1,0,1,1));
-		body.addCell(getCellC(orderInfo.getTerms(), font, 12, 0,0,0,1,1));
-		body.addCell(getCellC(orderInfo.getSalesperson(), font, 12, 0,0,0,1,1));
-		body.addCell(getCellC("", font, 12, 0,0,0,1,1));
-		body.addCell(getCellC(orderInfo.getAwb(), font, 12, 0,0,0,1,1));*/
-		//document.add(body);
 		Paragraph paragraph1s = new Paragraph();
 		paragraph1s.setSpacingBefore(2);
 		document.add(paragraph1s);
@@ -1011,28 +990,7 @@ public class PdfCustomer {
 		PdfPTable header1 = new PdfPTable(3);
 		header1.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
 		header1.setWidthPercentage(100);
-		//PdfPCell mid = new PdfPCell();
-		//mid.addElement(getText("", font, 12, 0));
-		//mid.setBorder(Rectangle.NO_BORDER);
-		//mid.setRowspan(6);
-		//header1.addCell(getCell("BILL TO:", font, 14, 1));
-		//header1.addCell(mid);
-		//header1.addCell(getCell("SHIP TO:", font, 14, 1));
 
-		/*header1.addCell(getCell(bill.getCompanyName(), font, 12, 0));
-		header1.addCell(getCell(ship.getCompanyName(), font, 12, 0));
-
-		header1.addCell(getCell(bill.getAddress(), font, 12, 0));
-		header1.addCell(getCell(ship.getAddress(), font, 12, 0));
-
-		header1.addCell(getCell(bill.getAddress2(), font, 12, 0));
-		header1.addCell(getCell(ship.getAddress2(), font, 12, 0));
-
-		header1.addCell(getCell(bill.getCity() + ", " + bill.getStates() + " " + bill.getZip(), font, 12, 0));
-		header1.addCell(getCell(ship.getCity() + ", " + ship.getStates() + " " + ship.getZip(), font, 12, 0));
-
-		header1.addCell(getCell(bill.getPhone1(), font, 12, 0));
-		header1.addCell(getCell(ship.getPhone1(), font, 12, 0));*/
 		header1.setWidths(new float[] { 40, 20, 40 });
 		document.add(header1);
 		
@@ -1048,24 +1006,7 @@ public class PdfCustomer {
 		body.addCell(getCellC("P O NUMBER", font, 12, 1,0,1,1,1));
 		body.addCell(getCellC("ORDER NUMBER", font, 12, 1,0,1,1,1));
 
-		/*body.addCell(getCellC(currentOrder.getCustomer_date(), font, 12, 0,1,0,1,1));
-		body.addCell(getCellC(orderInfo.getCustomer_ship(), font, 12, 0,0,0,1,1));
-		body.addCell(getCellC(orderInfo.getFob(), font, 12, 0,0,0,1,1));
-		body.addCell(getCellC(orderInfo.getPonumber() + "", font, 12, 0,0,0,1,1));
-		body.addCell(getCellC(currentOrder.getOrder_id() + "", font, 12, 0,0,0,1,1));
 
-		body.addCell(getCellC("DUE DATE", font, 12, 1,1,0,1,1));
-		body.addCell(getCellC("TERMS ", font, 12, 1,0,0,1,1));
-		body.addCell(getCellC("SALESPERSON ", font, 12, 1,0,0,1,1));
-		body.addCell(getCellC("ARRIVE", font, 12, 1,0,0,1,1));
-		body.addCell(getCellC("TRACKING NUMBER", font, 12, 1,0,0,1,1));
-
-		body.addCell(getCellC(currentOrder.getCustomer_date(), font, 12, 0,1,0,1,1));
-		body.addCell(getCellC(orderInfo.getTerms(), font, 12, 0,0,0,1,1));
-		body.addCell(getCellC(orderInfo.getSalesperson(), font, 12, 0,0,0,1,1));
-		body.addCell(getCellC("", font, 12, 0,0,0,1,1));
-		body.addCell(getCellC(orderInfo.getAwb(), font, 12, 0,0,0,1,1));*/
-		//document.add(body);
 		Paragraph paragraph1s = new Paragraph();
 		paragraph1s.setSpacingBefore(2);
 		document.add(paragraph1s);
@@ -1073,12 +1014,10 @@ public class PdfCustomer {
 		tblProduct.setWidthPercentage(100);
 		tblProduct.addCell(getCellC("CUST#", font, 8, 1,1,1,1,1));
 		tblProduct.addCell(getCellC("CUSTOMER NAME", font, 8, 1,0,1,1,1));
-		//tblProduct.addCell(getCellC("PENDING TOTAL", font, 12, 1,0,1,1,1));
 		tblProduct.addCell(getCellC("TERMS", font, 8, 1,0,1,1,1));
 		tblProduct.addCell(getCellC("SLSMN", font, 8, 1,0,1,1,1)); 
 		tblProduct.addCell(getCellC("PHONE", font, 8, 1,0,1,1,1)); 
 		tblProduct.addCell(getCellC("CONTACT ", font, 8, 1,0,1,1,1));
-		//tblProduct.setWidths(new float[] { 15, 15,23,23,24 });
 		tblProduct.setWidths(new float[] { 7,30,15,7,15,26 });
 		/*if(type.equals("sumary")){
 			document.add(tblProduct);
@@ -1104,7 +1043,6 @@ public class PdfCustomer {
 		PdfPTable header = new PdfPTable(3);
 		header.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
 		header.setWidthPercentage(100);
-		// header.setHorizontalAlignment(Element.ALIGN_RIGHT);
 		PdfPCell pcell1 = new PdfPCell();
 		pcell1.addElement(getText("Date: " +todayDate, font, 12, 1));
 		PdfPCell pcell2 = new PdfPCell();
@@ -1194,9 +1132,7 @@ public class PdfCustomer {
 
 			document.close();
 
-			// section1.add(image2);
 		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

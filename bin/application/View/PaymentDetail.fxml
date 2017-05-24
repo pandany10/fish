@@ -440,6 +440,18 @@
                   <Font size="18.0" />
                </font>
             </RadioButton>
+            <TextField fx:id="txtpaids" disable="true" layoutX="989.0" layoutY="156.0" prefHeight="25.0" prefWidth="122.0">
+               <styleClass>
+                  <String fx:value="clbold" />
+                  <String fx:value="clright" />
+                  <String fx:value="boderblue" />
+               </styleClass>
+            </TextField>
+            <Label layoutX="877.0" layoutY="155.0" prefHeight="27.0" prefWidth="113.0" text="Already Paid:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
    </children>
