@@ -366,9 +366,9 @@ public class CustomerDao {
 			 Customer.setZip(rs.getString("Zip"));
 			 Customer.setPhone1(rs.getString("Phone1"));
 			 String Terms =rs.getString("Terms");
-			 if(Terms.equals("null")){
-				 Terms = ""; 
-			 }
+			// if(Terms.equals("null")){
+			//	 Terms = ""; 
+			// }
 			 Customer.setTerms(Terms);
 			 Customer.setCarrier(rs.getString("carrier"));
 			 Customer.setSalesperson(rs.getString("Salesperson"));

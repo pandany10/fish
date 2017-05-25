@@ -515,17 +515,17 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="574.0" prefHeight="25.0" prefWidth="74.0" text="eport F6">
+            <Label layoutX="551.0" prefHeight="25.0" prefWidth="74.0" text="eport F6">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="655.0" prefHeight="25.0" prefWidth="81.0" text="nvoicer F7">
+            <Label layoutX="658.0" prefHeight="25.0" prefWidth="74.0" text="nvoicer F7">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="747.0" prefHeight="25.0" prefWidth="74.0" text="illing F8">
+            <Label layoutX="781.0" prefHeight="25.0" prefWidth="58.0" text="illing F8">
                <effect>
                   <Blend />
                </effect>
@@ -549,7 +549,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="834.0" prefHeight="25.0" prefWidth="106.0" text="ccounting F9">
+            <Label layoutX="849.0" layoutY="1.0" prefHeight="25.0" prefWidth="94.0" text="ccounting F9">
                <effect>
                   <Blend />
                </effect>
@@ -577,22 +577,22 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="565.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="R">
+            <Label layoutX="541.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="R">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="651.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="I">
+            <Label layoutX="654.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="I">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="739.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="B">
+            <Label layoutX="773.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="B">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="824.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="A">
+            <Label layoutX="839.0" layoutY="1.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="A">
                <font>
                   <Font size="14.0" />
                </font>
@@ -644,6 +644,11 @@
                </font>
             </Label>
             <Label layoutX="41.0" layoutY="2.0" prefHeight="25.0" prefWidth="43.0" text="o F1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="622.0" prefHeight="25.0" prefWidth="74.0">
                <font>
                   <Font size="14.0" />
                </font>

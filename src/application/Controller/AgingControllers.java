@@ -180,7 +180,11 @@ public class AgingControllers extends Menu implements Initializable {
 	  		// show result
 	  		twSearchCus.getItems().clear();
 	  		twSearchCus.getItems().addAll(lstCustomer);
-	  		twSearchCus.getSelectionModel().select(0);
+	  		twInvoice.getItems().clear();
+	  		if(lstCustomer.size()>0){
+		  		twSearchCus.getSelectionModel().select(0);
+	  			explanCustomer();
+	  		}
 			} catch (ClassNotFoundException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -192,9 +196,9 @@ public class AgingControllers extends Menu implements Initializable {
     	actionSearchCus();
     }
 	public void explanCustomer(MouseEvent event) throws IOException {
-		if(event.getClickCount() == 2){
+	//	if(event.getClickCount() == 2){
 			explanCustomer();
-		}
+	//	}
 	}	
 	public void explanCustomer1(MouseEvent event) throws IOException {
 		if(event.getClickCount() == 2){
@@ -365,7 +369,7 @@ public class AgingControllers extends Menu implements Initializable {
 				c = twSearchCus.getSelectionModel().getSelectedItem();
 				System.out.println(c.getCustomerID());
 				CustomerID = c.getCustomerID();
-				isShowSearchCus(false);
+			//	isShowSearchCus(false);
 				twInvoice.getItems().clear();
 				Thread thLoadData = new Thread() {
 					@SuppressWarnings("deprecation")
@@ -597,6 +601,14 @@ public class AgingControllers extends Menu implements Initializable {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					}
+		      }
+		      if(event.getCode() == KeyCode.DOWN || event.getCode() == KeyCode.UP  ){
+		    	  try {
+						explanCustomer();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 		      }
 		   }
