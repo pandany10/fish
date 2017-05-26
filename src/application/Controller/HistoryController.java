@@ -49,6 +49,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.WindowEvent;
 
 public class HistoryController extends Menu implements Initializable {
 	@FXML
@@ -88,6 +89,8 @@ public class HistoryController extends Menu implements Initializable {
 	@FXML
 	public Button btnEmail;	
 	String email = "";
+	String emailTo = "";
+	boolean isCustomEmail = false;
 	private boolean emailAgingWait = false;
 	private boolean emailReceivablesWait = false;
 	private boolean emailHistoryWait = false;
@@ -95,7 +98,81 @@ public class HistoryController extends Menu implements Initializable {
 	private OrderDao orderDao = new OrderDao();
 	@FXML
 	public Button btnPrint;	
-    public void gotoEmail(ActionEvent event) throws IOException {          
+    public void gotoEmail(ActionEvent event) throws IOException {   
+    	ConfirmationEmail a = new ConfirmationEmail(prevStage, "Confirmation");
+        a.setOnCloseRequest(new EventHandler<WindowEvent>() {
+             @Override
+             public void handle(WindowEvent t) {
+                a.chkClose = true;
+             }
+         }); 
+		a.show();
+		a.setAlwaysOnTop(true);
+		a.stage.setOnHiding(new EventHandler<WindowEvent>() {
+
+            @Override
+            public void handle(WindowEvent event) {
+                Platform.runLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        System.out.println("Application Closed by click to Close Button(X)");
+                        System.out.println(a.postStatus);
+                        System.out.println(event.getEventType());
+                        if( a.chkClose == false){
+	                        if(a.postStatus == true){
+	                        	try {
+									Report11E();
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+	                        }else{
+	                        	ConfirmationEmailField b = new ConfirmationEmailField(prevStage, "Confirmation");
+	                            b.setOnCloseRequest(new EventHandler<WindowEvent>() {
+	                                 @Override
+	                                 public void handle(WindowEvent t) {
+	                                    a.chkClose = true;
+	                                 }
+	                             }); 
+	                    		b.show();
+	                    		b.setAlwaysOnTop(true);
+	                    		b.stage.setOnHiding(new EventHandler<WindowEvent>() {
+
+	                                @Override
+	                                public void handle(WindowEvent event) {
+	                                    Platform.runLater(new Runnable() {
+
+	                                        @Override
+	                                        public void run() {
+	                                            System.out.println("Application Closed by click to Close Button(X)");
+	                                            System.out.println(a.postStatus);
+	                                            System.out.println(event.getEventType());
+	                                            if( b.chkClose == false){
+	                    	                        if(b.postStatus == true){
+	                    	                        	
+	                    	                        }else{
+	                    	                        	//
+	                    	                        	isCustomEmail = true;
+	                    	                        	emailTo = b.email;
+	                    	                        	try {
+															Report11E();
+														} catch (IOException e) {
+															// TODO Auto-generated catch block
+															e.printStackTrace();
+														}
+	                    	                        }
+	                                            }
+	                                        }
+	                                    });
+	                                }
+	                            });
+	                        }
+                        }
+                    }
+                });
+            }
+        });
     	Report11E();
      }
 	public void Report11E() throws IOException { 
@@ -144,6 +221,9 @@ public class HistoryController extends Menu implements Initializable {
 		//body
 		//attach
 		String emailto = email;
+		if(isCustomEmail == true){
+			emailto = emailTo;
+		}
 		String body ="<div><br><br><br></div><div>";
 		String signature = "<span style='font-size:11.0pt;'>Francisco Sanchez (frankie)</span><br><br><br>";
 		signature = signature +"<a href='tel:(310)%20648-7258' value='+13106487258' target='_blank'>310-648-7258 ext. 11</a><br>";

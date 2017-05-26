@@ -784,16 +784,6 @@ public class Menu {
 		     	        	}
 		     	        }
 	     	       }
-	     	     /*  if (evt.getCode().equals(KeyCode.F8)) {
-	     	    	  try {
-	     	    		gotoInvoices();
-	     	    		
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	     	       } */
-	     	        //
 	     	    }
 	     	});
 		    scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {

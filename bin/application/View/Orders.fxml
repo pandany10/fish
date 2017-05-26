@@ -461,7 +461,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="1155.0" layoutY="2.0" prefHeight="25.0" prefWidth="90.0" text="uit F12">
+            <Label layoutX="1184.0" layoutY="2.0" prefHeight="25.0" prefWidth="74.0" text="uit F12">
                <effect>
                   <Blend />
                </effect>
@@ -469,17 +469,17 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="1144.0" layoutY="2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="Q">
+            <Label layoutX="1173.0" layoutY="2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="Q">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="995.0" layoutY="2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="L">
+            <Label layoutX="1081.0" layoutY="2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="L">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="1002.0" layoutY="2.0" prefHeight="25.0" prefWidth="81.0" text="ogout F11">
+            <Label layoutX="1088.0" layoutY="2.0" prefHeight="25.0" prefWidth="81.0" text="ogout F11">
                <effect>
                   <Blend />
                </effect>
@@ -487,27 +487,27 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="841.0" layoutY="2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" text="E">
+            <Label layoutX="927.0" layoutY="2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" text="E">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="849.0" layoutY="2.0" prefHeight="25.0" prefWidth="12.0" style="-: ;" styleClass="underlines" text="x">
+            <Label layoutX="936.0" layoutY="2.0" prefHeight="25.0" prefWidth="12.0" style="-: ;" styleClass="underlines" text="x">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="722.0" layoutY="2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="A">
+            <Label layoutX="809.0" layoutY="2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="A">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="637.0" layoutY="2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="B">
+            <Label layoutX="726.0" layoutY="2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="B">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="549.0" layoutY="2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="I">
+            <Label layoutX="623.0" layoutY="2.0" prefHeight="25.0" prefWidth="18.0" style="-: ;" styleClass="underlines" text="I">
                <font>
                   <Font size="14.0" />
                </font>
@@ -537,7 +537,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="732.0" layoutY="2.0" prefHeight="25.0" prefWidth="106.0" text="ccounting F9">
+            <Label layoutX="819.0" layoutY="2.0" prefHeight="25.0" prefWidth="106.0" text="ccounting F9">
                <effect>
                   <Blend />
                </effect>
@@ -553,7 +553,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="856.0" layoutY="2.0" prefHeight="25.0" prefWidth="138.0" text="press Payment F10">
+            <Label layoutX="942.0" layoutY="2.0" prefHeight="25.0" prefWidth="138.0" text="press Payment F10">
                <effect>
                   <Blend />
                </effect>
@@ -561,7 +561,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="645.0" layoutY="2.0" prefHeight="25.0" prefWidth="74.0" text="illing F8">
+            <Label layoutX="734.0" layoutY="2.0" prefHeight="25.0" prefWidth="74.0" text="illing F8">
                <effect>
                   <Blend />
                </effect>
@@ -569,7 +569,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="553.0" layoutY="2.0" prefHeight="25.0" prefWidth="81.0" text="nvoicer F7">
+            <Label layoutX="627.0" layoutY="2.0" prefHeight="25.0" prefWidth="81.0" text="nvoicer F7">
                <font>
                   <Font size="14.0" />
                </font>
@@ -640,6 +640,11 @@
                <effect>
                   <Blend />
                </effect>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblf7" layoutX="548.0" layoutY="2.0" prefHeight="25.0" prefWidth="81.0" text="Create New">
                <font>
                   <Font size="14.0" />
                </font>

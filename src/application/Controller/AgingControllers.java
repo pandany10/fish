@@ -189,6 +189,108 @@ public class AgingControllers extends Menu implements Initializable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			};
+		  }else{
+			  twSearchCus.getItems().clear();
+			  twInvoice.getItems().clear();
+			  twInvoice.setPlaceholder(new Label("Please wait… Searching Database."));
+
+				Thread thLoadData = new Thread() {
+					@SuppressWarnings("deprecation")
+					public void run() {
+							Date date = new Date();
+							String tddate = dateFormat.format(date);							
+							List<OrderModel> lstOrder;
+							try {
+								lstOrder = orderDao.getOrderCustomerSale();
+									Platform.runLater(new Runnable() {
+										  @Override
+										  public void run() {
+											  	twInvoice.refresh();
+												if(lstOrder.size() == 0){
+													twInvoice.setPlaceholder(new Label("No found."));
+												}else{
+													//getOrderByCus(lstOrderCus.get(0).getCustomerId());
+													System.out.println(lstOrder.size());
+													List<OrderModel> lstOrderConvert = new ArrayList<>();
+													if(lstOrder.size() > 0){
+														String currentCusId = "";
+														Float total = 0.f;
+														Float totalP = 0.f;
+														Float totalUP = 0.f;
+														OrderModel or = new OrderModel();
+														OrderModel orderConvert = new OrderModel();
+														for (OrderModel order : lstOrder) {
+
+															if(total>0){
+															if(( !currentCusId.equals(order.getCustomerId())) ){
+																or.setAll_Total("$"+String.format ("%,.2f",total));
+																or.setAmoutPaid("$"+String.format ("%,.2f",totalP));
+																or.setAmoutUnPaid("$"+String.format ("%,.2f",totalUP));
+																or.setCustomer_date("Total:");
+																total = 0.f;
+																totalP = 0.f;
+																totalUP = 0.f;
+																lstOrderConvert.add(or);
+																or = new OrderModel();
+															}
+															}
+															if(( !currentCusId.equals(order.getCustomerId())) ){
+																orderConvert.setCustomerId(order.getCustomerId());
+																orderConvert.setCustomerName(order.getCustomerName());
+																orderConvert.setCustomerPhone(order.getCustomerPhone());
+																orderConvert.setCustomerTerms(order.getCustomerTerms());
+																orderConvert.setCustomerSalesperson(order.getCustomerSalesperson());
+																lstOrderConvert.add(orderConvert);
+																orderConvert = new OrderModel();
+																currentCusId = order.getCustomerId();
+
+
+															}
+															total = total + Float.parseFloat(order.getAll_Total().replace(",", ""));
+															totalP = totalP + Float.parseFloat(order.getAmoutPaid().replace(",", ""));
+															totalUP = totalUP + Float.parseFloat(order.getAmoutUnPaid().replace(",", ""));
+															order.setAll_Total("$"+order.getAll_Total());
+															order.setAmoutPaid("$"+order.getAmoutPaid());
+															order.setAmoutUnPaid("$"+order.getAmoutUnPaid());
+															orderConvert.setCustomer_date(order.getCustomer_date());
+															orderConvert.setOrder_id(order.getOrder_id());
+															orderConvert.setAll_Total(order.getAll_Total());
+															lstOrderConvert.add(orderConvert);
+															orderConvert = new OrderModel();
+														}
+														or.setAll_Total("$"+String.format ("%,.2f",total));
+														or.setAmoutPaid("$"+String.format ("%,.2f",totalP));
+														or.setAmoutUnPaid("$"+String.format ("%,.2f",totalUP));
+														or.setCustomer_date("Total:");
+														lstOrderConvert.add(or);
+													}
+														//pdf.Prints(lstOrder,tddate);
+													twInvoice.getItems().clear();
+													twInvoice.getItems().addAll(lstOrderConvert);
+														Platform.runLater(new Runnable() {
+															  @Override
+															  public void run() {
+																  	twInvoice.refresh();
+																	if(lstOrder.size() == 0){
+																		twInvoice.setPlaceholder(new Label("No found."));
+																	}else{
+																		
+																	}
+															  }
+														});
+												}
+										  }
+									});
+
+							} catch (ClassNotFoundException | SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+					}
+				};
+
+				thLoadData.start();	
 		  }
 		}
 	
@@ -323,6 +425,13 @@ public class AgingControllers extends Menu implements Initializable {
 						String cus = o.getCustomerId();
 						isShowPopup = true;
 						ConfirmationCustomer a = new ConfirmationCustomer(prevStage, "Confirmation");
+				        a.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				             @Override
+				             public void handle(WindowEvent t) {
+				                System.out.println("111");
+				                a.chkClose = true;
+				             }
+				         }); 
 						a.show();
 						a.setAlwaysOnTop(true);
 						a.stage.setOnHiding(new EventHandler<WindowEvent>() {
@@ -336,22 +445,24 @@ public class AgingControllers extends Menu implements Initializable {
 				                        System.out.println("Application Closed by click to Close Button(X)");
 				                        System.out.println(a.postStatus);
 				                        isShowPopup = false;
-				                        if(a.postStatus == true){
-				                        	try {
-												gotoReceivables(cus);
-											} catch (IOException e) {
-												// TODO Auto-generated catch block
-												e.printStackTrace();
-											}
-				                        }else{
-				                        		try {
-													gotoHistory(cus);
+				                        System.out.println(event.getEventType());
+				                        if( a.chkClose == false){
+					                        if(a.postStatus == true){
+					                        	try {
+													gotoReceivables(cus);
 												} catch (IOException e) {
 													// TODO Auto-generated catch block
 													e.printStackTrace();
 												}
+					                        }else{
+					                        		try {
+														gotoHistory(cus);
+													} catch (IOException e) {
+														// TODO Auto-generated catch block
+														e.printStackTrace();
+													}
+					                        }
 				                        }
-				                        
 				                    }
 				                });
 				            }

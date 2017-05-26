@@ -63,6 +63,9 @@ public class OrdersController extends Menu implements Initializable {
 	private String str_filters = screens[1];
 	String screen = "final";
 	
+	@FXML
+	private Label lblf7;
+	
 	public boolean stateEdit = false;
 	
 	public String getScreen() {
@@ -80,6 +83,7 @@ public class OrdersController extends Menu implements Initializable {
 
 	public void setScreen(String screen) {
 		this.screen = screen;
+		lblf7.setVisible(true);
 		if(screen.equals("Express")){
 			twOrder.getItems().clear();
 			Thread thLoadData = new Thread() {
@@ -342,6 +346,7 @@ public class OrdersController extends Menu implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		inits();
 		isShowOrdes(true);
+		lblf7.setVisible(false);
 		menuItemPackingList.setAccelerator(KeyCombination.keyCombination("Ctrl+K"));
 
 		menuItemPackingList.setOnAction(new EventHandler<ActionEvent>() {

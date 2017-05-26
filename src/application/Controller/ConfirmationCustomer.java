@@ -20,7 +20,7 @@ import javafx.stage.StageStyle;
             Stage stage;
             BorderPane root;
             static boolean postStatus;
- 
+            boolean chkClose = false;
             public ConfirmationCustomer( Stage owner, String title){
             root = new BorderPane();
             stage = this;

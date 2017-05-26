@@ -284,7 +284,7 @@
                </children>
             </Pane>
             <Button fx:id="btnPrint" layoutX="1122.0" layoutY="6.0" mnemonicParsing="false" onAction="#gotoPrint" prefHeight="25.0" prefWidth="68.0" text="Print" />
-            <Button fx:id="btnEmail" layoutX="1231.0" layoutY="6.0" mnemonicParsing="false" onAction="#gotoEmail" prefHeight="25.0" prefWidth="145.0" text="Email To Customer" />
+            <Button fx:id="btnEmail" layoutX="1231.0" layoutY="6.0" mnemonicParsing="false" onAction="#gotoEmail" prefHeight="25.0" prefWidth="145.0" text="Send Email " />
          </children>
       </Pane>
       <Label alignment="CENTER" layoutX="272.0" layoutY="30.0" prefHeight="30.0" prefWidth="771.0" style="-fx-font-size: 20; -fx-font-weight: bold;" styleClass="clbold" text="EXOTIC REEF IMPORTS, INC.  ACCOUNT STATEMENT REPORT">
