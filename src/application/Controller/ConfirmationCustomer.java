@@ -2,6 +2,7 @@ package application.Controller;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -79,12 +80,14 @@ import javafx.stage.StageStyle;
             		}
             	}
         	});
- 
- 
+           // yes.setPadding(u);
+          //  no.setPadding(u);
             HBox buttonPane = new HBox();
-            buttonPane.setSpacing(10);
+            buttonPane.setSpacing(5);
             buttonPane.getChildren().addAll(yes,no);
             buttonPane.setAlignment(Pos.CENTER);
+            Insets u = new Insets(0.0f,0.0f,4.0f,0.0f);
+            buttonPane.setPadding(u);
             root.setBottom(buttonPane);
  
         //   stage.show();

@@ -28,13 +28,16 @@ import application.Model.OrderDetailModel;
 import application.Model.OrderModel;
 import application.Utill.Menu;
 import application.Utill.Pdf;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.WindowEvent;
 
 public class EmailController extends Menu implements Initializable {
 
@@ -53,7 +56,7 @@ public class EmailController extends Menu implements Initializable {
 	public TextArea txtBody;
 	@FXML
 	public TextField txtAttach;
-	
+    boolean isShowPopup = false;
 	public int orderid =0;
 	private List<OrderModel> currentOrder;
 	private OrderDao orderDao = new OrderDao();
@@ -185,6 +188,40 @@ public class EmailController extends Menu implements Initializable {
 		     Transport.send(message);  
 		  
 		     System.out.println("message sent successfully...");  
+		   //popup success show
+				isShowPopup = true;
+				ConfirmationEmailMessage a = new ConfirmationEmailMessage(prevStage, "Confirmation");
+		        a.setOnCloseRequest(new EventHandler<WindowEvent>() {
+		             @Override
+		             public void handle(WindowEvent t) {
+		                a.chkClose = true;
+		             }
+		         }); 
+				a.show();
+				a.setAlwaysOnTop(true);
+				a.stage.setOnHiding(new EventHandler<WindowEvent>() {
+
+		            @Override
+		            public void handle(WindowEvent event) {
+		                Platform.runLater(new Runnable() {
+
+		                    @Override
+		                    public void run() {
+		                        System.out.println("Application Closed by click to Close Button(X)");
+		                        System.out.println(a.postStatus);
+		                        isShowPopup = false;
+		                        System.out.println(event.getEventType());
+		                        if( a.chkClose == false){
+			                        if(a.postStatus == true){
+			                        	
+			                        }else{
+			                        	
+			                        }
+		                        }
+		                    }
+		                });
+		            }
+		        });
 		     lblstatus.setText("Send Email Success.");
 		     btnSend.setDisable(true);
 		     } catch (MessagingException e) {e.printStackTrace();

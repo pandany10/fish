@@ -15,7 +15,6 @@ import application.Dao.OrderDao;
 import application.Model.CustomerModel;
 import application.Model.OrderDetailModel;
 import application.Model.OrderModel;
-import application.Model.ProductModel;
 import application.Utill.Menu;
 import application.Utill.Pdf;
 import application.Utill.PdfCustomer;
@@ -45,7 +44,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -184,6 +182,8 @@ public class AgingControllers extends Menu implements Initializable {
 	  		if(lstCustomer.size()>0){
 		  		twSearchCus.getSelectionModel().select(0);
 	  			explanCustomer();
+	  		}else{
+	  			twSearchCus.setPlaceholder(new Label("That customer was not found in aging report."));
 	  		}
 			} catch (ClassNotFoundException | SQLException e) {
 				// TODO Auto-generated catch block
@@ -301,6 +301,58 @@ public class AgingControllers extends Menu implements Initializable {
 	//	if(event.getClickCount() == 2){
 			explanCustomer();
 	//	}
+	if(event.getClickCount() == 2){
+		//
+			CustomerModel c = new CustomerModel();
+			c = twSearchCus.getSelectionModel().getSelectedItem();
+			System.out.println(c.getCustomerID());
+			String cus = c.getCustomerID();
+		
+			isShowPopup = true;
+			ConfirmationCustomer a = new ConfirmationCustomer(prevStage, "Confirmation");
+	        a.setOnCloseRequest(new EventHandler<WindowEvent>() {
+	             @Override
+	             public void handle(WindowEvent t) {
+	                a.chkClose = true;
+	             }
+	         }); 
+			a.show();
+			a.setAlwaysOnTop(true);
+			a.stage.setOnHiding(new EventHandler<WindowEvent>() {
+	
+	            @Override
+	            public void handle(WindowEvent event) {
+	                Platform.runLater(new Runnable() {
+	
+	                    @Override
+	                    public void run() {
+	                        System.out.println("Application Closed by click to Close Button(X)");
+	                        System.out.println(a.postStatus);
+	                        isShowPopup = false;
+	                        System.out.println(event.getEventType());
+	                        if( a.chkClose == false){
+		                        if(a.postStatus == true){
+		                        	try {
+										gotoReceivables(cus);
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+		                        }else{
+		                        		try {
+											gotoHistory(cus);
+										} catch (IOException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+		                        }
+	                        }
+	                    }
+	                });
+	            }
+	        }); 
+		
+	}	
 	}	
 	public void explanCustomer1(MouseEvent event) throws IOException {
 		if(event.getClickCount() == 2){
@@ -428,7 +480,6 @@ public class AgingControllers extends Menu implements Initializable {
 				        a.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				             @Override
 				             public void handle(WindowEvent t) {
-				                System.out.println("111");
 				                a.chkClose = true;
 				             }
 				         }); 
@@ -706,12 +757,60 @@ public class AgingControllers extends Menu implements Initializable {
 		    	  
 		      }else{ 
 		    	  if (event.getCode() == KeyCode.ENTER) {		
-		    		  try {
+		    		/*  try {
 						explanCustomer();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
+					}*/
+		  			CustomerModel c = new CustomerModel();
+					c = twSearchCus.getSelectionModel().getSelectedItem();
+					System.out.println(c.getCustomerID());
+					String cus = c.getCustomerID();
+				
+					isShowPopup = true;
+					ConfirmationCustomer a = new ConfirmationCustomer(prevStage, "Confirmation");
+			        a.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			             @Override
+			             public void handle(WindowEvent t) {
+			                a.chkClose = true;
+			             }
+			         }); 
+					a.show();
+					a.setAlwaysOnTop(true);
+					a.stage.setOnHiding(new EventHandler<WindowEvent>() {
+			
+			            @Override
+			            public void handle(WindowEvent event) {
+			                Platform.runLater(new Runnable() {
+			
+			                    @Override
+			                    public void run() {
+			                        System.out.println("Application Closed by click to Close Button(X)");
+			                        System.out.println(a.postStatus);
+			                        isShowPopup = false;
+			                        System.out.println(event.getEventType());
+			                        if( a.chkClose == false){
+				                        if(a.postStatus == true){
+				                        	try {
+												gotoReceivables(cus);
+											} catch (IOException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+				                        }else{
+				                        		try {
+													gotoHistory(cus);
+												} catch (IOException e) {
+													// TODO Auto-generated catch block
+													e.printStackTrace();
+												}
+				                        }
+			                        }
+			                    }
+			                });
+			            }
+			        }); 
 					}
 		      }
 		      if(event.getCode() == KeyCode.DOWN || event.getCode() == KeyCode.UP  ){
@@ -739,6 +838,7 @@ public class AgingControllers extends Menu implements Initializable {
 		   }
 		}); 
 		twInvoice.setPlaceholder(new Label("Please wait… Searching Database."));
+		
 		twi_date.setCellValueFactory(new PropertyValueFactory<>("Customer_date"));
 		twi_cusid.setCellValueFactory(new PropertyValueFactory<>("customerId"));
 		twi_name.setCellValueFactory(new PropertyValueFactory<>("customerName"));

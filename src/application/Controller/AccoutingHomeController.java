@@ -67,7 +67,7 @@ public class AccoutingHomeController extends Menu implements Initializable {
     public Button btnReceivablesP;
     @FXML
     public Button btnHistoryP;
-    
+    boolean isShowPopup = false;
 	@FXML
 	private Pane paneSearch;
 	@FXML
@@ -874,12 +874,46 @@ public class AccoutingHomeController extends Menu implements Initializable {
 		     Transport.send(message);  
 		  
 		     System.out.println("message sent successfully..."); 
+		     //popup success show
+				isShowPopup = true;
+				ConfirmationEmailMessage a = new ConfirmationEmailMessage(prevStage, "Confirmation");
+		        a.setOnCloseRequest(new EventHandler<WindowEvent>() {
+		             @Override
+		             public void handle(WindowEvent t) {
+		                a.chkClose = true;
+		             }
+		         }); 
+				a.show();
+				a.setAlwaysOnTop(true);
+				a.stage.setOnHiding(new EventHandler<WindowEvent>() {
+
+		            @Override
+		            public void handle(WindowEvent event) {
+		                Platform.runLater(new Runnable() {
+
+		                    @Override
+		                    public void run() {
+		                        System.out.println("Application Closed by click to Close Button(X)");
+		                        System.out.println(a.postStatus);
+		                        isShowPopup = false;
+		                        System.out.println(event.getEventType());
+		                        if( a.chkClose == false){
+			                        if(a.postStatus == true){
+			                        	
+			                        }else{
+			                        	
+			                        }
+		                        }
+		                    }
+		                });
+		            }
+		        }); 
+				
 			     if(emailAgingWait == true){
 					  btnAging.setDisable(false);
 					  emailAgingWait = false;
 			     }
 			     if(emailReceivablesWait == true){
-			    	 btnReceivablesP.setDisable(false);
 			    	 emailReceivablesWait = false;
 			     }
 			     if(emailHistoryWait== true){
