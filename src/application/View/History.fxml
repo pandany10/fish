@@ -326,7 +326,7 @@
             </Pane>
             <TableView fx:id="twInvoice" layoutY="92.0" prefHeight="575.0" prefWidth="1266.0">
                <columns>
-                  <TableColumn fx:id="twi_invoice" prefWidth="99.0" styleClass="clcenter" text="INVOICE" />
+                  <TableColumn fx:id="twi_invoice" prefWidth="99.0" styleClass="clcenter" text="INVOICE #" />
                   <TableColumn fx:id="twi_date" prefWidth="169.0" styleClass="clcenter" text="DATE" />
                   <TableColumn fx:id="twi_chk" minWidth="0.0" prefWidth="234.0" text="CHK/REF">
                      <styleClass>

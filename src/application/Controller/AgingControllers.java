@@ -50,6 +50,7 @@ import javafx.stage.WindowEvent;
 public class AgingControllers extends Menu implements Initializable {
 
 	public  String 	CustomerID ="";
+	public int count = 0;
 
 	@FXML
 	public TableView<OrderModel> twInvoice;	
@@ -207,7 +208,7 @@ public class AgingControllers extends Menu implements Initializable {
 										  public void run() {
 											  	twInvoice.refresh();
 												if(lstOrder.size() == 0){
-													twInvoice.setPlaceholder(new Label("No found."));
+													twInvoice.setPlaceholder(new Label("Customer not found in aging report."));
 												}else{
 													//getOrderByCus(lstOrderCus.get(0).getCustomerId());
 													System.out.println(lstOrder.size());
@@ -272,7 +273,7 @@ public class AgingControllers extends Menu implements Initializable {
 															  public void run() {
 																  	twInvoice.refresh();
 																	if(lstOrder.size() == 0){
-																		twInvoice.setPlaceholder(new Label("No found."));
+																		twInvoice.setPlaceholder(new Label("Customer not found in aging report."));
 																	}else{
 																		
 																	}
@@ -546,7 +547,7 @@ public class AgingControllers extends Menu implements Initializable {
 										  public void run() {
 											  	twInvoice.refresh();
 												if(lstOrder.size() == 0){
-													twInvoice.setPlaceholder(new Label("No found."));
+													twInvoice.setPlaceholder(new Label("Customer not found in aging report."));
 												}else{
 													//getOrderByCus(lstOrderCus.get(0).getCustomerId());
 													System.out.println(lstOrder.size());
@@ -612,7 +613,7 @@ public class AgingControllers extends Menu implements Initializable {
 															  public void run() {
 																  	twInvoice.refresh();
 																	if(lstOrder.size() == 0){
-																		twInvoice.setPlaceholder(new Label("No found."));
+																		twInvoice.setPlaceholder(new Label("Customer not found in aging report."));
 																	}else{
 																		
 																	}
@@ -922,7 +923,7 @@ public class AgingControllers extends Menu implements Initializable {
 								  public void run() {
 									  	twInvoice.refresh();
 										if(lstOrder.size() == 0){
-											twInvoice.setPlaceholder(new Label("No found."));
+											twInvoice.setPlaceholder(new Label("Customer not found in aging report."));
 										}else{
 											//getOrderByCus(lstOrderCus.get(0).getCustomerId());
 											System.out.println(lstOrder.size());
@@ -987,7 +988,7 @@ public class AgingControllers extends Menu implements Initializable {
 													  public void run() {
 														  	twInvoice.refresh();
 															if(lstOrder.size() == 0){
-																twInvoice.setPlaceholder(new Label("No found."));
+																twInvoice.setPlaceholder(new Label("Customer not found in aging report."));
 															}else{
 																
 															}
@@ -1047,7 +1048,7 @@ public class AgingControllers extends Menu implements Initializable {
 								  public void run() {
 									  	twInvoice.refresh();
 										if(lstOrder.size() == 0){
-											twInvoice.setPlaceholder(new Label("No found."));
+											twInvoice.setPlaceholder(new Label("Customer not found in aging report"));
 										}else{
 											
 										}

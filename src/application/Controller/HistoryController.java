@@ -26,9 +26,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import application.Dao.OrderDao;
-import application.Model.CustomerModel;
 import application.Model.OrderModel;
-import application.Model.ProductModel;
 import application.Utill.Menu;
 import application.Utill.PdfCustomer;
 import javafx.application.Platform;
@@ -48,7 +46,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
 import javafx.stage.WindowEvent;
 
 public class HistoryController extends Menu implements Initializable {
@@ -457,6 +454,7 @@ public class HistoryController extends Menu implements Initializable {
 		twi_invoices.setCellValueFactory(new PropertyValueFactory<>("All_Total"));
 		
 		twi_discount.setCellValueFactory(new PropertyValueFactory<>("disc"));
+		twi_balance.setCellValueFactory(new PropertyValueFactory<>("balance"));
 		//twi_unpaid.setCellValueFactory(new PropertyValueFactory<>("amoutUnPaid"));
 		twi_invoice.setCellFactory(column -> { 
 		        return new TableCell<OrderModel, Integer>() {
@@ -507,6 +505,7 @@ public class HistoryController extends Menu implements Initializable {
 							Float totalP = 0.f;
 							Float totalUP = 0.f;
 							Float totalDS = 0.f;
+							Float totalBF = 0.f;
 
 							OrderModel or = new OrderModel();
 							for (OrderModel order : lstOrder) {
@@ -514,7 +513,8 @@ public class HistoryController extends Menu implements Initializable {
 								totalP = totalP + Float.parseFloat(order.getAmoutPaid().replace(",", ""));
 								totalUP = totalUP + Float.parseFloat(order.getAmoutUnPaid().replace(",", ""));
 								totalDS = totalDS + Float.parseFloat(order.getDisc().replace(",", ""));
-
+								totalBF = totalBF + Float.parseFloat(order.getBalance().replace(",", ""));
+								
 								order.setAll_Total("$"+order.getAll_Total());
 								order.setAmoutPaid("$"+order.getAmoutPaid());
 								order.setAmoutUnPaid("$"+order.getAmoutUnPaid());
@@ -525,6 +525,7 @@ public class HistoryController extends Menu implements Initializable {
 							or.setAmoutPaid("$"+String.format ("%,.2f",totalP));
 							or.setAmoutUnPaid("$"+String.format ("%,.2f",totalUP));
 							or.setDisc("$"+String.format ("%,.2f",totalDS));
+							or.setBalance("$"+String.format ("%,.2f",totalBF));
 							or.setCustomer_date("");
 							
 							lstOrder.add(or);

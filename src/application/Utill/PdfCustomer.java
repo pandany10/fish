@@ -370,6 +370,7 @@ public class PdfCustomer {
 			Float total = 0.f;
 			Float totalP = 0.f;
 			Float totalUP = 0.f;
+			Float totalBF = 0.f;
 			int col = 9;
 			if(isLedger == true){
 				col = 7;
@@ -641,7 +642,7 @@ public class PdfCustomer {
 							totalDis.setBorderColorBottom(BaseColor.DARK_GRAY);
 							tblProducto.addCell(totalDis);
 							
-							PdfPCell totaln = getCellRR("", font, 7, 0);
+							PdfPCell totaln = getCellRR("$"+String.format ("%,.2f",totalBF), font, 7, 0);
 
 							totaln.setBorderWidthBottom(1);
 							totaln.setBorderColorBottom(BaseColor.DARK_GRAY);
@@ -728,7 +729,7 @@ public class PdfCustomer {
 					PdfPCell discount = getCellR("$"+order.getDisc(), font, 7, 0);
 					tblProducto.addCell(discount);
 					
-					PdfPCell blanceFWD = getCellR("", font, 7, 0);
+					PdfPCell blanceFWD = getCellR("$"+order.getBalance(), font, 7, 0);
 					blanceFWD.setBorderWidthRight(1);
 					blanceFWD.setBorderColorRight(BaseColor.DARK_GRAY);
 					tblProducto.addCell(blanceFWD);
@@ -736,7 +737,8 @@ public class PdfCustomer {
 					total = total + Float.parseFloat(order.getAll_Total().replace(",", ""));
 					totalP = totalP + Float.parseFloat(order.getAmoutPaid().replace(",", ""));
 					totalUP = totalUP + Float.parseFloat(order.getDisc().replace(",", ""));
-					
+					totalBF = totalBF + Float.parseFloat(order.getBalance().replace(",", ""));
+
 
 				}
 			}

@@ -27,7 +27,14 @@ public class OrderModel {
 	private String amoutPaid;
 	private String amoutUnPaid;
 	private String disc;
+	private String balance;
 	
+	public String getBalance() {
+		return balance;
+	}
+	public void setBalance(String balance) {
+		this.balance = balance;
+	}
 	public String getDisc() {
 		return disc;
 	}

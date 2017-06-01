@@ -1299,8 +1299,28 @@ public class AccoutingHomeController extends Menu implements Initializable {
     	    @Override
     	    public void handle(KeyEvent evt) {
     	        if (evt.getCode().equals(KeyCode.ESCAPE)) {
-    	        		prevStage.show();
-    	        		stage.close();
+    	        	String txt = controller.txtKeySearchCus.getText();
+    	        	if(!txt.equals("")){
+    	        		controller.txtKeySearchCus.setText("");
+    	        		//System.out.println("vao day 1");
+    	        		if(controller.txtKeySearchCus.isFocused()){
+    	        			controller.count = 1;
+    	        		}
+    	        		try {
+							controller.actionSearchCus();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+    	        	}else{
+    	        		if(controller.count == 1){
+    	        			controller.count = 0;
+    	        		}else{
+    	        		//	System.out.println("vao day 2");
+     	        	        prevStage.show();
+         	        		stage.close();	
+    	        		}
+    	        	}
     	        }
     	    }
     	});

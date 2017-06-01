@@ -30,7 +30,7 @@ public class OrderDao {
 			String customerTerms = rs.getString("Terms");
 			String customerSalesperson = rs.getString("Salesperson");
 			Integer order_id = rs.getInt("order_id");
-			String Customer_date =  rs.getString("Customer_date");
+			String Customer_date =  rs.getString("Date");
 			Float All_Total = rs.getFloat("All_Total");
 			String All_Totals = String.format ("%.2f", All_Total);
 			
@@ -70,7 +70,7 @@ public class OrderDao {
 			String customerTerms = rs.getString("Terms");
 			String customerSalesperson = rs.getString("Salesperson");
 			Integer order_id = rs.getInt("order_id");
-			String Customer_date =  rs.getString("Customer_date");
+			String Customer_date =  rs.getString("Date");
 			Float All_Total = rs.getFloat("All_Total");
 			String All_Totals = String.format ("%.2f", All_Total);
 			
@@ -110,7 +110,7 @@ public class OrderDao {
 			String customerTerms = rs.getString("Terms");
 			String customerSalesperson = rs.getString("Salesperson");
 			Integer order_id = rs.getInt("order_id");
-			String Customer_date =  rs.getString("Customer_date");
+			String Customer_date =  rs.getString("Date");
 			Float All_Total = rs.getFloat("All_Total");
 			String All_Totals = String.format ("%.2f", All_Total);
 			
@@ -149,7 +149,7 @@ public class OrderDao {
 			String customerTerms = rs.getString("Terms");
 			String customerSalesperson = rs.getString("Salesperson");
 			Integer order_id = rs.getInt("order_id");
-			String Customer_date =  rs.getString("Customer_date");
+			String Customer_date =  rs.getString("Date");
 			Float All_Total = rs.getFloat("All_Total");
 			String All_Totals = String.format ("%.2f", All_Total);
 			
@@ -180,6 +180,7 @@ public class OrderDao {
 		List<OrderModel> lstOrder = new ArrayList<>();
 		String sql = "SELECT * FROM exoticre_order.customerfishpro t1 inner join exoticre_order.orders t2 on t1.CustomerID = t2.ClientCustomerID WHERE t1.CompanyName != '' and t2.ClientCustomerID = '"+Customerid+"'  GROUP BY t2.order_id order by t2.Date desc limit 20000;";
 		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
+		Float All_balance = 0.00f;
 		while (rs.next()) {
 			String email = rs.getString("Email");
 			String customerId = rs.getString("CustomerID");
@@ -189,9 +190,11 @@ public class OrderDao {
 			String customerTerms = rs.getString("Terms");
 			String customerSalesperson = rs.getString("Salesperson");
 			Integer order_id = rs.getInt("order_id");
-			String Customer_date =  rs.getString("Customer_date");
+			String Customer_date =  rs.getString("Date");
 			Float All_Total = rs.getFloat("All_Total");
+			All_balance = All_balance + All_Total;
 			String All_Totals = String.format ("%.2f", All_Total);
+			String All_balances = String.format ("%,.2f", All_balance);
             String paymentMethod = rs.getString("paymentMethod");
 
 			Float amoutPaid = rs.getFloat("amoutPaid");
@@ -221,6 +224,7 @@ public class OrderDao {
 			order.setOrder_id(order_id);
 			order.setCustomer_date(Customer_date);
 			order.setAll_Total(All_Totals);
+			order.setBalance(All_balances);
 			order.setAmoutPaid(amoutPaids); 
 			order.setAmoutUnPaid(amoutUnPaids);
 			order.setCustomer_email(email);

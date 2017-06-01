@@ -39,7 +39,7 @@ import javafx.stage.StageStyle;
             setScene(scene);
  
             Group groupInDialog = new Group();
-            groupInDialog.getChildren().add( new Label("") );
+            groupInDialog.getChildren().add( new Label("Email sent successful.") );
             root.setCenter( groupInDialog );
  
  
