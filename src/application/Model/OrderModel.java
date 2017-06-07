@@ -28,7 +28,35 @@ public class OrderModel {
 	private String amoutUnPaid;
 	private String disc;
 	private String balance;
+	private String blance30 = "";
+	private String blance60  = "";
+	private String blance90  = "";
+	private String blance120  = "";
 	
+	public String getBlance30() {
+		return blance30;
+	}
+	public void setBlance30(String blance30) {
+		this.blance30 = blance30;
+	}
+	public String getBlance60() {
+		return blance60;
+	}
+	public void setBlance60(String blance60) {
+		this.blance60 = blance60;
+	}
+	public String getBlance90() {
+		return blance90;
+	}
+	public void setBlance90(String blance90) {
+		this.blance90 = blance90;
+	}
+	public String getBlance120() {
+		return blance120;
+	}
+	public void setBlance120(String blance120) {
+		this.blance120 = blance120;
+	}
 	public String getBalance() {
 		return balance;
 	}

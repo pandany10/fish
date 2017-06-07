@@ -218,6 +218,11 @@ public class AgingControllers extends Menu implements Initializable {
 														Float total = 0.f;
 														Float totalP = 0.f;
 														Float totalUP = 0.f;
+														Float totalB30 = 0.f;
+														Float totalB60 = 0.f;
+														Float totalB90 = 0.f;
+														Float totalB120 = 0.f;
+
 														OrderModel or = new OrderModel();
 														OrderModel orderConvert = new OrderModel();
 														for (OrderModel order : lstOrder) {
@@ -227,10 +232,18 @@ public class AgingControllers extends Menu implements Initializable {
 																or.setAll_Total("$"+String.format ("%,.2f",total));
 																or.setAmoutPaid("$"+String.format ("%,.2f",totalP));
 																or.setAmoutUnPaid("$"+String.format ("%,.2f",totalUP));
+																or.setBlance30("$"+String.format ("%,.2f",totalB30));
+																or.setBlance60("$"+String.format ("%,.2f",totalB60));
+																or.setBlance90("$"+String.format ("%,.2f",totalB90));
+																or.setBlance120("$"+String.format ("%,.2f",totalB120));
 																or.setCustomer_date("Total:");
 																total = 0.f;
 																totalP = 0.f;
 																totalUP = 0.f;
+																totalB30 = 0.f;
+																totalB60 = 0.f;
+																totalB90 = 0.f;
+																totalB120 = 0.f;
 																lstOrderConvert.add(or);
 																or = new OrderModel();
 															}
@@ -244,24 +257,43 @@ public class AgingControllers extends Menu implements Initializable {
 																lstOrderConvert.add(orderConvert);
 																orderConvert = new OrderModel();
 																currentCusId = order.getCustomerId();
-
-
 															}
 															total = total + Float.parseFloat(order.getAll_Total().replace(",", ""));
 															totalP = totalP + Float.parseFloat(order.getAmoutPaid().replace(",", ""));
 															totalUP = totalUP + Float.parseFloat(order.getAmoutUnPaid().replace(",", ""));
+															if(!order.getBlance30().equals("")){
+																totalB30 = totalB30 + Float.parseFloat(order.getBlance30().replace(",", ""));
+															}
+															if(!order.getBlance60().equals("")){
+																totalB60 = totalB60 + Float.parseFloat(order.getBlance60().replace(",", ""));
+															}
+															if(!order.getBlance90().equals("")){
+																totalB90 = totalB90 + Float.parseFloat(order.getBlance90().replace(",", ""));
+															}
+															if(!order.getBlance120().equals("")){
+																totalB120 = totalB120 + Float.parseFloat(order.getBlance120().replace(",", ""));
+															}
 															order.setAll_Total("$"+order.getAll_Total());
 															order.setAmoutPaid("$"+order.getAmoutPaid());
 															order.setAmoutUnPaid("$"+order.getAmoutUnPaid());
 															orderConvert.setCustomer_date(order.getCustomer_date());
 															orderConvert.setOrder_id(order.getOrder_id());
 															orderConvert.setAll_Total(order.getAll_Total());
-															lstOrderConvert.add(orderConvert);
+															orderConvert.setBlance30(order.getBlance30());
+															orderConvert.setBlance60(order.getBlance60());
+															orderConvert.setBlance90(order.getBlance90());
+															orderConvert.setBlance120(order.getBlance120());
+
+															lstOrderConvert.add(orderConvert); 
 															orderConvert = new OrderModel();
 														}
 														or.setAll_Total("$"+String.format ("%,.2f",total));
 														or.setAmoutPaid("$"+String.format ("%,.2f",totalP));
 														or.setAmoutUnPaid("$"+String.format ("%,.2f",totalUP));
+														or.setBlance30("$"+String.format ("%,.2f",totalB30));
+														or.setBlance60("$"+String.format ("%,.2f",totalB60));
+														or.setBlance90("$"+String.format ("%,.2f",totalB90));
+														or.setBlance120("$"+String.format ("%,.2f",totalB120));
 														or.setCustomer_date("Total:");
 														lstOrderConvert.add(or);
 													}
@@ -557,6 +589,11 @@ public class AgingControllers extends Menu implements Initializable {
 														Float total = 0.f;
 														Float totalP = 0.f;
 														Float totalUP = 0.f;
+														Float totalB30 = 0.f;
+														Float totalB60 = 0.f;
+														Float totalB90 = 0.f;
+														Float totalB120 = 0.f;
+
 														OrderModel or = new OrderModel();
 														OrderModel orderConvert = new OrderModel();
 														for (OrderModel order : lstOrder) {
@@ -566,10 +603,18 @@ public class AgingControllers extends Menu implements Initializable {
 																or.setAll_Total("$"+String.format ("%,.2f",total));
 																or.setAmoutPaid("$"+String.format ("%,.2f",totalP));
 																or.setAmoutUnPaid("$"+String.format ("%,.2f",totalUP));
+																or.setBlance30("$"+String.format ("%,.2f",totalB30));
+																or.setBlance60("$"+String.format ("%,.2f",totalB60));
+																or.setBlance90("$"+String.format ("%,.2f",totalB90));
+																or.setBlance120("$"+String.format ("%,.2f",totalB120));
 																or.setCustomer_date("Total:");
 																total = 0.f;
 																totalP = 0.f;
 																totalUP = 0.f;
+																totalB30 = 0.f;
+																totalB60 = 0.f;
+																totalB90 = 0.f;
+																totalB120 = 0.f;
 																lstOrderConvert.add(or);
 																or = new OrderModel();
 															}
@@ -583,25 +628,43 @@ public class AgingControllers extends Menu implements Initializable {
 																lstOrderConvert.add(orderConvert);
 																orderConvert = new OrderModel();
 																currentCusId = order.getCustomerId();
-
-
 															}
 															total = total + Float.parseFloat(order.getAll_Total().replace(",", ""));
 															totalP = totalP + Float.parseFloat(order.getAmoutPaid().replace(",", ""));
 															totalUP = totalUP + Float.parseFloat(order.getAmoutUnPaid().replace(",", ""));
+															if(!order.getBlance30().equals("")){
+																totalB30 = totalB30 + Float.parseFloat(order.getBlance30().replace(",", ""));
+															}
+															if(!order.getBlance60().equals("")){
+																totalB60 = totalB60 + Float.parseFloat(order.getBlance60().replace(",", ""));
+															}
+															if(!order.getBlance90().equals("")){
+																totalB90 = totalB90 + Float.parseFloat(order.getBlance90().replace(",", ""));
+															}
+															if(!order.getBlance120().equals("")){
+																totalB120 = totalB120 + Float.parseFloat(order.getBlance120().replace(",", ""));
+															}
 															order.setAll_Total("$"+order.getAll_Total());
 															order.setAmoutPaid("$"+order.getAmoutPaid());
 															order.setAmoutUnPaid("$"+order.getAmoutUnPaid());
-															
 															orderConvert.setCustomer_date(order.getCustomer_date());
 															orderConvert.setOrder_id(order.getOrder_id());
 															orderConvert.setAll_Total(order.getAll_Total());
-															lstOrderConvert.add(orderConvert);
+															orderConvert.setBlance30(order.getBlance30());
+															orderConvert.setBlance60(order.getBlance60());
+															orderConvert.setBlance90(order.getBlance90());
+															orderConvert.setBlance120(order.getBlance120());
+
+															lstOrderConvert.add(orderConvert); 
 															orderConvert = new OrderModel();
 														}
 														or.setAll_Total("$"+String.format ("%,.2f",total));
 														or.setAmoutPaid("$"+String.format ("%,.2f",totalP));
 														or.setAmoutUnPaid("$"+String.format ("%,.2f",totalUP));
+														or.setBlance30("$"+String.format ("%,.2f",totalB30));
+														or.setBlance60("$"+String.format ("%,.2f",totalB60));
+														or.setBlance90("$"+String.format ("%,.2f",totalB90));
+														or.setBlance120("$"+String.format ("%,.2f",totalB120));
 														or.setCustomer_date("Total:");
 														lstOrderConvert.add(or);
 													}
@@ -852,7 +915,7 @@ public class AgingControllers extends Menu implements Initializable {
 		twi_60.setCellValueFactory(new PropertyValueFactory<>("blance60"));
 		twi_90.setCellValueFactory(new PropertyValueFactory<>("blance90"));
 		twi_120.setCellValueFactory(new PropertyValueFactory<>("blance120"));
-		twi_blance.setCellValueFactory(new PropertyValueFactory<>("blance"));
+		twi_blance.setCellValueFactory(new PropertyValueFactory<>("All_Total"));
 		twi_remark.setCellValueFactory(new PropertyValueFactory<>("remark"));
 		
 		twi_date.setCellFactory(column -> { 
@@ -933,6 +996,11 @@ public class AgingControllers extends Menu implements Initializable {
 												Float total = 0.f;
 												Float totalP = 0.f;
 												Float totalUP = 0.f;
+												Float totalB30 = 0.f;
+												Float totalB60 = 0.f;
+												Float totalB90 = 0.f;
+												Float totalB120 = 0.f;
+
 												OrderModel or = new OrderModel();
 												OrderModel orderConvert = new OrderModel();
 												for (OrderModel order : lstOrder) {
@@ -942,10 +1010,18 @@ public class AgingControllers extends Menu implements Initializable {
 														or.setAll_Total("$"+String.format ("%,.2f",total));
 														or.setAmoutPaid("$"+String.format ("%,.2f",totalP));
 														or.setAmoutUnPaid("$"+String.format ("%,.2f",totalUP));
+														or.setBlance30("$"+String.format ("%,.2f",totalB30));
+														or.setBlance60("$"+String.format ("%,.2f",totalB60));
+														or.setBlance90("$"+String.format ("%,.2f",totalB90));
+														or.setBlance120("$"+String.format ("%,.2f",totalB120));
 														or.setCustomer_date("Total:");
 														total = 0.f;
 														totalP = 0.f;
 														totalUP = 0.f;
+														totalB30 = 0.f;
+														totalB60 = 0.f;
+														totalB90 = 0.f;
+														totalB120 = 0.f;
 														lstOrderConvert.add(or);
 														or = new OrderModel();
 													}
@@ -959,24 +1035,44 @@ public class AgingControllers extends Menu implements Initializable {
 														lstOrderConvert.add(orderConvert);
 														orderConvert = new OrderModel();
 														currentCusId = order.getCustomerId();
-
-
 													}
 													total = total + Float.parseFloat(order.getAll_Total().replace(",", ""));
 													totalP = totalP + Float.parseFloat(order.getAmoutPaid().replace(",", ""));
 													totalUP = totalUP + Float.parseFloat(order.getAmoutUnPaid().replace(",", ""));
+													if(!order.getBlance30().equals("")){
+														totalB30 = totalB30 + Float.parseFloat(order.getBlance30().replace(",", ""));
+													}
+													if(!order.getBlance60().equals("")){
+														totalB60 = totalB60 + Float.parseFloat(order.getBlance60().replace(",", ""));
+													}
+													if(!order.getBlance90().equals("")){
+														totalB90 = totalB90 + Float.parseFloat(order.getBlance90().replace(",", ""));
+													}
+													if(!order.getBlance120().equals("")){
+														totalB120 = totalB120 + Float.parseFloat(order.getBlance120().replace(",", ""));
+													}
+
 													order.setAll_Total("$"+order.getAll_Total());
 													order.setAmoutPaid("$"+order.getAmoutPaid());
 													order.setAmoutUnPaid("$"+order.getAmoutUnPaid());
 													orderConvert.setCustomer_date(order.getCustomer_date());
 													orderConvert.setOrder_id(order.getOrder_id());
 													orderConvert.setAll_Total(order.getAll_Total());
-													lstOrderConvert.add(orderConvert);
+													orderConvert.setBlance30(order.getBlance30());
+													orderConvert.setBlance60(order.getBlance60());
+													orderConvert.setBlance90(order.getBlance90());
+													orderConvert.setBlance120(order.getBlance120());
+
+													lstOrderConvert.add(orderConvert); 
 													orderConvert = new OrderModel();
 												}
 												or.setAll_Total("$"+String.format ("%,.2f",total));
 												or.setAmoutPaid("$"+String.format ("%,.2f",totalP));
 												or.setAmoutUnPaid("$"+String.format ("%,.2f",totalUP));
+												or.setBlance30("$"+String.format ("%,.2f",totalB30));
+												or.setBlance60("$"+String.format ("%,.2f",totalB60));
+												or.setBlance90("$"+String.format ("%,.2f",totalB90));
+												or.setBlance120("$"+String.format ("%,.2f",totalB120));
 												or.setCustomer_date("Total:");
 												lstOrderConvert.add(or);
 											}

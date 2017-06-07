@@ -22,6 +22,7 @@ public class OrderDao {
 		List<OrderModel> lstOrder = new ArrayList<>();
 		String sql = "SELECT * FROM exoticre_order.customerfishpro t1 inner join exoticre_order.orders t2 on t1.CustomerID = t2.ClientCustomerID WHERE t1.CompanyName != '' and t2.amoutPaid != t2.All_Total  and t2.status != 'COMPLETED' GROUP BY t2.order_id order by t1.CompanyName asc limit 20000;";
 		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
+		SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd"); 
 		while (rs.next()) {
 			String customerId = rs.getString("CustomerID");
 			String customerName = rs.getString("CompanyName");
@@ -39,7 +40,23 @@ public class OrderDao {
 			
 			Float amoutUnPaid = All_Total-amoutPaid;
 			String amoutUnPaids = String.format ("%.2f", amoutUnPaid);
-			
+
+			Date d1 = null;
+			Date d2 = null;
+
+			try {
+			Date date = new Date();
+			String dateStop = format.format(date);
+			String dateStart = Customer_date;
+
+			d1 = format.parse(dateStart);
+			d2 = format.parse(dateStop);
+
+			long diff = d2.getTime() - d1.getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+			System.out.println(diffDays + " days, ");
+
+
 			OrderModel order = new OrderModel();
 			order.setCustomerId(customerId);
 			order.setCustomerName(customerName);
@@ -47,13 +64,30 @@ public class OrderDao {
 			order.setCustomerPhone(customerPhone);
 			order.setCustomerTerms(customerTerms);
 			order.setCustomerSalesperson(customerSalesperson);
-			
 			order.setOrder_id(order_id);
 			order.setCustomer_date(Customer_date);
 			order.setAll_Total(All_Totals);
 			order.setAmoutPaid(amoutPaids); 
 			order.setAmoutUnPaid(amoutUnPaids);
+/*			order.setBlance30("");
+			order.setBlance60("");
+			order.setBlance90("");
+			order.setBlance120("");*/
+
+			if(diffDays>=0 && diffDays <=30){
+				order.setBlance30(All_Totals);
+			}else if(diffDays>30 && diffDays<=60){
+				order.setBlance60(All_Totals);
+			}else if(diffDays>60 && diffDays<=90){
+				order.setBlance90(All_Totals);
+			}else if(diffDays>90 ){
+				order.setBlance120(All_Totals);
+			}
 			lstOrder.add(order);
+			} catch (Exception e) {
+			e.printStackTrace();
+			}
+			
 		}
 		return lstOrder;
 	}
@@ -61,7 +95,9 @@ public class OrderDao {
 		List<OrderModel> lstOrder = new ArrayList<>();
 		String sql = "SELECT * FROM exoticre_order.customerfishpro t1 inner join exoticre_order.orders t2 on t1.CustomerID = t2.ClientCustomerID WHERE t1.CompanyName != '' and t2.amoutPaid != t2.All_Total  and t2.status != 'COMPLETED' and t2.amoutPaid = '0.00' and t2.ClientCustomerID = '"+Customerid+"' GROUP BY t2.order_id order by t2.Date desc limit 20000;";
 		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
-		while (rs.next()) {
+		SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd"); 
+
+		while (rs.next()) {			
 			String email = rs.getString("Email");
 			String customerId = rs.getString("CustomerID");
 			String customerName = rs.getString("CompanyName");
@@ -79,7 +115,20 @@ public class OrderDao {
 			
 			Float amoutUnPaid = All_Total-amoutPaid;
 			String amoutUnPaids = String.format ("%.2f", amoutUnPaid);
-			
+			Date d1 = null;
+			Date d2 = null;
+
+			try {
+			Date date = new Date();
+			String dateStop = format.format(date);
+			String dateStart = Customer_date;
+
+			d1 = format.parse(dateStart);
+			d2 = format.parse(dateStop);
+
+			long diff = d2.getTime() - d1.getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+			System.out.println(diffDays + " days, ");
 			OrderModel order = new OrderModel();
 			order.setCustomerId(customerId);
 			order.setCustomerName(customerName);
@@ -94,7 +143,19 @@ public class OrderDao {
 			order.setAmoutPaid(amoutPaids); 
 			order.setAmoutUnPaid(amoutUnPaids);
 			order.setCustomer_email(email);
+			if(diffDays>=0 && diffDays <=30){
+				order.setBlance30(All_Totals);
+			}else if(diffDays>30 && diffDays<=60){
+				order.setBlance60(All_Totals);
+			}else if(diffDays>60 && diffDays<=90){
+				order.setBlance90(All_Totals);
+			}else if(diffDays>90 ){
+				order.setBlance120(All_Totals);
+			}
 			lstOrder.add(order);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return lstOrder;
 	}

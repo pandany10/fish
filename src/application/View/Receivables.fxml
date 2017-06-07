@@ -307,37 +307,37 @@
                   <String fx:value="clbold" />
                </styleClass>
             </TableColumn>
-            <TableColumn fx:id="twi_30" prefWidth="48.0" text="30">
+            <TableColumn fx:id="twi_30" prefWidth="59.0" text="30">
                <styleClass>
                   <String fx:value="clright" />
                   <String fx:value="clbold" />
                </styleClass>
             </TableColumn>
-            <TableColumn fx:id="twi_60" prefWidth="51.0" text="60">
+            <TableColumn fx:id="twi_60" prefWidth="59.0" text="60">
                <styleClass>
                   <String fx:value="clright" />
                   <String fx:value="clbold" />
                </styleClass>
             </TableColumn>
-            <TableColumn fx:id="twi_90" prefWidth="51.0" text="90">
+            <TableColumn fx:id="twi_90" prefWidth="68.0" text="90">
                <styleClass>
                   <String fx:value="clright" />
                   <String fx:value="clbold" />
                </styleClass>
             </TableColumn>
-            <TableColumn fx:id="twi_120" prefWidth="61.0" text="120">
+            <TableColumn fx:id="twi_120" prefWidth="64.0" text="120">
                <styleClass>
                   <String fx:value="clright" />
                   <String fx:value="clbold" />
                </styleClass>
             </TableColumn>
-            <TableColumn fx:id="twi_blance" prefWidth="100.0" text="Open Balance">
+            <TableColumn fx:id="twi_blance" prefWidth="85.0" text="Open Balance">
                <styleClass>
                   <String fx:value="clright" />
                   <String fx:value="clbold" />
                </styleClass>
             </TableColumn>
-            <TableColumn fx:id="twi_remark" prefWidth="127.0" text="Remark" />
+            <TableColumn fx:id="twi_remark" prefWidth="103.0" text="Remark" />
          </columns>
       </TableView>
    </children>

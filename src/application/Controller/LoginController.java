@@ -206,7 +206,7 @@ public class LoginController  implements Initializable  {
 				gotoHome();
 			} else {
 				lbl.setText("Username or password is incorrect.");
-				//gotoHome();
+			//	gotoHome();
 			}
 			System.out.println("login:"+status);
 		} else {
