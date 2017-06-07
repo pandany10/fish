@@ -233,7 +233,7 @@ public class PdfCustomer {
 	public void Prints1(List<OrderModel> lstOrder,String todayDate)
 			throws MalformedURLException, IOException {
 		isLedger = true;
-		title = "EXOTIC REEF IMPORTS, INC. CUSTOMER LEDGER  REPORT";
+		title = "EXOTIC REEF IMPORTS, INC. CUSTOMER LEDGER REPORT";
 		this.lstOrder = lstOrder;
 		this.todayDate = todayDate;
 		String replacedString = todayDate.replace("/", "");
@@ -371,6 +371,10 @@ public class PdfCustomer {
 			Float totalP = 0.f;
 			Float totalUP = 0.f;
 			Float totalBF = 0.f;
+			Float totalB30 = 0.f;
+			Float totalB60 = 0.f;
+			Float totalB90 = 0.f;
+			Float totalB120 = 0.f;
 			int col = 9;
 			if(isLedger == true){
 				col = 7;
@@ -414,21 +418,21 @@ public class PdfCustomer {
 						ts.setBorderColorBottom(BaseColor.DARK_GRAY);
 						tblProducto.addCell(ts);
 						
-						PdfPCell totalc = getCellRR("$0.00", font, 7, 0);
+						PdfPCell totalc = getCellRR("$"+String.format ("%,.2f",totalB30), font, 7, 0);
 //						PdfPCell totalc = getCellRR("$"+String.format ("%,.2f",totalP), font, 10, 0);
 
 						totalc.setBorderWidthBottom(1);
 						tblProducto.addCell(totalc);
 						
-						PdfPCell totalc1 = getCellRR("$0.00", font, 7, 0);
+						PdfPCell totalc1 = getCellRR("$"+String.format ("%,.2f",totalB60), font, 7, 0);
 //						PdfPCell totalc = getCellRR("$"+String.format ("%,.2f",totalP), font, 10, 0);
 						totalc1.setBorderWidthBottom(1);
 						tblProducto.addCell(totalc1);
-						PdfPCell totalc2 = getCellRR("$0.00", font, 7, 0);
+						PdfPCell totalc2 = getCellRR("$"+String.format ("%,.2f",totalB90), font, 7, 0);
 //						PdfPCell totalc = getCellRR("$"+String.format ("%,.2f",totalP), font, 10, 0);
 						totalc2.setBorderWidthBottom(1);
 						tblProducto.addCell(totalc2);
-						PdfPCell totalc3 = getCellRR("$0.00", font, 7, 0);
+						PdfPCell totalc3 = getCellRR("$"+String.format ("%,.2f",totalB120), font, 7, 0);
 //						PdfPCell totalc = getCellRR("$"+String.format ("%,.2f",totalP), font, 10, 0);
 						totalc3.setBorderWidthBottom(1);
 						tblProducto.addCell(totalc3);
@@ -446,7 +450,10 @@ public class PdfCustomer {
 						totaln.setBorderWidthRight(1);
 						totaln.setBorderColorRight(BaseColor.DARK_GRAY);
 						tblProducto.addCell(totaln);
+						
 						if(title.equals("EXOTIC REEF IMPORTS, INC. ACCOUNT STATEMENT")){
+							Float totalOB =0.00f;
+							totalOB = totalB30 + totalB60 +totalB90 + totalB120;
 							PdfPCell bottom0 = getCellCN("", font, 7, 0);
 							bottom0.setColspan(9);
 							tblProducto.addCell(bottom0);
@@ -460,35 +467,35 @@ public class PdfCustomer {
 							tblProducto.addCell(bottomDefault);
 							
 							PdfPCell bottom21 = getCell("CURRENT", font, 7, 0);
-							PdfPCell bottom22 = getCellR("0.00", font, 7, 0);
+							PdfPCell bottom22 = getCellR("$"+String.format ("%,.2f",totalOB), font, 7, 0);
 							tblProducto.addCell(bottom21);
 							tblProducto.addCell(bottomDefaultBlank);
 							tblProducto.addCell(bottom22);
 							tblProducto.addCell(bottomDefault);
 							
 							PdfPCell bottom31 = getCell("30 DAYS", font, 7, 0);
-							PdfPCell bottom32 = getCellR("0.00", font, 7, 0);
+							PdfPCell bottom32 = getCellR("$"+String.format ("%,.2f",totalB30), font, 7, 0);
 							tblProducto.addCell(bottom31);
 							tblProducto.addCell(bottomDefaultBlank);
 							tblProducto.addCell(bottom32);
 							tblProducto.addCell(bottomDefault);
 							
 							PdfPCell bottom41 = getCell("60 DAYS", font, 7, 0);
-							PdfPCell bottom42 = getCellR("0.00", font, 7, 0);
+							PdfPCell bottom42 = getCellR("$"+String.format ("%,.2f",totalB60), font, 7, 0);
 							tblProducto.addCell(bottom41);
 							tblProducto.addCell(bottomDefaultBlank);
 							tblProducto.addCell(bottom42);
 							tblProducto.addCell(bottomDefault);
 
 							PdfPCell bottom51 = getCell("90 DAYS", font, 7, 0);
-							PdfPCell bottom52 = getCellR("0.00", font, 7, 0);
+							PdfPCell bottom52 = getCellR("$"+String.format ("%,.2f",totalB90), font, 7, 0);
 							tblProducto.addCell(bottom51);
 							tblProducto.addCell(bottomDefaultBlank);
 							tblProducto.addCell(bottom52);
 							tblProducto.addCell(bottomDefault);
 							
 							PdfPCell bottom61 = getCell("120 DAYS", font, 7, 0);
-							PdfPCell bottom62 = getCellR("0.00", font, 7, 0);
+							PdfPCell bottom62 = getCellR("$"+String.format ("%,.2f",totalB120), font, 7, 0);
 							tblProducto.addCell(bottom61);
 							tblProducto.addCell(bottomDefaultBlank);
 							tblProducto.addCell(bottom62);
@@ -501,7 +508,7 @@ public class PdfCustomer {
 							
 							PdfPCell bottom81 = getCell("OVERALL BALANCE", font, 7, 0);
 							bottom81.setColspan(2);
-							PdfPCell bottom82 = getCellR("0.00", font, 7, 0);
+							PdfPCell bottom82 = getCellR("$"+String.format ("%,.2f",totalOB), font, 7, 0);
 							tblProducto.addCell(bottom81);
 							tblProducto.addCell(bottom82);
 							tblProducto.addCell(bottomDefault);
@@ -511,7 +518,10 @@ public class PdfCustomer {
 						total = 0.f;
 						totalP = 0.f;
 						totalUP = 0.f;
-						
+						totalB30 = 0.f;
+						totalB60 = 0.f;
+						totalB90 = 0.f;
+						totalB120 = 0.f;
 						tblProducto = new PdfPTable(9);
 						tblProducto.setWidthPercentage(100);
 						tblProducto.setWidths(new float[] { 10,10,10,10,10,10,10,15,15 });
@@ -575,24 +585,56 @@ public class PdfCustomer {
 				
 				PdfPCell cusSale = getCellR("$"+order.getAll_Total(), font, 7, 0);
 				tblProducto.addCell(cusSale);	
+				if(!order.getBlance30().equals("")){
+					PdfPCell totalc = getCellR("$"+order.getBlance30(), font, 7, 0);
+					tblProducto.addCell(totalc);
+				}else{
+					PdfPCell totalc = getCellR(order.getBlance30(), font, 7, 0);
+					tblProducto.addCell(totalc);
+				}
+
+				if(!order.getBlance60().equals("")){
+					PdfPCell totalc1 = getCellR("$"+order.getBlance60(), font, 7, 0);
+					tblProducto.addCell(totalc1);
+				}else{
+					PdfPCell totalc1 = getCellR(order.getBlance60(), font, 7, 0);
+					tblProducto.addCell(totalc1);
+				}
 				
-				PdfPCell totalc = getCellR("", font, 7, 0);
-				tblProducto.addCell(totalc);
+				if(!order.getBlance90().equals("")){
+					PdfPCell totalc2 = getCellR("$"+order.getBlance90(), font, 7, 0);
+					tblProducto.addCell(totalc2);
+				}else{
+					PdfPCell totalc2 = getCellR(order.getBlance90(), font, 7, 0);
+					tblProducto.addCell(totalc2);
+				}
 				
-				PdfPCell totalc1 = getCellR("", font, 7, 0);
-				tblProducto.addCell(totalc1);
-				PdfPCell totalc2 = getCellR("", font, 7, 0);
-				tblProducto.addCell(totalc2);
-				PdfPCell totalc3 = getCellR("", font, 7, 0);
-				tblProducto.addCell(totalc3);
+				if(!order.getBlance120().equals("")){
+					PdfPCell totalc3 = getCellR("$"+order.getBlance120(), font, 7, 0);
+					tblProducto.addCell(totalc3);
+				}else{
+					PdfPCell totalc3 = getCellR(order.getBlance120(), font, 7, 0);
+					tblProducto.addCell(totalc3);
+				}
+
 				PdfPCell totalc4 = getCellR("$"+order.getAmoutUnPaid(), font, 7, 0);
 				tblProducto.addCell(totalc4);
-				
 				PdfPCell totaln = getCellR("", font, 7, 0);
 				totaln.setBorderWidthRight(1);
 				totaln.setBorderColorRight(BaseColor.DARK_GRAY);
 				tblProducto.addCell(totaln);
-				
+				if(!order.getBlance30().equals("")){
+					totalB30 = totalB30 + Float.parseFloat(order.getBlance30().replace(",", ""));
+				}
+				if(!order.getBlance60().equals("")){
+					totalB60 = totalB60 + Float.parseFloat(order.getBlance60().replace(",", ""));
+				}
+				if(!order.getBlance90().equals("")){
+					totalB90 = totalB90 + Float.parseFloat(order.getBlance90().replace(",", ""));
+				}
+				if(!order.getBlance120().equals("")){
+					totalB120 = totalB120 + Float.parseFloat(order.getBlance120().replace(",", ""));
+				}
 				total = total + Float.parseFloat(order.getAll_Total().replace(",", ""));
 				totalP = totalP + Float.parseFloat(order.getAmoutPaid().replace(",", ""));
 				totalUP = totalUP + Float.parseFloat(order.getAmoutUnPaid().replace(",", ""));
@@ -642,19 +684,31 @@ public class PdfCustomer {
 							totalDis.setBorderColorBottom(BaseColor.DARK_GRAY);
 							tblProducto.addCell(totalDis);
 							
-							PdfPCell totaln = getCellRR("$"+String.format ("%,.2f",totalBF), font, 7, 0);
 
-							totaln.setBorderWidthBottom(1);
-							totaln.setBorderColorBottom(BaseColor.DARK_GRAY);
-							totaln.setBorderWidthRight(1);
-							totaln.setBorderColorRight(BaseColor.DARK_GRAY);
-							tblProducto.addCell(totaln);
+							if(title.equals("EXOTIC REEF IMPORTS, INC. CUSTOMER LEDGER REPORT")){
+								PdfPCell totaln = getCellRR("", font, 7, 0);
+								totaln.setBorderWidthBottom(1);
+								totaln.setBorderColorBottom(BaseColor.DARK_GRAY);
+								totaln.setBorderWidthRight(1);
+								totaln.setBorderColorRight(BaseColor.DARK_GRAY);
+								tblProducto.addCell(totaln);
+							}else{
+								PdfPCell totaln = getCellRR("$"+String.format ("%,.2f",totalBF), font, 7, 0);
+								totaln.setBorderWidthBottom(1);
+								totaln.setBorderColorBottom(BaseColor.DARK_GRAY);
+								totaln.setBorderWidthRight(1);
+								totaln.setBorderColorRight(BaseColor.DARK_GRAY);
+								tblProducto.addCell(totaln);
+							}
 							document.add(tblProducto);
 							
 							total = 0.f;
 							totalP = 0.f;
 							totalUP = 0.f;
-							
+							totalB30 = 0.f;
+							totalB60 = 0.f;
+							totalB90 = 0.f;
+							totalB120 = 0.f;
 							tblProducto = new PdfPTable(7);
 							tblProducto.setWidthPercentage(100);
 							tblProducto.setWidths(new float[] { 13,13,17,13,13,13,18 });
@@ -728,7 +782,8 @@ public class PdfCustomer {
 					
 					PdfPCell discount = getCellR("$"+order.getDisc(), font, 7, 0);
 					tblProducto.addCell(discount);
-					
+			
+						
 					PdfPCell blanceFWD = getCellR("$"+order.getBalance(), font, 7, 0);
 					blanceFWD.setBorderWidthRight(1);
 					blanceFWD.setBorderColorRight(BaseColor.DARK_GRAY);

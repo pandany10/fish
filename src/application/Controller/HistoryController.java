@@ -525,7 +525,7 @@ public class HistoryController extends Menu implements Initializable {
 							or.setAmoutPaid("$"+String.format ("%,.2f",totalP));
 							or.setAmoutUnPaid("$"+String.format ("%,.2f",totalUP));
 							or.setDisc("$"+String.format ("%,.2f",totalDS));
-							or.setBalance("$"+String.format ("%,.2f",totalBF));
+							//or.setBalance("$"+String.format ("%,.2f",totalBF));
 							or.setCustomer_date("");
 							
 							lstOrder.add(or);
