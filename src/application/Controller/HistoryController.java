@@ -33,7 +33,9 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
@@ -43,9 +45,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 public class HistoryController extends Menu implements Initializable {
@@ -126,7 +133,65 @@ public class HistoryController extends Menu implements Initializable {
 									e.printStackTrace();
 								}
 	                        }else{
-	                        	ConfirmationEmailField b = new ConfirmationEmailField(prevStage, "Confirmation");
+	                        	try {
+		                         	Stage stage = new Stage();
+		                            stage.setTitle("Confirmation");
+		                            stage.getIcons().add(new Image("file:resources/images/icon.png"));
+		                            FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/ConfirmationEmailField.fxml"));
+		                            Pane myPane;
+									myPane = (Pane)myLoader.load();
+									ConfirmationEmailFieldController controller = (ConfirmationEmailFieldController) myLoader.getController();
+		                     	 //   controller.setPrevStage(stage);
+		                            Scene scene = new Scene(myPane);
+		                            stage.setScene(scene);
+		                            stage.setResizable(false);
+		                            stage.initModality( Modality.APPLICATION_MODAL );
+		                            stage.initOwner( prevStage );
+		                            stage.initStyle( StageStyle.UTILITY );
+		                            controller.ConfirmationWindowAccounts(prevStage, stage);
+		                            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+		                                 @Override
+		                                 public void handle(WindowEvent t) {
+		                                	 controller.chkClose = true;
+		                                 }
+		                             }); 
+		                            stage.setOnHiding(new EventHandler<WindowEvent>() {
+
+		                                @Override
+		                                public void handle(WindowEvent event) {
+		                                    Platform.runLater(new Runnable() {
+
+		                                        @Override
+		                                        public void run() {
+		                                            System.out.println("Application Closed by click to Close Button(X)");
+		                                            System.out.println(controller.postStatus);
+		                                            System.out.println(event.getEventType());
+		                                            if( controller.chkClose == false){
+		                    	                        if(controller.postStatus == true){
+		                    	                        	
+		                    	                        }else{
+		                    	                        	//
+		                    	                        	isCustomEmail = true;
+		                    	                        	emailTo = controller.email;
+		                    	                        	try {
+		                    	                        		Report11E();
+															} catch (IOException e) {
+																// TODO Auto-generated catch block
+																e.printStackTrace();
+															}
+		                    	                        }
+		                                            }
+		                                        }
+		                                    });
+		                                }
+		                            });
+		                            stage.show();
+
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+	                        /*	ConfirmationEmailField b = new ConfirmationEmailField(prevStage, "Confirmation");
 	                            b.setOnCloseRequest(new EventHandler<WindowEvent>() {
 	                                 @Override
 	                                 public void handle(WindowEvent t) {
@@ -164,14 +229,14 @@ public class HistoryController extends Menu implements Initializable {
 	                                        }
 	                                    });
 	                                }
-	                            });
+	                            });*/
 	                        }
                         }
                     }
                 });
             }
         });
-    	Report11E();
+    //	Report11E();
      }
 	public void Report11E() throws IOException { 
 		btnEmail.setDisable(true);
@@ -240,7 +305,7 @@ public class HistoryController extends Menu implements Initializable {
 
 		 String host="secure.emailsrvr.com";  
 		  final String user="orders@exoticreefimports.com";//change accordingly  
-		  final String password="Z@eqQ^hnA~9R";//change accordingly  
+		  final String password="2?WXvL9U>R]gPH`t";//change accordingly  
 		    
 		  String to="avictim404@gmail.com";//change accordingly  
 		  String to1="remymedranda@gmail.com";//change accordingly  
@@ -250,7 +315,7 @@ public class HistoryController extends Menu implements Initializable {
 		   props.put("mail.smtp.host",host);  
 		   props.put("mail.transport.protocol.", "smtp");
 		   props.put("mail.smtp.auth", "true");  
-		   props.put("mail.smtp.port", "587");
+		   props.put("mail.smtp.port", "2525");
 		     
 		   Session session = Session.getDefaultInstance(props,  
 		    new javax.mail.Authenticator() {  

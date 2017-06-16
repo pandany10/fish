@@ -169,7 +169,7 @@ public class CustomerDao {
 	}
 	public List<CustomerModel> getLstCustomerSearchc(String key, String type) throws ClassNotFoundException, SQLException {
 		List<CustomerModel> LstCustomer = new ArrayList<>();
-		final String[] filter = new String[] { "ID", "Email", "Name", "Contact", "Phone", "City" };
+		final String[] filter = new String[] { "ID", "Email", "Name", "Contact", "Phone", "City","combind" };
 		String sql ="SELECT t1.* , t2.* FROM  exoticre_order.customerfishpro t1 left join exoticre_order.salesperson t2 on t1.Salesperson = t2.scode  where 	LOWER(t1.CustomerID) like  LOWER('%"+key+"%')  limit 1000 ";
 		if(type.equals(filter[1])){
 			sql ="SELECT t1.* , t2.* FROM  exoticre_order.customerfishpro t1 left join exoticre_order.salesperson t2 on t1.Salesperson = t2.scode  where 	LOWER(t1.Email) like  LOWER('%"+key+"%')  limit 1000";
@@ -185,6 +185,9 @@ public class CustomerDao {
 		}
 		if(type.equals(filter[5])){
 			sql ="SELECT t1.* , t2.* FROM  exoticre_order.customerfishpro t1 left join exoticre_order.salesperson t2 on t1.Salesperson = t2.scode  where 	LOWER(t1.City) like  LOWER('%"+key+"%') limit 1000";
+		}
+		if(type.equals(filter[6])){
+			sql ="SELECT t1.* , t2.* FROM  exoticre_order.customerfishpro t1 left join exoticre_order.salesperson t2 on t1.Salesperson = t2.scode  where 	LOWER(t1.CustomerID) like  LOWER('%"+key+"%')  or LOWER(t1.CompanyName) like  LOWER('%"+key+"%')  limit 1000 ";
 		}
 		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
 		 while (rs.next()) {

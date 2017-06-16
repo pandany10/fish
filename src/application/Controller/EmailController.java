@@ -137,7 +137,7 @@ public class EmailController extends Menu implements Initializable {
 
 		 String host="secure.emailsrvr.com";  
 		  final String user="orders@exoticreefimports.com";//change accordingly  
-		  final String password="Z@eqQ^hnA~9R";//change accordingly  
+		  final String password="2?WXvL9U>R]gPH`t";//change accordingly  
 		    
 		  String to="avictim404@gmail.com";//change accordingly  
 		  String to1="remymedranda@gmail.com";//change accordingly  
@@ -147,7 +147,7 @@ public class EmailController extends Menu implements Initializable {
 		   props.put("mail.smtp.host",host);  
 		   props.put("mail.transport.protocol.", "smtp");
 		   props.put("mail.smtp.auth", "true");  
-		   props.put("mail.smtp.port", "587");
+		   props.put("mail.smtp.port", "2525");
 		     
 		   Session session = Session.getDefaultInstance(props,  
 		    new javax.mail.Authenticator() {  

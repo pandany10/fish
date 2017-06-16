@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="223.0" prefWidth="610.0" stylesheets="@../Css/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller.ConfirmationEmailFieldController">
+   <children>
+      <Label layoutX="2.0" layoutY="5.0" prefHeight="27.0" prefWidth="99.0" text="Search:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="keySearch" layoutX="101.0" layoutY="6.0" onAction="#actionSearchCus" prefHeight="25.0" prefWidth="243.0" />
+      <TableView fx:id="twSearchCus" layoutX="4.0" layoutY="33.0" onMouseClicked="#doubleClick" prefHeight="155.0" prefWidth="604.0">
+         <columns>
+            <TableColumn fx:id="tcs_cus" prefWidth="82.0" text="Cus Id" />
+            <TableColumn fx:id="tcs_name" prefWidth="259.0" text="Customer Name" />
+            <TableColumn fx:id="tcs_email" prefWidth="255.0" text="Email" />
+         </columns>
+      </TableView>
+      <TextField fx:id="txtEmail" layoutX="101.0" layoutY="192.0" prefHeight="25.0" prefWidth="362.0" />
+      <Button fx:id="btnkok" layoutX="489.0" layoutY="192.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Send To" />
+      <Label layoutX="2.0" layoutY="191.0" prefHeight="27.0" prefWidth="93.0" text="Send To:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
