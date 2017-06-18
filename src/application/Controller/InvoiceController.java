@@ -22,7 +22,9 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContentDisplay;
@@ -36,11 +38,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
@@ -799,6 +805,56 @@ public class InvoiceController  extends Menu implements Initializable {
 
 			@Override
 			public void handle(TableColumn.CellEditEvent<ProductModel, String> event) {
+				/*try {
+             	Stage stage = new Stage();
+                stage.setTitle("Confirmation");
+                stage.getIcons().add(new Image("file:resources/images/icon.png"));
+                FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/ConfirmationSearchSku.fxml"));
+                Pane myPane;
+				myPane = (Pane)myLoader.load();
+				ConfirmationSearchSkuController controller = (ConfirmationSearchSkuController) myLoader.getController();
+         	 //   controller.setPrevStage(stage);
+                Scene scene = new Scene(myPane);
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.initModality( Modality.APPLICATION_MODAL );
+                stage.initOwner( prevStage );
+                stage.initStyle( StageStyle.UTILITY );
+                controller.ConfirmationWindowAccounts(prevStage, stage);
+                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                     @Override
+                     public void handle(WindowEvent t) {
+                    	 controller.chkClose = true;
+                     }
+                 }); 
+                stage.setOnHiding(new EventHandler<WindowEvent>() {
+
+                    @Override
+                    public void handle(WindowEvent event) {
+                        Platform.runLater(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                System.out.println("Application Closed by click to Close Button(X)");
+                                System.out.println(controller.postStatus);
+                                System.out.println(event.getEventType());
+                                if( controller.chkClose == false){
+        	                        if(controller.postStatus == true){
+        	                        	
+        	                        }else{
+        	                        	
+        	                        }
+                                }
+                            }
+                        });
+                    }
+                });
+                stage.show();
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
 				//System.out.println("double:"+event.getNewValue());
 				//ProductModel item = event.getRowValue();
 			//	System.out.println(item.getSku());
@@ -987,14 +1043,80 @@ public class InvoiceController  extends Menu implements Initializable {
 					else if (pos.getRow() <= twOrderDetail.getItems().size() - 1) {
 						//addRow();
 						if(pos.getColumn()==1){
-							twOrderDetail.getSelectionModel().clearSelection();
-							twOrderDetail.getSelectionModel().select(pos.getRow(), twd_qty);
+							/*twOrderDetail.getSelectionModel().clearSelection();
+							twOrderDetail.getSelectionModel().select(pos.getRow(), twd_qty);*/
 							//twOrderDetail.getFocusModel().focus(pos.getRow(), twd_qty);
+							try {
+				             	Stage stage = new Stage();
+				                stage.setTitle("Search Products");
+				                stage.getIcons().add(new Image("file:resources/images/icon.png"));
+				                FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/ConfirmationSearchSku.fxml"));
+				                Pane myPane;
+								myPane = (Pane)myLoader.load();
+								ConfirmationSearchSkuController controller = (ConfirmationSearchSkuController) myLoader.getController();
+				         	 //   controller.setPrevStage(stage);
+				                Scene scene = new Scene(myPane);
+				                stage.setScene(scene);
+				                stage.setResizable(false);
+				                stage.initModality( Modality.APPLICATION_MODAL );
+				                stage.initOwner( prevStage );
+				                stage.initStyle( StageStyle.UTILITY );
+				                controller.ConfirmationWindowAccounts(prevStage, stage);
+				                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				                     @Override
+				                     public void handle(WindowEvent t) {
+				                    	 controller.chkClose = true;
+				                     }
+				                 }); 
+				                controller.twResultSearch.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+				        		    @Override
+				        		    public void handle(KeyEvent event) {
+				        		      if(event.getCode() == KeyCode.PAGE_UP){
+				        		    	  txtKeySearch.requestFocus();
+				        		      }else{ 
+				        		    	  if (event.getCode() == KeyCode.ENTER ) {
+				        		    		  Entertb(controller);
+				        				  }
+				        		    	  if (event.getCode() == KeyCode.PAGE_DOWN ) {
+				        		    		 // txtEmail.requestFocus();
+				        		    	  }
+				        		      }
+				        		   }
+				        		}); 
+				                stage.setOnHiding(new EventHandler<WindowEvent>() {
+
+				                    @Override
+				                    public void handle(WindowEvent event) {
+				                        Platform.runLater(new Runnable() {
+
+				                            @Override
+				                            public void run() {
+				                                System.out.println("Application Closed by click to Close Button(X)");
+				                                System.out.println(controller.postStatus);
+				                                System.out.println(event.getEventType());
+				                                if( controller.chkClose == false){
+				        	                        if(controller.postStatus == true){
+				        	                        	
+				        	                        }else{
+				        	                        	
+				        	                        }
+				                                }
+				                            }
+				                        });
+				                    }
+				                });
+				                stage.show();
+
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 						if(pos.getColumn()==2){
 							twOrderDetail.getSelectionModel().clearSelection();
 							twOrderDetail.getSelectionModel().select(pos.getRow(), twd_disk);
 							twOrderDetail.getFocusModel().focus(pos.getRow(), twd_disk);
+							
 							//addRow();
 						}
 						if(pos.getColumn()==7){
@@ -1107,7 +1229,54 @@ public class InvoiceController  extends Menu implements Initializable {
 		});
 
 	}
-
+	public void Entertb(ConfirmationSearchSkuController controller){
+		TablePosition pos = controller.twResultSearch.getFocusModel().getFocusedCell();
+		TablePosition pos1 = twOrderDetail.getFocusModel().getFocusedCell();
+		System.out.println(pos1.getRow());
+		if (pos.getRow() == -1) {
+			controller.twResultSearch.getSelectionModel().select(0);
+		}
+		if (pos.getRow() < controller.twResultSearch.getItems().size()) {
+			ProductModel p = controller.twResultSearch.getSelectionModel().getSelectedItem();
+			System.out.println(p.getSku());
+			if (p.getSku() != null) {
+				p.setId(p.getId());
+				showPopup(true );
+				int count = twOrderDetail.getItems().size();
+				List<ProductModel> lst = new ArrayList<>();
+				lst.add(p);
+				ProductModel pro = new ProductModel();
+				for(int i =0;i<count;i++){
+					String sub = twOrderDetail.getItems().get(i).getTotal();
+					if (sub != null && !sub.isEmpty() ) {
+						ProductModel pro1 = twOrderDetail.getItems().get(i);
+						lst.add(pro1);
+					}else{
+						lst.add(pro);
+					}
+				}
+				//twOrderDetail.getItems().clear();
+				//twOrderDetail.getItems().addAll(lst);
+				twOrderDetail.getItems().remove(pos1.getRow());
+				twOrderDetail.getItems().add(pos1.getRow(), p);
+				txtTotalOrder.setText(String.format ("%.2f", calTotal()));
+				twOrderDetail.getSelectionModel().clearSelection();
+				twOrderDetail.getSelectionModel().select((lst.size()-1), twd_sku1);
+				controller.postStatus =false;
+				controller.stage.close();
+				twOrderDetail.getSelectionModel().clearSelection();
+				if(pos1.getRow() == twOrderDetail.getItems().size() - 1){
+					addRow();
+				}else{
+					System.out.println("123");
+					twOrderDetail.getSelectionModel().select(pos1.getRow()+1, twd_sku1);
+				}
+			} else {
+				
+			}
+		}
+		
+	}
 	private Callback<TableColumn<ProductModel, String>, TableCell<ProductModel, String>> createNumberCellFactoryd() {
 
 		Callback<TableColumn<ProductModel, String>, TableCell<ProductModel, String>> factory = TextFieldTableCell
