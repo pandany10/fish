@@ -43,7 +43,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
@@ -54,9 +53,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 public class AccoutingHomeController extends Menu implements Initializable {
@@ -67,6 +64,9 @@ public class AccoutingHomeController extends Menu implements Initializable {
     public Button btnReceivablesP;
     @FXML
     public Button btnHistoryP;
+    @FXML
+    public Button btnCreditMemos;
+    
     boolean isShowPopup = false;
 	@FXML
 	private Pane paneSearch;
@@ -342,6 +342,24 @@ public class AccoutingHomeController extends Menu implements Initializable {
 	            {
 	            	try {
 	            		 gotoHistory1();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+	            }
+	        }
+	    });
+		btnCreditMemos.setOnKeyPressed(new EventHandler<KeyEvent>()
+	    {
+	        @Override
+	        
+	        public void handle(KeyEvent ke)
+	        {
+	            if (ke.getCode().equals(KeyCode.ENTER))
+	            {
+	            	try {
+	            		 showCreaditMemos();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -687,9 +705,93 @@ public class AccoutingHomeController extends Menu implements Initializable {
     public void gotoHistory1(ActionEvent event) throws IOException {          
     	gotoHistory1();
      }
+    public void gotoCreditMemos(ActionEvent event) throws IOException {          
+    	//System.out.println("");
+    	showCreaditMemos();
+     }
     public void SendEmail(ActionEvent event) throws IOException {          
     	SendEmail();
      }
+    public void showCreaditMemos() throws IOException{
+	    	 Stage stage = new Stage();
+	         stage.setTitle("Orders complete");
+	         stage.getIcons().add(new Image("file:resources/images/icon.png"));
+	         FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/OrdersCreditmemos.fxml"));
+	         Pane myPane = (Pane)myLoader.load();
+	         
+	         OrdersMeno1Controller controller = (OrdersMeno1Controller) myLoader.getController();
+	  	    controller.setPrevStage(stage);
+	  	    controller.setScreen("App Java1");
+	 	    controller.setCbFilter(false);
+	 	    controller.setTw_payment(false);
+	 	    controller.setTw_issued(false);
+	 	    controller.setStatus(false);
+	        Scene scene = new Scene(myPane);
+	         stage.setScene(scene);
+	         prevStage.close();
+	         stage.setResizable(false);
+	         stage.show();
+
+	         scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+	             int count = 0;
+	     	    @Override
+	     	    public void handle(KeyEvent evt) {
+	     	        if (evt.getCode().equals(KeyCode.ESCAPE)) {
+		     	       	if(!controller.stateEdit){
+		     	        	String temp = controller.getCscreen();
+		     	        	System.out.println(temp);
+		     	        	if(temp.equals("lstOrder")){
+		     	        		prevStage.show();
+		     	        		stage.close();
+		     	        	}else{
+		     	        		count++;
+		     	        		if(count ==1 ){
+		 	    	        		try {
+		 	    	        			stage.close();
+		 								gotoOrders();
+		 							} catch (IOException e) {
+		 								// TODO Auto-generated catch block
+		 								e.printStackTrace();
+		 							}
+		     	        		}
+		     	        	}
+		     	        }
+	     	       }
+	     	    }
+	     	});
+		    scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+		     	    @Override
+		     	    public void handle(KeyEvent evt) {
+		     	    	//if(isControl == true){
+			     	        String code = evt.getText();
+			     	        if(code != null){
+			 	    	        if(code.length()>0){
+			 	    	        	 if (evt.getEventType() == KeyEvent.KEY_PRESSED && (!evt.isControlDown())) {
+			 	    	    	        System.out.println("Home " +evt.getCode());
+			 	    	    	        evt.fireEvent(scene,new KeyEvent(KeyEvent.KEY_PRESSED, null, null, evt.getCode(), false, true, false, false));
+			 	    	    	     }
+			 	    	        }
+			     	        }
+		     	    	//}
+		     	    }
+		     	}); 
+	        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+	     	    @Override
+	     	    public void handle(KeyEvent evt) {
+	     	    	if(controller.isControl == true){
+	 	     	        String code = evt.getText();
+	 	     	        if(code != null){
+	 	 	    	        if(code.length()>0){
+	 	 	    	        	 if (evt.getEventType() == KeyEvent.KEY_PRESSED && (!evt.isControlDown())) {
+	 	 	    	    	        System.out.println("Home " +evt.getCode());
+	 	 	    	    	        evt.fireEvent(scene,new KeyEvent(KeyEvent.KEY_PRESSED, null, null, evt.getCode(), false, true, false, false));
+	 	 	    	    	     }
+	 	 	    	        }
+	 	     	        }
+	     	    	}
+	     	    }
+	     	}); 
+    }
     public void SendEmail() throws IOException{
     	String emails = txtEmail.getText();
     	if(emails.indexOf('@') != -1){

@@ -125,10 +125,18 @@ public class PaymentDetailController extends Menu implements Initializable {
 	
 	@FXML
 	private Button btnSubmit;
+	@FXML
+	private Button btnSave;
+	@FXML
+	private CheckBox chkApplyCreditMemo;
+	@FXML
+	private Label lblmsgMemo;
 	
 	private OrderDao orderDao;
 	private CardDao cardDao;
-		
+	private float 	All_Total_Memo = 0.00f;
+	private float 	All_Total_Memo_Sub = 0.00f;
+	private float 	All_Total = 0.00f;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		inits();
@@ -216,6 +224,32 @@ public class PaymentDetailController extends Menu implements Initializable {
 						  }
 						});
 					ShowCus( customer);
+					All_Total_Memo = orderDao.getTotalMemo(customer.getCustomerID());
+					All_Total = lstProduct.get(0).getAll_Total();
+					
+					System.out.println(All_Total_Memo);
+				
+					Platform.runLater(new Runnable() {
+						  @Override
+						  public void run() {
+								try {
+									float amoutMemo = orderDao.getAmountMemo(orderId);
+									if(amoutMemo>0){
+										chkApplyCreditMemo.setSelected(true);
+										try {
+											checkMemo();
+										} catch (IOException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									}
+								} catch (ClassNotFoundException | SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								
+						  }
+						});
 					//
 					this.suspend();
 				} catch (ClassNotFoundException e) {
@@ -372,7 +406,23 @@ public class PaymentDetailController extends Menu implements Initializable {
 			txtPaid.setEditable(false);
 		}
 	}
-	
+	public void checkMemo(ActionEvent event) throws IOException {
+		checkMemo();
+	}
+	public void checkMemo() throws IOException {
+		System.out.println(chkApplyCreditMemo.isSelected());
+		if(chkApplyCreditMemo.isSelected()){
+			if(All_Total<All_Total_Memo){
+				All_Total_Memo_Sub = All_Total;
+			}else {
+				All_Total_Memo_Sub = All_Total_Memo;
+			}
+			lblmsgMemo.setText("-$"+All_Total_Memo_Sub+" subtract from $"+All_Total);
+		}else{
+			lblmsgMemo.setText("");
+			All_Total_Memo_Sub = 0.00f;
+		}
+	}
 	public void payMethod(ActionEvent event) throws IOException {
 		String paymentMethod ="";
 		if(optCheck.isSelected()){
@@ -440,8 +490,74 @@ public class PaymentDetailController extends Menu implements Initializable {
 		}
 	}
 	public void processSubmit(){
-		statusSPayment.setText("Please wait ... the payment is processing.");
-		
+		String paymentMethod ="";
+		if(optCheck.isSelected()){
+			optCredit.setSelected(false);
+			optCreditMeno.setSelected(false);
+			optPayPal.setSelected(false);
+			optCash.setSelected(false);
+			optStripe.setSelected(false);
+			paymentMethod = "Check";
+		}
+		if(optCredit.isSelected()){
+			optCheck.setSelected(false);
+			optCreditMeno.setSelected(false);
+			optPayPal.setSelected(false);
+			optCash.setSelected(false);
+			optStripe.setSelected(false);
+			paymentMethod = "Credit/Debit Card";
+		}
+		if(optCreditMeno.isSelected()){
+			optCredit.setSelected(false);
+			optCheck.setSelected(false);
+			optPayPal.setSelected(false);
+			optCash.setSelected(false);
+			optStripe.setSelected(false);
+			paymentMethod = "Credit Memo";
+		}
+		if(optPayPal.isSelected()){
+			optCredit.setSelected(false);
+			optCreditMeno.setSelected(false);
+			optCheck.setSelected(false);
+			optCash.setSelected(false);
+			optStripe.setSelected(false);
+			paymentMethod = "PayPal";
+		}
+		if(optCash.isSelected()){
+			optCredit.setSelected(false);
+			optCreditMeno.setSelected(false);
+			optPayPal.setSelected(false);
+			optCheck.setSelected(false);
+			optStripe.setSelected(false);
+			paymentMethod = "Cash";
+		}
+		if(optStripe.isSelected()){
+			optCredit.setSelected(false);
+			optCreditMeno.setSelected(false);
+			optPayPal.setSelected(false);
+			optCheck.setSelected(false);
+			optCash.setSelected(false);
+			paymentMethod = "Stripe";
+		}
+		if(paymentMethod.equals("")){
+			statusSPayment.setText("Please select a payment method.");
+		}else{
+			statusSPayment.setText("Please wait ... the payment is processing.");
+		//	if(chkApplyCreditMemo.isSelected()){
+				try {
+					orderDao.updateAmoutMemo(orderId, All_Total_Memo_Sub);
+				/*	float amoutMemo =  orderDao.getAmountMemo(orderId);
+					if(amoutMemo>0){
+						//processs
+					}*/
+					statusSPayment.setText("Payment process success.");
+				} catch (ClassNotFoundException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		//	}
+			
+		}
 	}
 	public void gotoHome() throws IOException {          
 			Stage stage = new Stage();

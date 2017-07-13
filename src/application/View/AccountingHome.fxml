@@ -85,17 +85,17 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Button fx:id="btnAging" alignment="TOP_LEFT" layoutX="456.0" layoutY="94.0" mnemonicParsing="false" onAction="#gotoAging" prefHeight="39.0" prefWidth="327.0" text="1. Aging Report">
+      <Button fx:id="btnAging" alignment="TOP_LEFT" layoutX="456.0" layoutY="61.0" mnemonicParsing="false" onAction="#gotoAging" prefHeight="39.0" prefWidth="327.0" text="1. Aging Report">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnReceivablesP" alignment="TOP_LEFT" layoutX="456.0" layoutY="144.0" mnemonicParsing="false" onAction="#gotoReceivables1" prefHeight="39.0" prefWidth="327.0" text="2. Account Statement">
+      <Button fx:id="btnReceivablesP" alignment="TOP_LEFT" layoutX="456.0" layoutY="109.0" mnemonicParsing="false" onAction="#gotoReceivables1" prefHeight="39.0" prefWidth="327.0" text="2. Account Statement">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnHistoryP" alignment="TOP_LEFT" layoutX="456.0" layoutY="195.0" mnemonicParsing="false" onAction="#gotoHistory1" prefHeight="39.0" prefWidth="327.0" text="3. Customer Ledger">
+      <Button fx:id="btnHistoryP" alignment="TOP_LEFT" layoutX="456.0" layoutY="156.0" mnemonicParsing="false" onAction="#gotoHistory1" prefHeight="39.0" prefWidth="327.0" text="3. Customer Ledger">
          <font>
             <Font size="18.0" />
          </font>
@@ -272,7 +272,7 @@
             </Label>
          </children>
       </Pane>
-      <Label alignment="CENTER" layoutX="348.0" layoutY="53.0" prefHeight="27.0" prefWidth="547.0" style="-fx-font-size: 20; -fx-font-weight: bold;" styleClass="clbold" text="ACCOUNTING">
+      <Label alignment="CENTER" layoutX="348.0" layoutY="28.0" prefHeight="27.0" prefWidth="547.0" style="-fx-font-size: 20; -fx-font-weight: bold;" styleClass="clbold" text="ACCOUNTING">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -304,7 +304,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane fx:id="paneEmail" layoutY="282.0" prefHeight="330.0" prefWidth="1195.0" visible="false">
+      <Pane fx:id="paneEmail" cacheShape="false" layoutY="282.0" prefHeight="330.0" prefWidth="1195.0">
          <children>
             <TextField fx:id="txtEmail" layoutX="454.0" layoutY="1.0" prefHeight="25.0" prefWidth="246.0" />
             <Label layoutX="351.0" layoutY="1.0" prefHeight="27.0" prefWidth="98.0" text="Email:">
@@ -316,7 +316,7 @@
             <Label layoutX="454.0" layoutY="35.0" prefHeight="17.0" prefWidth="730.0" text="Please Enter Correct Email. if you send for many email add ; after each email.  example : email1@gmail.com;mail2@gmail.com" />
          </children>
       </Pane>
-      <Pane fx:id="paneChoice" layoutY="282.0" prefHeight="330.0" prefWidth="1195.0">
+      <Pane fx:id="paneChoice" layoutY="282.0" prefHeight="330.0" prefWidth="1195.0" visible="false">
          <children>
             <Label alignment="TOP_LEFT" layoutX="617.0" layoutY="14.0" prefHeight="30.0" prefWidth="21.0" style="-fx-font-size: 20; -fx-font-weight: bold;" text="P">
                <font>
@@ -373,5 +373,10 @@
             </Label>
          </children>
       </Pane>
+      <Button fx:id="btnCreditMemos" alignment="TOP_LEFT" layoutX="456.0" layoutY="201.0" mnemonicParsing="false" onAction="#gotoCreditMemos" prefHeight="39.0" prefWidth="327.0" text="4. Credit Memos">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

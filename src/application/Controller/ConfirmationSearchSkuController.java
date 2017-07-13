@@ -71,7 +71,18 @@ public class ConfirmationSearchSkuController extends Menu implements Initializab
 		}
 	}
 	public void actionSearch(ActionEvent event) throws IOException {
-		actionSearch();
+		 Thread thLoadDatas1 = new Thread() {
+				@SuppressWarnings("deprecation")
+				public void run() {
+					try {
+		    			  actionSearch();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			};
+			thLoadDatas1.start();
 	}
 	public void actionSearch() throws IOException {
 		System.out.println("key ="+txtKeySearch.getText());
@@ -133,7 +144,7 @@ public class ConfirmationSearchSkuController extends Menu implements Initializab
 		    	  if(event.getCode() == KeyCode.TAB){
 		    		  
 		    	  }else{
-		    		  Thread thLoadDatas1 = new Thread() {
+		    		 /* Thread thLoadDatas1 = new Thread() {
 		  				@SuppressWarnings("deprecation")
 		  				public void run() {
 		  					try {
@@ -144,7 +155,7 @@ public class ConfirmationSearchSkuController extends Menu implements Initializab
 		  					}
 		  				}
 		  			};
-		  			thLoadDatas1.start();
+		  			thLoadDatas1.start();*/
 		    	  }
 		      }
 		   }

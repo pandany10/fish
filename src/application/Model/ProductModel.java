@@ -3,6 +3,7 @@ package application.Model;
 public class ProductModel {
 	private Integer id;
 	private Integer ido;
+	private Integer productId;
 	private String sku;
 	private String qty;//
 	private String size;//
@@ -13,6 +14,7 @@ public class ProductModel {
 	private String disc;//
 	private String total;
 	private Float All_Total;
+	private Float All_Total_Memo;
 	private Float surcharge;
 	private String scientific;
 	private String readyPayment ="0";
@@ -20,7 +22,26 @@ public class ProductModel {
 	private String issued ="0";
 	private String  ExpressCommisson;
 	private String chlSL;
+	private String ClientCustomerID;
 	
+	public Float getAll_Total_Memo() {
+		return All_Total_Memo;
+	}
+	public void setAll_Total_Memo(Float all_Total_Memo) {
+		All_Total_Memo = all_Total_Memo;
+	}
+	public String getClientCustomerID() {
+		return ClientCustomerID;
+	}
+	public void setClientCustomerID(String clientCustomerID) {
+		ClientCustomerID = clientCustomerID;
+	}
+	public Integer getProductId() {
+		return productId;
+	}
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
 	private String grxp="";
 	
 	public String getGrxp() {
@@ -87,7 +108,14 @@ public class ProductModel {
 		this.ido = ido;
 	}
 	private Boolean commission = true;
+	private Boolean fishdie = true;
 	
+	public Boolean getFishdie() {
+		return fishdie;
+	}
+	public void setFishdie(Boolean fishdie) {
+		this.fishdie = fishdie;
+	}
 	public Boolean getCommission() {
 		return commission;
 	}

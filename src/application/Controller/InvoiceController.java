@@ -227,6 +227,7 @@ public class InvoiceController  extends Menu implements Initializable {
 	
 	public CustomerModel customer;
 	
+	public boolean isEditSku = false;
 	public void setTxtKeySearch() {
 		txtKeySearch.setText("");
 	}
@@ -1028,7 +1029,74 @@ public class InvoiceController  extends Menu implements Initializable {
 		twOrderDetail.addEventFilter(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
+	
+				if ( event.getCode() == KeyCode.P ) {
+					try {
+		             	Stage stage = new Stage();
+		                stage.setTitle("Search Products");
+		                stage.getIcons().add(new Image("file:resources/images/icon.png"));
+		                FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/ConfirmationSearchSku.fxml"));
+		                Pane myPane;
+						myPane = (Pane)myLoader.load();
+						ConfirmationSearchSkuController controller = (ConfirmationSearchSkuController) myLoader.getController();
+		         	 //   controller.setPrevStage(stage);
+		                Scene scene = new Scene(myPane);
+		                stage.setScene(scene);
+		                stage.setResizable(false);
+		                stage.initModality( Modality.APPLICATION_MODAL );
+		                stage.initOwner( prevStage );
+		                stage.initStyle( StageStyle.UTILITY );
+		                controller.ConfirmationWindowAccounts(prevStage, stage);
+		                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+		                     @Override
+		                     public void handle(WindowEvent t) {
+		                    	 controller.chkClose = true;
+		                     }
+		                 }); 
+		                controller.twResultSearch.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+		        		    @Override
+		        		    public void handle(KeyEvent event) {
+		        		      if(event.getCode() == KeyCode.PAGE_UP){
+		        		    	  txtKeySearch.requestFocus();
+		        		      }else{ 
+		        		    	  if (event.getCode() == KeyCode.ENTER ) {
+		        		    		  Entertb(controller);
+		        				  }
+		        		    	  if (event.getCode() == KeyCode.PAGE_DOWN ) {
+		        		    		 // txtEmail.requestFocus();
+		        		    	  }
+		        		      }
+		        		   }
+		        		}); 
+		                stage.setOnHiding(new EventHandler<WindowEvent>() {
 
+		                    @Override
+		                    public void handle(WindowEvent event) {
+		                        Platform.runLater(new Runnable() {
+
+		                            @Override
+		                            public void run() {
+		                                System.out.println("Application Closed by click to Close Button(X)");
+		                                System.out.println(controller.postStatus);
+		                                System.out.println(event.getEventType());
+		                                if( controller.chkClose == false){
+		        	                        if(controller.postStatus == true){
+		        	                        	
+		        	                        }else{
+		        	                        	
+		        	                        }
+		                                }
+		                            }
+		                        });
+		                    }
+		                });
+		                stage.show();
+
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 				if ( event.getCode() == KeyCode.TAB ||  event.getCode() == KeyCode.ENTER ) {
 					// move focus & selection
 					// we need to clear the current selection first or else the
@@ -1046,71 +1114,13 @@ public class InvoiceController  extends Menu implements Initializable {
 							/*twOrderDetail.getSelectionModel().clearSelection();
 							twOrderDetail.getSelectionModel().select(pos.getRow(), twd_qty);*/
 							//twOrderDetail.getFocusModel().focus(pos.getRow(), twd_qty);
-							try {
-				             	Stage stage = new Stage();
-				                stage.setTitle("Search Products");
-				                stage.getIcons().add(new Image("file:resources/images/icon.png"));
-				                FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/ConfirmationSearchSku.fxml"));
-				                Pane myPane;
-								myPane = (Pane)myLoader.load();
-								ConfirmationSearchSkuController controller = (ConfirmationSearchSkuController) myLoader.getController();
-				         	 //   controller.setPrevStage(stage);
-				                Scene scene = new Scene(myPane);
-				                stage.setScene(scene);
-				                stage.setResizable(false);
-				                stage.initModality( Modality.APPLICATION_MODAL );
-				                stage.initOwner( prevStage );
-				                stage.initStyle( StageStyle.UTILITY );
-				                controller.ConfirmationWindowAccounts(prevStage, stage);
-				                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				                     @Override
-				                     public void handle(WindowEvent t) {
-				                    	 controller.chkClose = true;
-				                     }
-				                 }); 
-				                controller.twResultSearch.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
-				        		    @Override
-				        		    public void handle(KeyEvent event) {
-				        		      if(event.getCode() == KeyCode.PAGE_UP){
-				        		    	  txtKeySearch.requestFocus();
-				        		      }else{ 
-				        		    	  if (event.getCode() == KeyCode.ENTER ) {
-				        		    		  Entertb(controller);
-				        				  }
-				        		    	  if (event.getCode() == KeyCode.PAGE_DOWN ) {
-				        		    		 // txtEmail.requestFocus();
-				        		    	  }
-				        		      }
-				        		   }
-				        		}); 
-				                stage.setOnHiding(new EventHandler<WindowEvent>() {
-
-				                    @Override
-				                    public void handle(WindowEvent event) {
-				                        Platform.runLater(new Runnable() {
-
-				                            @Override
-				                            public void run() {
-				                                System.out.println("Application Closed by click to Close Button(X)");
-				                                System.out.println(controller.postStatus);
-				                                System.out.println(event.getEventType());
-				                                if( controller.chkClose == false){
-				        	                        if(controller.postStatus == true){
-				        	                        	
-				        	                        }else{
-				        	                        	
-				        	                        }
-				                                }
-				                            }
-				                        });
-				                    }
-				                });
-				                stage.show();
-
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+							if(pos.getRow() == twOrderDetail.getItems().size() - 1){
+								addRow();
+							}else{
+								System.out.println("123");
+								twOrderDetail.getSelectionModel().select(pos.getRow()+1, twd_sku1);
 							}
+			
 						}
 						if(pos.getColumn()==2){
 							twOrderDetail.getSelectionModel().clearSelection();
@@ -1275,6 +1285,7 @@ public class InvoiceController  extends Menu implements Initializable {
 				
 			}
 		}
+		isEditSku = false;
 		
 	}
 	private Callback<TableColumn<ProductModel, String>, TableCell<ProductModel, String>> createNumberCellFactoryd() {
@@ -1761,7 +1772,7 @@ public class InvoiceController  extends Menu implements Initializable {
 	    @Override
 	    public void startEdit() {
 	        super.startEdit();
-
+	        isEditSku = true;
 	        if (textField == null) {
 	            createTextField();
 	        }
@@ -1769,6 +1780,71 @@ public class InvoiceController  extends Menu implements Initializable {
 	        setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 	        textField.selectAll();
 	        textField.requestFocus();
+/*	    	try {
+             	Stage stage = new Stage();
+                stage.setTitle("Search Products");
+                stage.getIcons().add(new Image("file:resources/images/icon.png"));
+                FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/ConfirmationSearchSku.fxml"));
+                Pane myPane;
+				myPane = (Pane)myLoader.load();
+				ConfirmationSearchSkuController controller = (ConfirmationSearchSkuController) myLoader.getController();
+         	 //   controller.setPrevStage(stage);
+                Scene scene = new Scene(myPane);
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.initModality( Modality.APPLICATION_MODAL );
+                stage.initOwner( prevStage );
+                stage.initStyle( StageStyle.UTILITY );
+                controller.ConfirmationWindowAccounts(prevStage, stage);
+                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                     @Override
+                     public void handle(WindowEvent t) {
+                    	 controller.chkClose = true;
+                     }
+                 }); 
+                controller.twResultSearch.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+        		    @Override
+        		    public void handle(KeyEvent event) {
+        		      if(event.getCode() == KeyCode.PAGE_UP){
+        		    	  txtKeySearch.requestFocus();
+        		      }else{ 
+        		    	  if (event.getCode() == KeyCode.ENTER ) {
+        		    		  Entertb(controller);
+        				  }
+        		    	  if (event.getCode() == KeyCode.PAGE_DOWN ) {
+        		    		 // txtEmail.requestFocus();
+        		    	  }
+        		      }
+        		   }
+        		}); 
+                stage.setOnHiding(new EventHandler<WindowEvent>() {
+
+                    @Override
+                    public void handle(WindowEvent event) {
+                        Platform.runLater(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                System.out.println("Application Closed by click to Close Button(X)");
+                                System.out.println(controller.postStatus);
+                                System.out.println(event.getEventType());
+                                if( controller.chkClose == false){
+        	                        if(controller.postStatus == true){
+        	                        	
+        	                        }else{
+        	                        	
+        	                        }
+                                }
+                            }
+                        });
+                    }
+                });
+                stage.show();
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
 	    }
 
 	    @Override
@@ -1777,6 +1853,10 @@ public class InvoiceController  extends Menu implements Initializable {
 	        String string = getItem() == null ?"":getItem();
 	        setText(string);
 	        setContentDisplay(ContentDisplay.TEXT_ONLY);
+/*	        if(isEditing()){
+	        	isEditSku = false;
+	        	System.out.println("cancle editsku = "+isEditSku);
+	        }*/
 	    }
 
 	    @Override
@@ -1793,6 +1873,7 @@ public class InvoiceController  extends Menu implements Initializable {
 	                }
 	                setGraphic(textField);
 	                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+	              //  isEditSku = true;
 	            } else {
 	                setText(getString());
 	                //System.out.println("aa "+getString());

@@ -27,7 +27,14 @@ public class OrderInfoModel {
 	private String saleEmail; //order
 	private String Customer_email; //order
 	private Float ShippingCost; //cus fish pro
+	private String customerDate; //order
 	
+	public String getCustomerDate() {
+		return customerDate;
+	}
+	public void setCustomerDate(String customerDate) {
+		this.customerDate = customerDate;
+	}
 	public Float getShippingCost() {
 		return ShippingCost;
 	}

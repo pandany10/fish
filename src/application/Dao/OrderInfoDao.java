@@ -28,6 +28,7 @@ public class OrderInfoDao {
 			 orderInfo.setDfbw(rs.getInt("dfbw"));
 			 orderInfo.setTotalb(rs.getInt("totalb"));
 			 orderInfo.setShippingCost(rs.getFloat("ShippingCost"));
+			 orderInfo.setCustomerDate(rs.getString("Date"));
          }
 		return orderInfo;
 	}

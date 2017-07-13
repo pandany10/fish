@@ -394,6 +394,8 @@ public class ProductDao {
 		 while (rs.next()) {
 			 ProductModel product = new ProductModel();
              String sku = rs.getString("Product_Sku");
+             Integer Product_id = rs.getInt("Product_id");
+             String ClientCustomerID = rs.getString("ClientCustomerID");
              Integer qty = rs.getInt("Item");
              String size = rs.getString("Size");
              String name = rs.getString("Product_name");
@@ -405,6 +407,7 @@ public class ProductDao {
              Float alltotal = rs.getFloat("All_Total");
              Float surcharge = rs.getFloat("surcharge");
              Boolean commission = rs.getBoolean("commission");
+             Boolean fishdie = rs.getBoolean("fishdie");
              String scientific = rs.getString("scientific");
              String paymentMethod = rs.getString("paymentMethod");
              Float amoutPaid = rs.getFloat("amoutPaid");
@@ -430,12 +433,14 @@ public class ProductDao {
             	// disc =  (int)Math.round(((total-subTotal)/subTotal)*100);
              }
              Integer id = rs.getInt("id");
+            // System.out.println(id);
              product.setGrxp(grxp);
+             product.setClientCustomerID(ClientCustomerID);
              product.setId(id);
              product.setScientific(scientific);
              product.setSku(sku);
              product.setQty(String.valueOf(qty));
-             
+             product.setProductId(Product_id);
              product.setSize(size);
              product.setName(name);
              product.setLot(String.valueOf(lot));
@@ -446,6 +451,7 @@ public class ProductDao {
              product.setAll_Total(alltotal);
              product.setSurcharge(surcharge);
              product.setCommission(commission);
+             product.setFishdie(fishdie);
              product.setAmoutPaid(amoutPaid);
              product.setPaymentMethod(paymentMethod);
              product.setChecknumber(checknumber);

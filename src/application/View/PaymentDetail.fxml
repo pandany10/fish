@@ -188,9 +188,9 @@
                 <TableColumn fx:id="td_qty" prefWidth="67.0" styleClass="clcenter" text="QTY" />
                   <TableColumn fx:id="td_size" prefWidth="79.0" styleClass="clcenter" text="SIZE" />
                   <TableColumn fx:id="td_name" prefWidth="433.0" text="NAME" />
-                  <TableColumn fx:id="td_scien" minWidth="5.0" prefWidth="243.0" text="SCIENTIFIC" />
-                  <TableColumn fx:id="td_price" prefWidth="90.0" styleClass="clright" text="PRICE" />
-                  <TableColumn fx:id="td_total" prefWidth="102.0" text="TOTAL($)">
+                  <TableColumn fx:id="td_scien" minWidth="5.0" prefWidth="222.0" text="SCIENTIFIC" />
+                  <TableColumn fx:id="td_price" prefWidth="84.0" styleClass="clright" text="PRICE" />
+                  <TableColumn fx:id="td_total" prefWidth="117.0" text="TOTAL($)">
                      <styleClass>
                         <String fx:value="clright" />
                         <String fx:value="clbold" />
@@ -452,6 +452,13 @@
                   <Font size="18.0" />
                </font>
             </Label>
+            <CheckBox fx:id="chkApplyCreditMemo" layoutX="269.0" layoutY="397.0" mnemonicParsing="false" onAction="#checkMemo" prefHeight="17.0" prefWidth="228.0" text="Apply Credit Memo as Payment" />
+            <Label fx:id="lblmsgMemo" layoutX="503.0" layoutY="395.0" prefHeight="17.0" prefWidth="336.0" textFill="#e40808">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnSave" layoutX="1048.0" layoutY="12.0" mnemonicParsing="false" onAction="#submitPayment" prefHeight="25.0" prefWidth="61.0" text="Save" />
          </children>
       </Pane>
    </children>

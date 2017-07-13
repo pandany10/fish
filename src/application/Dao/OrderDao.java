@@ -464,6 +464,9 @@ public class OrderDao {
 		if(notes.equals("Express")){
 			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes     FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.isExpress) = LOWER('1')  GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
 		}
+		if(notes.equals("App Java1")){
+			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes     FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.status) = LOWER('COMPLETED')  GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
+		}
 		if(notes.equals("ExpressStore")){
 			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes     FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.isExpress) = LOWER('1') and t1.ClientCustomerID = '"+in_status+"' GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
 		}
@@ -719,6 +722,29 @@ public class OrderDao {
 		System.out.println("update product order Total : "+status);
 		return true;
 	}
+	public float getTotalMemo(String CusId) throws ClassNotFoundException, SQLException {
+		String sql = "SELECT * FROM exoticre_order.ordersCreditMemo where ClientCustomerID = "+CusId+" group by order_idc;";
+		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
+		Float allTotal = (float) 0;
+		 while (rs.next()) {
+			 allTotal += rs.getFloat("All_Total_Memo");
+        }
+		String sql1 = "SELECT amoutMemo FROM exoticre_order.orders where ClientCustomerID = "+CusId+" group by order_id;";
+		ResultSet rs1 = DBConnection.getConnection().createStatement().executeQuery(sql1);
+		while (rs1.next()) {
+			allTotal -= rs1.getFloat("amoutMemo");
+	    }
+		return allTotal;
+	}
+	public float getAmountMemo(Integer order_id) throws ClassNotFoundException, SQLException {
+		String sql = "SELECT amoutMemo FROM exoticre_order.orders where order_id = "+order_id+" group by order_id;";
+		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
+		Float allTotal = (float) 0;
+		 while (rs.next()) {
+			 allTotal += rs.getFloat("amoutMemo");
+        }
+		return allTotal;
+	}
 	public Boolean updatePaymentMethod(Integer order_id,String paymentMethod) throws ClassNotFoundException, SQLException {
 		String sql1 = "UPDATE exoticre_order.orders SET  "
 				+ "paymentMethod ='"+paymentMethod+"'"
@@ -734,6 +760,15 @@ public class OrderDao {
 				+ "  WHERE order_id = "+order_id;       
 		int status = DBConnection.getConnection().createStatement().executeUpdate(sql1);
 		System.out.println("update amount Paid: "+status);
+		// for new payment
+		return true;
+	}
+	public Boolean updateAmoutMemo(Integer order_id,Float amountMemo) throws ClassNotFoundException, SQLException {
+		String sql1 = "UPDATE exoticre_order.orders SET  "
+				+ "amoutMemo ='"+amountMemo+"'"
+				+ "  WHERE order_id = "+order_id;       
+		int status = DBConnection.getConnection().createStatement().executeUpdate(sql1);
+		System.out.println("update amount amoutMemo: "+status);
 		// for new payment
 		return true;
 	}
@@ -787,6 +822,76 @@ public class OrderDao {
 		int status1 = DBConnection.getConnection().createStatement().executeUpdate(sql1);
 		System.out.println("update  order payment : "+status1);
 		return true;
+	}
+	public Boolean updateFishDie(Integer id,Boolean fishdie) throws ClassNotFoundException, SQLException {
+		String fishdies = "0";
+		if(fishdie == true){
+			fishdies = "1";
+		}
+		String sql1 = "UPDATE exoticre_order.orders SET  "
+				+ "fishdie ='"+fishdies+"'"
+				+ "  WHERE id = "+id;       
+		int status1 = DBConnection.getConnection().createStatement().executeUpdate(sql1);
+		System.out.println("update  order fishdie : "+status1);
+		return true;
+	}
+	public Boolean deleteOnceOrderCreditMemo(Integer order_id) throws ClassNotFoundException, SQLException {
+		String sql1 = "DELETE FROM  exoticre_order.ordersCreditMemo  "
+				+ "  WHERE order_id = "+order_id;       
+		int status = DBConnection.getConnection().createStatement().executeUpdate(sql1);
+		System.out.println("delete  order credit memo : "+order_id+"-"+status);
+		return true;
+	}
+	public Integer addceOrderCreditMemo(List<ProductModel> lstProduct,Integer order_id) throws ClassNotFoundException, SQLException {
+		String orderc= order_id+"-c";
+		String ClientCustomerID= order_id+"-c";
+		float allTotal = 0.00f;
+		String allTotals = "0.00";
+		for (ProductModel product : lstProduct) {
+		    System.out.println(product.getTotal());
+		    if(product.getFishdie() == true){
+		    	allTotal = allTotal + Float.parseFloat(product.getTotal()); 
+		    }
+		}
+		allTotals = String.format ("%.2f", allTotal);
+		for (ProductModel product : lstProduct) {
+		    System.out.println(product.getTotal());
+		    if(product.getFishdie() == true){
+		    	product.setAll_Total(Float.parseFloat(allTotals));
+		    	product.setAll_Total_Memo(Float.parseFloat(allTotals));
+		    String sql = "INSERT INTO exoticre_order.ordersCreditMemo("
+					+ "order_id,"
+					+ "order_idc,"
+					+ "Product_id,"
+					+ "Product_Sku,"
+					+ "Size,"
+					+ "Lot,"
+					+ "Item,"
+					+ "Price,"
+					+ "Total,"
+					+ "All_Total,"
+					+ "surcharge,"
+					+ "All_Total_Memo,"
+					+ "ClientCustomerID)"
+					+ "VALUES ('"
+					+order_id+"','"
+					+orderc+"','"
+					+product.getProductId()+"','"
+					+product.getSku()+"','"
+					+product.getSize()+"','"
+					+product.getLot()+"','"
+					+product.getQty()+"','"
+					+product.getPrice()+"','"
+					+product.getTotal()+"','"
+					+product.getAll_Total()+"','"
+					+product.getSurcharge()+"','"
+					+product.getAll_Total_Memo()+"','"
+					+product.getClientCustomerID()+"')";     
+			Statement stmt = (Statement) DBConnection.getConnection().createStatement();
+			int status = stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
+		    }
+		}
+		return 1;
 	}
 	public Boolean updateReadyPayment(Integer order_id,Boolean payment) throws ClassNotFoundException, SQLException {
 		String payments = "0";
