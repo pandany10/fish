@@ -90,37 +90,37 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnCustomer" alignment="TOP_LEFT" layoutX="496.0" layoutY="144.0" mnemonicParsing="false" onAction="#gotoCustomer" prefHeight="30.0" prefWidth="249.0" text="2 - CUSTOMERS">
+      <Button fx:id="btnCustomer" alignment="TOP_LEFT" layoutX="496.0" layoutY="140.0" mnemonicParsing="false" onAction="#gotoCustomer" prefHeight="30.0" prefWidth="249.0" text="2 - CUSTOMERS">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnProduct" alignment="TOP_LEFT" layoutX="496.0" layoutY="194.0" mnemonicParsing="false" onAction="#gotoProduct" prefHeight="30.0" prefWidth="249.0" text="3 - PRODUCTS">
+      <Button fx:id="btnProduct" alignment="TOP_LEFT" layoutX="496.0" layoutY="188.0" mnemonicParsing="false" onAction="#gotoProduct" prefHeight="30.0" prefWidth="249.0" text="3 - PRODUCTS">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnSales" alignment="TOP_LEFT" layoutX="497.0" layoutY="246.0" mnemonicParsing="false" onAction="#gotoSales" prefHeight="30.0" prefWidth="249.0" text="4 - SALES REPORTS">
+      <Button fx:id="btnSales" alignment="TOP_LEFT" layoutX="497.0" layoutY="238.0" mnemonicParsing="false" onAction="#gotoSales" prefHeight="30.0" prefWidth="249.0" text="4 - SALES REPORTS">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnInvoice" alignment="TOP_LEFT" layoutX="497.0" layoutY="299.0" mnemonicParsing="false" onAction="#gotoInvoice" prefHeight="30.0" prefWidth="249.0" text="5 - INVOICER">
+      <Button fx:id="btnInvoice" alignment="TOP_LEFT" layoutX="497.0" layoutY="289.0" mnemonicParsing="false" onAction="#gotoInvoice" prefHeight="30.0" prefWidth="249.0" text="5 - INVOICER">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnPayment" alignment="TOP_LEFT" layoutX="497.0" layoutY="350.0" mnemonicParsing="false" onAction="#gotoPayment" prefHeight="30.0" prefWidth="249.0" text="6 - BILLING">
+      <Button fx:id="btnPayment" alignment="TOP_LEFT" layoutX="497.0" layoutY="338.0" mnemonicParsing="false" onAction="#gotoPayment" prefHeight="30.0" prefWidth="249.0" text="6 - BILLING">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnExpress" alignment="TOP_LEFT" layoutX="496.0" layoutY="400.0" mnemonicParsing="false" onAction="#gotoExpress" prefHeight="30.0" prefWidth="249.0" text="7 - EXPRESS ORDERS">
+      <Button fx:id="btnExpress" alignment="TOP_LEFT" layoutX="496.0" layoutY="389.0" mnemonicParsing="false" onAction="#gotoExpress" prefHeight="30.0" prefWidth="249.0" text="7 - EXPRESS ORDERS">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnAccounting" alignment="TOP_LEFT" layoutX="496.0" layoutY="455.0" mnemonicParsing="false" onAction="#gotoAccounting" prefHeight="30.0" prefWidth="249.0" text="8 - ACCOUNTING">
+      <Button fx:id="btnAccounting" alignment="TOP_LEFT" layoutX="496.0" layoutY="439.0" mnemonicParsing="false" onAction="#gotoAccounting" prefHeight="30.0" prefWidth="249.0" text="8 - ACCOUNTING">
          <font>
             <Font size="18.0" />
          </font>
@@ -299,13 +299,13 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <TextField fx:id="txtEnterSelect" layoutX="496.0" layoutY="582.0" prefHeight="25.0" prefWidth="74.0" />
-      <Label alignment="BASELINE_LEFT" layoutX="581.0" layoutY="581.0" prefHeight="27.0" prefWidth="298.0" text="Enter  Selection Please.">
+      <TextField fx:id="txtEnterSelect" layoutX="496.0" layoutY="550.0" prefHeight="25.0" prefWidth="74.0" />
+      <Label alignment="BASELINE_LEFT" layoutX="581.0" layoutY="549.0" prefHeight="27.0" prefWidth="298.0" text="Enter  Selection Please.">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Button fx:id="btnPaymentExpress" alignment="TOP_LEFT" layoutX="496.0" layoutY="508.0" mnemonicParsing="false" onAction="#gotoExpressPayment" prefHeight="30.0" prefWidth="249.0" text="9- EXPRESS PAYMENT">
+      <Button fx:id="btnPaymentExpress" alignment="TOP_LEFT" layoutX="496.0" layoutY="487.0" mnemonicParsing="false" onAction="#gotoExpressPayment" prefHeight="30.0" prefWidth="249.0" text="9- EXPRESS PAYMENT">
          <font>
             <Font size="18.0" />
          </font>

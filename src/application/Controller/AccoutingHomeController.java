@@ -117,6 +117,9 @@ public class AccoutingHomeController extends Menu implements Initializable {
 	private TableColumn<CustomerModel, Boolean> tcs_email;
 	@FXML
 	private TableColumn<CustomerModel, Boolean> tcs_city;
+	@FXML
+	public Button btnCreditMemo;
+	
 	CustomerModel c = new CustomerModel();
 	// end
     public static void addTextLimiter(final TextField tf, final int maxLength) {
@@ -135,6 +138,22 @@ public class AccoutingHomeController extends Menu implements Initializable {
 		// TODO Auto-generated method stub
 		inits();
 		// begin
+		btnCreditMemo.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+
+			public void handle(KeyEvent ke) {
+				if (ke.getCode().equals(KeyCode.ENTER)) {
+					try {
+						txtEnterSelect.setText("5");
+						gotoCreditMemo();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+			}
+		});
 		btnSendEmail.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
 		       
 		    @Override
@@ -293,6 +312,22 @@ public class AccoutingHomeController extends Menu implements Initializable {
 						e.printStackTrace();
 					}
 		   	        }
+				   if (number == 4) {
+						try {
+							showCreaditMemos();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				   if (number == 5) {
+						try {
+							gotoCreditMemo();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 			   }
 		    }
 		});	   
@@ -394,6 +429,10 @@ public class AccoutingHomeController extends Menu implements Initializable {
 		if(isShow == true){
 			tx.requestFocus();
 		}
+	}
+	public void gotoCreditMemo(ActionEvent event) throws IOException {
+		txtEnterSelect.setText("5");
+		gotoCreditMemo();
 	}
 	public void actionSearchCus() throws IOException {
 		  System.out.println("key ="+txtKeySearchCus.getText());

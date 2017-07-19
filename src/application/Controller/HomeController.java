@@ -41,6 +41,7 @@ public class HomeController extends Menu implements Initializable {
 	@FXML
 	public Button btnPaymentExpress;
 
+
 	
 	@FXML
 	public TextField txtEnterSelect;
@@ -149,6 +150,14 @@ public class HomeController extends Menu implements Initializable {
 							e.printStackTrace();
 						}
 					}
+				/*	if (number == 10) {
+						try {
+							gotoCreditMemo();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}*/
 				}
 			}
 		});
@@ -366,5 +375,7 @@ public class HomeController extends Menu implements Initializable {
 		txtEnterSelect.setText("9");
 		gotoExpressPayment();
 	}
+
+
 
 }

@@ -441,6 +441,62 @@ public class OrderDao {
          }
 		return lstOrder;
 	}
+	public List<OrderModel> getOrderMemo() throws ClassNotFoundException, SQLException{
+		List<OrderModel> lstOrder = new ArrayList<>();
+		String sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes  FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.fishdie) = LOWER('1')  GROUP BY t1.order_id order by t1.order_id desc limit 1000;";
+
+		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
+		 while (rs.next()) {
+             String Customer_date = rs.getString("Customer_date");
+             String status = rs.getString("status");
+             String Customer_ship = rs.getString("Customer_ship");
+             Integer order_id = rs.getInt("order_id");
+             String order_idc = order_id+"-c";
+
+             String ClientCustomerID = rs.getString("ClientCustomerID");
+             String Customer_email =  rs.getString("Customer_email");
+             String CompanyName =  rs.getString("CompanyName");
+             Float All_Total = rs.getFloat("All_Total");
+             String All_Totals = String.format ("%.2f", All_Total);
+             Float surcharge = rs.getFloat("surcharge");
+             String payment = rs.getString("payment");
+             String issued = rs.getString("issued");
+             String paymentMethod = rs.getString("paymentMethod");
+             String notes1= rs.getString("notes");
+             Float amoutPaid = rs.getFloat("amoutPaid");
+             Boolean payments = false;
+             Boolean issueds = false;
+             if(payment.equals("1")){
+            	 payments = true;
+             }else{
+            	 payments = false;
+             }
+             if(paymentMethod.equals("")){
+            	 
+             }else{
+            	 if(amoutPaid != 0.00){
+            		 payments = true;
+            	 }
+             }
+             if(issued.equals("1")){
+            	 issueds = true;
+             }else{
+            	 issueds = false;
+             }
+             OrderModel order = new OrderModel(0,Customer_date,status,Customer_ship,order_id,ClientCustomerID,Customer_email,CompanyName,All_Totals,surcharge,payments);
+             order.setIssued(issueds);
+             order.setOrder_idc(order_idc);
+             lstOrder.add(order);
+           /*  if((!notes.equals("App Java")) && notes1.equals("App Java") && issueds == false && payments == false){
+            	 
+             }else if(!notes.equals("App Java")){
+                 lstOrder.add(order);
+             }else if(notes.equals("App Java") && issueds == false && payments == false){
+            	 lstOrder.add(order);
+             }*/
+         }
+		return lstOrder;
+	}
 	public List<OrderModel> getOrder(String in_status,String notes) throws ClassNotFoundException, SQLException{
 		List<OrderModel> lstOrder = new ArrayList<>();
 		String status1 = "";

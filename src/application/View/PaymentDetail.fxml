@@ -155,7 +155,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TableView fx:id="tp" layoutX="3.0" layoutY="237.0" prefHeight="143.0" prefWidth="1116.0">
+            <TableView fx:id="tp" layoutX="3.0" layoutY="237.0" prefHeight="75.0" prefWidth="1116.0">
               <columns>
                 <TableColumn fx:id="tp_Name" prefWidth="266.0" text="Name Card" />
                 <TableColumn fx:id="tp_Card" prefWidth="292.0" styleClass="clcenter" text="Card Number" />
@@ -165,17 +165,17 @@
                   <TableColumn fx:id="tp_Default" prefWidth="120.0" styleClass="clcenter" text="Card Default" />
               </columns>
             </TableView>
-            <Label layoutX="5.0" layoutY="392.0" prefHeight="27.0" prefWidth="174.0" text="Payment Details">
+            <Label layoutX="5.0" layoutY="392.0" prefHeight="27.0" prefWidth="174.0" text="Order Summary">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label layoutX="869.0" layoutY="392.0" prefHeight="27.0" prefWidth="122.0" text="Total Order:">
+            <Label layoutX="854.0" layoutY="397.0" prefHeight="27.0" prefWidth="138.0" text="Order Total:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="txtTotal" editable="false" layoutX="1004.0" layoutY="393.0" prefHeight="25.0" prefWidth="113.0">
+            <TextField fx:id="txtTotal" editable="false" layoutX="726.0" layoutY="328.0" prefHeight="25.0" prefWidth="113.0" visible="false">
                <styleClass>
                   <String fx:value="clbold" />
                   <String fx:value="clright" />
@@ -214,12 +214,12 @@
                   <Font size="18.0" />
                </font>
             </CheckBox>
-            <Label layoutX="8.0" layoutY="192.0" prefHeight="27.0" prefWidth="143.0" text="Amount Paid($):">
+            <Label layoutX="851.0" layoutY="329.0" prefHeight="27.0" prefWidth="143.0" text="Amount Paid:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="txtPaid" editable="false" layoutX="156.0" layoutY="193.0" prefHeight="25.0" prefWidth="97.0">
+            <TextField fx:id="txtPaid" editable="false" layoutX="1003.0" layoutY="328.0" prefHeight="25.0" prefWidth="113.0">
                <styleClass>
                   <String fx:value="clbold" />
                   <String fx:value="clright" />
@@ -236,17 +236,17 @@
                   <Font size="18.0" />
                </font>
             </RadioButton>
-            <RadioButton fx:id="optCreditMeno" layoutX="595.0" layoutY="192.0" mnemonicParsing="false" onAction="#payMethod" prefHeight="27.0" prefWidth="166.0" text="Credit Memo">
+            <RadioButton fx:id="optCreditMeno" layoutX="965.0" layoutY="192.0" mnemonicParsing="false" onAction="#payMethod" prefHeight="27.0" prefWidth="150.0" text="Credit Memo" visible="false">
                <font>
                   <Font size="18.0" />
                </font>
             </RadioButton>
-            <RadioButton fx:id="optPayPal" layoutX="773.0" layoutY="192.0" mnemonicParsing="false" onAction="#payMethod" prefHeight="27.0" prefWidth="103.0" text="PayPal">
+            <RadioButton fx:id="optPayPal" layoutX="619.0" layoutY="192.0" mnemonicParsing="false" onAction="#payMethod" prefHeight="27.0" prefWidth="103.0" text="PayPal">
                <font>
                   <Font size="18.0" />
                </font>
             </RadioButton>
-            <RadioButton fx:id="optCash" layoutX="901.0" layoutY="192.0" mnemonicParsing="false" onAction="#payMethod" prefHeight="27.0" prefWidth="103.0" text="Cash">
+            <RadioButton fx:id="optCash" layoutX="747.0" layoutY="192.0" mnemonicParsing="false" onAction="#payMethod" prefHeight="27.0" prefWidth="103.0" text="Cash">
                <font>
                   <Font size="18.0" />
                </font>
@@ -435,30 +435,49 @@
                   </Label>
                </children>
             </Pane>
-            <RadioButton fx:id="optStripe" layoutX="1012.0" layoutY="192.0" mnemonicParsing="false" onAction="#payMethod" prefHeight="27.0" prefWidth="103.0" text="Stripe">
+            <RadioButton fx:id="optStripe" layoutX="858.0" layoutY="192.0" mnemonicParsing="false" onAction="#payMethod" prefHeight="27.0" prefWidth="103.0" text="Stripe">
                <font>
                   <Font size="18.0" />
                </font>
             </RadioButton>
-            <TextField fx:id="txtpaids" disable="true" layoutX="989.0" layoutY="156.0" prefHeight="25.0" prefWidth="122.0">
+            <TextField fx:id="txtpaids" disable="true" layoutX="989.0" layoutY="156.0" prefHeight="25.0" prefWidth="122.0" visible="false">
                <styleClass>
                   <String fx:value="clbold" />
                   <String fx:value="clright" />
                   <String fx:value="boderblue" />
                </styleClass>
             </TextField>
-            <Label layoutX="877.0" layoutY="155.0" prefHeight="27.0" prefWidth="113.0" text="Already Paid:">
+            <Label layoutX="833.0" layoutY="155.0" prefHeight="27.0" prefWidth="157.0" text="Partial Payment:" visible="false">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <CheckBox fx:id="chkApplyCreditMemo" layoutX="269.0" layoutY="397.0" mnemonicParsing="false" onAction="#checkMemo" prefHeight="17.0" prefWidth="228.0" text="Apply Credit Memo as Payment" />
-            <Label fx:id="lblmsgMemo" layoutX="503.0" layoutY="395.0" prefHeight="17.0" prefWidth="336.0" textFill="#e40808">
+            <CheckBox fx:id="chkApplyCreditMemo" layoutX="623.0" layoutY="397.0" mnemonicParsing="false" onAction="#checkMemo" prefHeight="17.0" prefWidth="228.0" text="Apply Credit Memo as Payment" />
+            <Label fx:id="lblmsgMemo" alignment="CENTER_RIGHT" layoutX="278.0" layoutY="396.0" prefHeight="17.0" prefWidth="336.0" textFill="#e40808" visible="false">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
             <Button fx:id="btnSave" layoutX="1048.0" layoutY="12.0" mnemonicParsing="false" onAction="#submitPayment" prefHeight="25.0" prefWidth="61.0" text="Save" />
+            <Label layoutX="853.0" layoutY="363.0" prefHeight="27.0" prefWidth="137.0" text="Credit Memo:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtTotalMemo" editable="false" layoutX="1004.0" layoutY="364.0" prefHeight="25.0" prefWidth="113.0" text="0.00">
+               <styleClass>
+                  <String fx:value="clbold" />
+                  <String fx:value="clright" />
+                  <String fx:value="boderblue" />
+               </styleClass>
+            </TextField>
+            <TextField fx:id="txtTotal1" editable="false" layoutX="1004.0" layoutY="395.0" prefHeight="25.0" prefWidth="113.0">
+               <styleClass>
+                  <String fx:value="clbold" />
+                  <String fx:value="clright" />
+                  <String fx:value="boderblue" />
+               </styleClass>
+            </TextField>
          </children>
       </Pane>
    </children>

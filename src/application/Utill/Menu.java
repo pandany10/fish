@@ -15,6 +15,7 @@ import application.Controller.LoginController;
 import application.Controller.OrdersController;
 import application.Controller.OrdersExpressController;
 import application.Controller.OrdersExpressStoreController;
+import application.Controller.OrdersMemoController;
 import application.Controller.PaymentController;
 import application.Controller.ProductController;
 import application.Controller.SalesController;
@@ -1248,6 +1249,66 @@ public class Menu {
 	       	    }
 	       	});
 	     }
+	    public void gotoCreditMemo() throws IOException { 
+	        Stage stage = new Stage();
+	        stage.setTitle("Orders Credit Memo");
+	        stage.getIcons().add(new Image("file:resources/images/icon.png"));
+	        FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/OrdersMemo.fxml"));
+	        Pane myPane = (Pane)myLoader.load();
+	        
+	        OrdersMemoController controller = (OrdersMemoController) myLoader.getController();
+	 	    controller.setPrevStage(stage);
+	        Scene scene = new Scene(myPane);
+	        stage.setScene(scene);
+	        prevStage.close();
+	        stage.setResizable(false);
+	        stage.show();
+
+	        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+	            int count = 0;
+	    	    @Override
+	    	    public void handle(KeyEvent evt) {
+	    	        if (evt.getCode().equals(KeyCode.ESCAPE)) {
+	    	        	String temp = controller.getCscreen();
+	    	        	System.out.println(temp);
+	    	        	//prevStage.show();
+    	        		//stage.close();
+    	        		if(temp.equals("lstOrder")){
+	     	        		prevStage.show();
+	     	        		stage.close();
+	     	        	}else{
+	     	        		count++;
+	     	        		if(count ==1 ){
+	 	    	        		try {
+	 	    	        			stage.close();
+	 	    	        			gotoCreditMemo();
+	 							} catch (IOException e) {
+	 								// TODO Auto-generated catch block
+	 								e.printStackTrace();
+	 							}
+	     	        		}
+	     	        	}
+	    	        }
+	    	    }
+	    	});
+	        
+	        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+	     	    @Override
+	     	    public void handle(KeyEvent evt) {
+	     	    	if(controller.isControl == true){
+	 	     	        String code = evt.getText();
+	 	     	        if(code != null){
+	 	 	    	        if(code.length()>0){
+	 	 	    	        	 if (evt.getEventType() == KeyEvent.KEY_PRESSED && (!evt.isControlDown())) {
+	 	 	    	    	        System.out.println("Home " +evt.getCode());
+	 	 	    	    	        evt.fireEvent(scene,new KeyEvent(KeyEvent.KEY_PRESSED, null, null, evt.getCode(), false, true, false, false));
+	 	 	    	    	     }
+	 	 	    	        }
+	 	     	        }
+	     	    	}
+	     	    }
+	     	});
+	    }
 	    public void gotoExpressPayment() throws IOException {          
 	        Stage stage = new Stage();
 	        stage.setTitle("Express Payment");

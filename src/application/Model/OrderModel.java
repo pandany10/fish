@@ -15,6 +15,7 @@ public class OrderModel {
 	private String status;
 	private String Customer_ship;
 	private Integer order_id;
+	private String order_idc;
 	private String ClientCustomerID;
 	private String Customer_email;
 	private String CompanyName;
@@ -220,6 +221,12 @@ public class OrderModel {
 	}
 
 
+	public String getOrder_idc() {
+		return order_idc;
+	}
+	public void setOrder_idc(String order_idc) {
+		this.order_idc = order_idc;
+	}
 	public OrderModel() {}
 
     public  OrderModel(Integer No, String Customer_date,String status,String Customer_ship, Integer order_id, String ClientCustomerID,String Customer_email, String CompanyName,String All_Total,Float surcharge ,Boolean payment) {

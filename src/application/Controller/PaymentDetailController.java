@@ -68,6 +68,10 @@ public class PaymentDetailController extends Menu implements Initializable {
 	private TextField txtEmail;	
 	@FXML
 	private TextField txtTotal;	
+	@FXML
+	private TextField txtTotal1;	
+	@FXML
+	private TextField txtTotalMemo;	
 	
 	@FXML
 	private TextField txtPaid;	
@@ -214,6 +218,7 @@ public class PaymentDetailController extends Menu implements Initializable {
 						  @Override
 						  public void run() {
 							  txtTotal.setText(String.format("%.2f", lstProduct.get(0).getAll_Total()));
+							  txtTotal1.setText(String.format("%.2f", lstProduct.get(0).getAll_Total()));
 							  txtPaid.setText(String.format("%.2f", lstProduct.get(0).getAmoutPaid()));
 							  txtpaids.setText(String.format("%.2f", lstProduct.get(0).getAmoutPaid()));
 							  txtCheckN.setText(lstProduct.get(0).getChecknumber());
@@ -417,10 +422,15 @@ public class PaymentDetailController extends Menu implements Initializable {
 			}else {
 				All_Total_Memo_Sub = All_Total_Memo;
 			}
-			lblmsgMemo.setText("-$"+All_Total_Memo_Sub+" subtract from $"+All_Total);
+			lblmsgMemo.setText("-$"+ String.format ("%.2f", All_Total_Memo_Sub)+" subtract from $"+All_Total);
+			txtTotalMemo.setText("-"+ String.format ("%.2f", All_Total_Memo_Sub));
+			float totaltemp = All_Total - All_Total_Memo_Sub;
+			txtTotal1.setText(String.format ("%.2f", totaltemp));
 		}else{
 			lblmsgMemo.setText("");
 			All_Total_Memo_Sub = 0.00f;
+			txtTotal1.setText(String.format ("%.2f", All_Total));
+			txtTotalMemo.setText("-"+ String.format ("%.2f", All_Total_Memo_Sub));
 		}
 	}
 	public void payMethod(ActionEvent event) throws IOException {

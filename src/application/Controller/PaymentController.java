@@ -110,6 +110,8 @@ public class PaymentController extends Menu implements Initializable {
 								tp.refresh();
 								if(count == 0){
 									tp.setPlaceholder(new Label("No matching results were found."));
+								}else{
+									tp.requestFocus();
 								}
 						  }
 						});
@@ -216,6 +218,14 @@ public class PaymentController extends Menu implements Initializable {
 				}
 			}
 		});
+		keySearch.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+		    @Override
+		    public void handle(KeyEvent event) {
+		      if(event.getCode() == KeyCode.DOWN){
+		    	  twSearchCus.requestFocus();
+		      }
+		   }
+		});  
 /*		keySearch.textProperty().addListener(new ChangeListener<String>() {
 		    @Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 		        if(newValue.length()>0){        	
@@ -268,6 +278,24 @@ public class PaymentController extends Menu implements Initializable {
 				}
 
 			}
+		});
+		tp.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+		       
+		    @Override
+		    public void handle(KeyEvent event) {
+		      if(event.getCode() == KeyCode.PAGE_UP){
+		    	  keySearch.requestFocus();
+		      }
+		   }
+		}); 
+		twSearchCus.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+		       
+		    @Override
+		    public void handle(KeyEvent event) {
+		      if(event.getCode() == KeyCode.PAGE_UP){
+		    	  keySearch.requestFocus();
+		      }
+		   }
 		});
 		Thread thLoadData = new Thread() {
 			@SuppressWarnings("deprecation")

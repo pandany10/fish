@@ -85,7 +85,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Button fx:id="btnAging" alignment="TOP_LEFT" layoutX="456.0" layoutY="61.0" mnemonicParsing="false" onAction="#gotoAging" prefHeight="39.0" prefWidth="327.0" text="1. Aging Report">
+      <Button fx:id="btnAging" alignment="TOP_LEFT" layoutX="456.0" layoutY="61.0" mnemonicParsing="false" onAction="#gotoAging" prefHeight="25.0" prefWidth="327.0" text="1. Aging Report">
          <font>
             <Font size="18.0" />
          </font>
@@ -277,17 +277,17 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <TextField fx:id="txtEnterSelect" layoutX="457.0" layoutY="250.0" prefHeight="25.0" prefWidth="74.0" />
-      <Label alignment="BASELINE_LEFT" layoutX="548.0" layoutY="249.0" prefHeight="27.0" prefWidth="298.0" text="Enter  Selection Please.">
+      <TextField fx:id="txtEnterSelect" layoutX="457.0" layoutY="300.0" prefHeight="25.0" prefWidth="74.0" />
+      <Label alignment="BASELINE_LEFT" layoutX="548.0" layoutY="299.0" prefHeight="27.0" prefWidth="298.0" text="Enter  Selection Please.">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Pane fx:id="paneSearch" layoutX="-1.0" layoutY="281.0" prefHeight="330.0" prefWidth="1195.0" visible="false">
+      <Pane fx:id="paneSearch" layoutX="-1.0" layoutY="331.0" prefHeight="273.0" prefWidth="1195.0" visible="false">
          <children>
             <TextField fx:id="txtKeySearchCus" layoutX="454.0" layoutY="1.0" onAction="#actionSearchCus" prefHeight="25.0" prefWidth="201.0" />
             <ChoiceBox fx:id="cbFilterCus" layoutX="667.0" layoutY="1.0" prefHeight="25.0" prefWidth="139.0" />
-            <TableView fx:id="twSearchCus" layoutX="2.0" layoutY="28.0" onMouseClicked="#explanCustomer" prefHeight="302.0" prefWidth="1189.0">
+            <TableView fx:id="twSearchCus" layoutX="2.0" layoutY="28.0" onMouseClicked="#explanCustomer" prefHeight="248.0" prefWidth="1189.0">
                <columns>
                   <TableColumn fx:id="tcs_cus" prefWidth="62.0" text="Cus Id" />
                   <TableColumn fx:id="tcs_name" prefWidth="213.0" text="Customer Name" />
@@ -304,7 +304,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane fx:id="paneEmail" cacheShape="false" layoutY="282.0" prefHeight="330.0" prefWidth="1195.0">
+      <Pane fx:id="paneEmail" cacheShape="false" layoutY="332.0" prefHeight="279.0" prefWidth="1195.0">
          <children>
             <TextField fx:id="txtEmail" layoutX="454.0" layoutY="1.0" prefHeight="25.0" prefWidth="246.0" />
             <Label layoutX="351.0" layoutY="1.0" prefHeight="27.0" prefWidth="98.0" text="Email:">
@@ -316,7 +316,7 @@
             <Label layoutX="454.0" layoutY="35.0" prefHeight="17.0" prefWidth="730.0" text="Please Enter Correct Email. if you send for many email add ; after each email.  example : email1@gmail.com;mail2@gmail.com" />
          </children>
       </Pane>
-      <Pane fx:id="paneChoice" layoutY="282.0" prefHeight="330.0" prefWidth="1195.0" visible="false">
+      <Pane fx:id="paneChoice" layoutY="333.0" prefHeight="279.0" prefWidth="1195.0" visible="false">
          <children>
             <Label alignment="TOP_LEFT" layoutX="617.0" layoutY="14.0" prefHeight="30.0" prefWidth="21.0" style="-fx-font-size: 20; -fx-font-weight: bold;" text="P">
                <font>
@@ -373,7 +373,12 @@
             </Label>
          </children>
       </Pane>
-      <Button fx:id="btnCreditMemos" alignment="TOP_LEFT" layoutX="456.0" layoutY="201.0" mnemonicParsing="false" onAction="#gotoCreditMemos" prefHeight="39.0" prefWidth="327.0" text="4. Credit Memos">
+      <Button fx:id="btnCreditMemos" alignment="TOP_LEFT" layoutX="456.0" layoutY="201.0" mnemonicParsing="false" onAction="#gotoCreditMemos" prefHeight="39.0" prefWidth="327.0" text="4. Create Credit Memo">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnCreditMemo" alignment="TOP_LEFT" layoutX="458.0" layoutY="248.0" mnemonicParsing="false" onAction="#gotoCreditMemo" prefHeight="39.0" prefWidth="327.0" text="5. Orders Credit Memo">
          <font>
             <Font size="18.0" />
          </font>
