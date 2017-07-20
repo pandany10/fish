@@ -33,12 +33,14 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -314,7 +316,7 @@ public class OrdersMeno1Controller extends Menu implements Initializable {
 		status.setVisible(hiden);
 		if(hiden == false){
 			Customer_emails.setPrefWidth(320.0);
-			CompanyName.setPrefWidth(350.0);
+			CompanyName.setPrefWidth(270.0);
 			twOrder.setLayoutY(0);
 			twOrder.setPrefHeight(680);
 			cbFilterScreen.setVisible(false);
@@ -345,6 +347,7 @@ public class OrdersMeno1Controller extends Menu implements Initializable {
 	TableColumn<OrderModel, String> status = new TableColumn<>("Status");
 	TableColumn<OrderModel, String> Customer_emails = new TableColumn<>("Email");
 	TableColumn<OrderModel, String> CompanyName = new TableColumn<>("Store");
+	TableColumn<OrderModel, String> fishdie = new TableColumn<>("fishdie");
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -1251,8 +1254,62 @@ public class OrdersMeno1Controller extends Menu implements Initializable {
 		ClientCustomerID.setCellFactory(createNumberCellFactory());
 	
 		CompanyName.setCellValueFactory(new PropertyValueFactory<>("CompanyName"));
-		CompanyName.setPrefWidth(210.0);
+		CompanyName.setPrefWidth(130.0);
 		CompanyName.setCellFactory(createNumberCellFactory());
+		
+		fishdie.setCellValueFactory(new PropertyValueFactory<>("fishDie"));
+		fishdie.setPrefWidth(80.0);
+		fishdie.setCellFactory(createNumberCellFactory());
+		fishdie.getStyleClass().add("clcenter");
+		fishdie.setCellFactory(column -> { 
+	        return new TableCell<OrderModel, String>() {
+	            @Override
+	            protected void updateItem(String item, boolean empty) {
+	                super.updateItem(item, empty);
+	                if(item != null){
+	                	setText(empty? "" : getItem().toString());
+	                }else{
+	                	setText("");
+	                }
+	                setGraphic(null);
+
+	                TableRow<OrderModel> currentRow = getTableRow();
+
+	                if (!isEmpty()) {
+	                	//System.out.println(item);
+	                    if(item == null) {
+	                     	currentRow.setStyle("");
+		                    /*	for(int i=0; i<getChildren().size();i++){
+			                    	currentRow.getChildrenUnmodifiable().get(i).setStyle("");
+			                    }*/
+		                    	for(int i=0; i<currentRow.getChildrenUnmodifiable().size();i++){
+		                    		((Labeled)currentRow.getChildrenUnmodifiable().get(i)).setStyle("");
+		                    	}
+		                    //Color.ALICEBLUE
+	                    }else{
+
+			                	if(item.equals("Yes")) {
+			                		currentRow.setStyle("-fx-background-color:lightgreen");
+			                    	//currentRow.setStyle("-fx-text-fill: red ! important;");
+			                    	for(int i=0; i<currentRow.getChildrenUnmodifiable().size();i++){
+			                    		//((Labeled)currentRow.getChildrenUnmodifiable().get(i)).setStyle("-fx-text-fill: red ! important;");
+			                    	}
+			                	}else{
+			                    	currentRow.setStyle("");
+			                    /*	for(int i=0; i<getChildren().size();i++){
+				                    	currentRow.getChildrenUnmodifiable().get(i).setStyle("");
+				                    }*/
+			                    	for(int i=0; i<currentRow.getChildrenUnmodifiable().size();i++){
+			                    		((Labeled)currentRow.getChildrenUnmodifiable().get(i)).setStyle("");
+			                    	}
+			                    
+			                    //Color.ALICEBLUE
+			                	}
+	                }
+	            }
+	            }
+	        };
+	    });;
 		TableColumn<OrderModel, String> All_Total = new TableColumn<>("Total($)");
 		All_Total.setCellValueFactory(new PropertyValueFactory<>("All_Total"));
 		All_Total.setPrefWidth(90.0);
@@ -1311,7 +1368,7 @@ public class OrdersMeno1Controller extends Menu implements Initializable {
 		Customer_emails.setCellFactory(createNumberCellFactory());
 
 		boolean addAll = twOrder.getColumns().addAll(order_id, Customer_date, status,tw_payment, Customer_ship, ClientCustomerID,
-				Customer_emails, CompanyName,tw_issued, All_Total);
+				Customer_emails, CompanyName,tw_issued,fishdie, All_Total);
 		twOrder.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {

@@ -34,6 +34,15 @@ public class OrderModel {
 	private String blance90  = "";
 	private String blance120  = "";
 	
+	private String fishDie  = "";
+
+
+	public String getFishDie() {
+		return fishDie;
+	}
+	public void setFishDie(String fishDie) {
+		this.fishDie = fishDie;
+	}
 	public String getBlance30() {
 		return blance30;
 	}

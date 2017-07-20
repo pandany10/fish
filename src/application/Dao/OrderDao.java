@@ -521,7 +521,7 @@ public class OrderDao {
 			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes     FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.isExpress) = LOWER('1')  GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
 		}
 		if(notes.equals("App Java1")){
-			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes     FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.status) = LOWER('COMPLETED')  GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
+			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes,t3.order_idc     FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID  left join ordersCreditMemo t3 On t1.order_id = t3.order_id WHERE LOWER(t1.status) = LOWER('COMPLETED')  GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
 		}
 		if(notes.equals("ExpressStore")){
 			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes     FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.isExpress) = LOWER('1') and t1.ClientCustomerID = '"+in_status+"' GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
@@ -532,6 +532,7 @@ public class OrderDao {
              String status = rs.getString("status");
              String Customer_ship = rs.getString("Customer_ship");
              Integer order_id = rs.getInt("order_id");
+
              String ClientCustomerID = rs.getString("ClientCustomerID");
              String Customer_email =  rs.getString("Customer_email");
              String CompanyName =  rs.getString("CompanyName");
@@ -562,8 +563,15 @@ public class OrderDao {
              }else{
             	 issueds = false;
              }
+
              OrderModel order = new OrderModel(0,Customer_date,status,Customer_ship,order_id,ClientCustomerID,Customer_email,CompanyName,All_Totals,surcharge,payments);
              order.setIssued(issueds);
+             if(notes.equals("App Java1")){
+                 String order_idc = rs.getString("order_idc");
+	             if(order_idc != null && !order_idc.isEmpty()) { 
+	          		 order.setFishDie("Yes");
+	          	 }
+             }
              lstOrder.add(order);
            /*  if((!notes.equals("App Java")) && notes1.equals("App Java") && issueds == false && payments == false){
             	 
