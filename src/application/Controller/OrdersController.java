@@ -60,6 +60,7 @@ public class OrdersController extends Menu implements Initializable {
 	final String[] statusS = new String[] { "Pending", "Packing", "Shipped", "Completed","Pulling" };
 	final String[] filter = new String[] { "Pending", "Packing", "Shipped", "Completed" ,"Pulling" };
 	final String[] screens = new String[] { "Express", "Exotic", "Both" };
+	final String[] aftership = new String[] { "UPS", "OnTrac" };
 	private String str_filters = screens[1];
 	String screen = "final";
 	
@@ -84,6 +85,7 @@ public class OrdersController extends Menu implements Initializable {
 	public void setScreen(String screen) {
 		this.screen = screen;
 		lblf7.setVisible(true);
+		Tracking.setVisible(false);
 		if(screen.equals("Express")){
 			twOrder.getItems().clear();
 			Thread thLoadData = new Thread() {
@@ -341,7 +343,9 @@ public class OrdersController extends Menu implements Initializable {
 	TableColumn<OrderModel, String> status = new TableColumn<>("Status");
 	TableColumn<OrderModel, String> Customer_emails = new TableColumn<>("Email");
 	TableColumn<OrderModel, String> CompanyName = new TableColumn<>("Store");
-
+	TableColumn<OrderModel, String> Tracking = new TableColumn<>("Tracking");
+	TableColumn<OrderModel, String> Trackinglink = new TableColumn<>("Trackinglink");
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		inits();
@@ -1128,7 +1132,7 @@ public class OrdersController extends Menu implements Initializable {
 	 		tw_issued.setCellValueFactory(new PropertyValueFactory<>("issued"));
 	 		tw_issued.setCellFactory(booleanCellFactoryIssued);
 	 		tw_issued.getStyleClass().add("clcenter");
-	 		tw_issued.setPrefWidth(70.0);
+	 		tw_issued.setPrefWidth(50.0);
 
 		twOrder.setEditable(true);
 		
@@ -1229,7 +1233,7 @@ public class OrdersController extends Menu implements Initializable {
 		No.getStyleClass().add("clNo");
 		TableColumn<OrderModel, String> Customer_date = new TableColumn<>("Submit Date");
 		Customer_date.setCellValueFactory(new PropertyValueFactory<>("Customer_date"));
-		Customer_date.setPrefWidth(115.0);
+		Customer_date.setPrefWidth(95.0);
 		Customer_date.getStyleClass().add("clCusDate");
 		Customer_date.setOnEditCommit((CellEditEvent<OrderModel, String> t) -> {
 			((OrderModel) t.getTableView().getItems().get(t.getTablePosition().getRow()))
@@ -1238,7 +1242,7 @@ public class OrdersController extends Menu implements Initializable {
 		Customer_date.setCellFactory(createNumberCellFactory());
 		TableColumn<OrderModel, Integer> order_id = new TableColumn<>("Order id");
 		order_id.setCellValueFactory(new PropertyValueFactory<>("order_id"));
-		order_id.setPrefWidth(89.0);
+		order_id.setPrefWidth(69.0);
 		order_id.getStyleClass().add("clOrderId");
 		TableColumn<OrderModel, String> ClientCustomerID = new TableColumn<>("Customer ID");
 		ClientCustomerID.setCellValueFactory(new PropertyValueFactory<>("ClientCustomerID"));
@@ -1247,11 +1251,41 @@ public class OrdersController extends Menu implements Initializable {
 		ClientCustomerID.setCellFactory(createNumberCellFactory());
 	
 		CompanyName.setCellValueFactory(new PropertyValueFactory<>("CompanyName"));
-		CompanyName.setPrefWidth(210.0);
+		CompanyName.setPrefWidth(200.0);
 		CompanyName.setCellFactory(createNumberCellFactory());
+		
+		Tracking.setCellValueFactory(new PropertyValueFactory<>("Tracking"));
+		Tracking.setPrefWidth(153.0);
+		Tracking.getStyleClass().add("clcenter");
+		Trackinglink.setCellValueFactory(new PropertyValueFactory<>("Trackinglink"));
+		Trackinglink.setPrefWidth(253.0);
+		Trackinglink.getStyleClass().add("clcenter");
+		//Tracking.setCellFactory(createNumberCellFactory());
+		Tracking.setCellFactory(new Callback<TableColumn<OrderModel,String>, TableCell<OrderModel,String>>() {
+            public TableCell call(TableColumn p) {
+                return new EditingCell("Tracking");
+            }
+        });
+		Tracking.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<OrderModel, String>>() {
+
+			@Override
+			public void handle(TableColumn.CellEditEvent<OrderModel, String> event) {
+				OrderModel item = event.getRowValue();
+				String news = event.getNewValue();
+				System.out.println(news);
+				Integer order_id = item.getOrder_id();
+				try {
+					orderDao.updateTracking(order_id, news);
+				} catch (ClassNotFoundException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
 		TableColumn<OrderModel, String> All_Total = new TableColumn<>("Total($)");
 		All_Total.setCellValueFactory(new PropertyValueFactory<>("All_Total"));
-		All_Total.setPrefWidth(90.0);
+		All_Total.setPrefWidth(70.0);
 		All_Total.getStyleClass().add("clTotal");
 		status.setCellValueFactory(new PropertyValueFactory<>("status"));
 		status.setPrefWidth(100.0);
@@ -1297,7 +1331,7 @@ public class OrdersController extends Menu implements Initializable {
 	     }
 		TableColumn<OrderModel, String> Customer_ship = new TableColumn<>("Ship Via");
 		Customer_ship.setCellValueFactory(new PropertyValueFactory<>("Customer_ship"));
-		Customer_ship.setPrefWidth(143.0);
+		Customer_ship.setPrefWidth(100.0);
 		Customer_ship.getStyleClass().add("clStatus");
 		Customer_ship.setCellFactory(createNumberCellFactory());
 
@@ -1306,8 +1340,15 @@ public class OrdersController extends Menu implements Initializable {
 		Customer_emails.getStyleClass().add("clEmail");
 		Customer_emails.setCellFactory(createNumberCellFactory());
 
-		boolean addAll = twOrder.getColumns().addAll(order_id, Customer_date, status,tw_payment, Customer_ship, ClientCustomerID,
-				Customer_emails, CompanyName,tw_issued, All_Total);
+		//boolean addAll = twOrder.getColumns().addAll(order_id, Customer_date, status,tw_payment, Customer_ship, ClientCustomerID,
+		//		Customer_emails, CompanyName,tw_issued, All_Total,Tracking);
+		if(screen.equals("final")){
+			twOrder.getColumns().addAll(order_id, Customer_date, status,tw_payment, Customer_ship, ClientCustomerID,
+					Customer_emails, CompanyName,tw_issued, All_Total,Tracking,Trackinglink);
+		}else{
+			twOrder.getColumns().addAll(order_id, Customer_date, status,tw_payment, Customer_ship, ClientCustomerID,
+					Customer_emails, CompanyName,tw_issued, All_Total);
+		}
 		twOrder.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
@@ -1321,17 +1362,23 @@ public class OrdersController extends Menu implements Initializable {
 					if (modeEdit == true) {
 						modeEdit = false;
 					} else {
-						try {
-							EditOrder();
-							//r.resize(1267, 913);
-							cscreen = "orderDetails";
-							r.setPrefHeight(860);
-						} catch (ClassNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						TablePosition pos = twOrder.getFocusModel().getFocusedCell();
+						System.out.println(pos.getColumn());
+						if(pos.getColumn() == 11){
+							System.out.println("tracking");
+						}else{
+							try {
+								EditOrder();
+								//r.resize(1267, 913);
+								cscreen = "orderDetails";
+								r.setPrefHeight(860);
+							} catch (ClassNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 					return;
@@ -2370,6 +2417,8 @@ public class OrdersController extends Menu implements Initializable {
 					        } else {
 				        		System.out.println(newValue);
 					        	if(newValue.indexOf(".") != -1 && id.equals("price")){
+					        		
+					        	}else if( id.equals("Tracking")){
 					        		
 					        	}else{
 					        		textField.setText(oldValue);

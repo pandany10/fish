@@ -7,8 +7,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -17,14 +15,6 @@ import javax.net.ssl.TrustManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.stripe.Stripe;
-import com.stripe.exception.APIConnectionException;
-import com.stripe.exception.APIException;
-import com.stripe.exception.AuthenticationException;
-import com.stripe.exception.CardException;
-import com.stripe.exception.InvalidRequestException;
-import com.stripe.model.Token;
 
 import application.Utill.EnDeCryption;
 import application.Utill.Files;

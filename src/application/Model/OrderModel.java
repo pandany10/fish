@@ -7,6 +7,7 @@ public class OrderModel {
 	private String customerPhone;
 	private String customerTerms;
 	private String customerSalesperson;
+	private String Tracking;
 	
 	
 	
@@ -37,6 +38,12 @@ public class OrderModel {
 	private String fishDie  = "";
 
 
+	public String getTracking() {
+		return Tracking;
+	}
+	public void setTracking(String tracking) {
+		Tracking = tracking;
+	}
 	public String getFishDie() {
 		return fishDie;
 	}
