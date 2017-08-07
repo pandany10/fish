@@ -1,5 +1,7 @@
 package application.Model;
 
+import javafx.scene.control.Hyperlink;
+
 public class OrderModel {
 	private String customerId = "";
 	private String customerName;
@@ -8,6 +10,8 @@ public class OrderModel {
 	private String customerTerms;
 	private String customerSalesperson;
 	private String Tracking;
+	private Hyperlink Trackinglink;
+
 	
 	
 	
@@ -38,6 +42,12 @@ public class OrderModel {
 	private String fishDie  = "";
 
 
+	public Hyperlink getTrackinglink() {
+		return Trackinglink;
+	}
+	public void setTrackinglink(Hyperlink trackinglink) {
+		Trackinglink = trackinglink;
+	}
 	public String getTracking() {
 		return Tracking;
 	}

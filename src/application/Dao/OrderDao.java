@@ -1,5 +1,9 @@
 package application.Dao;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -10,12 +14,16 @@ import java.util.List;
 import com.mysql.jdbc.Statement;
 
 import application.DBConnection;
+import application.Model.AirlinesModel;
 import application.Model.CustomerModel;
 import application.Model.InvoiceModel;
 import application.Model.OrderDetailModel;
 import application.Model.OrderInfoModel;
 import application.Model.OrderModel;
 import application.Model.ProductModel;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Hyperlink;
 
 public class OrderDao {
 	public List<OrderModel> getOrderCustomerSale() throws ClassNotFoundException, SQLException{
@@ -497,6 +505,27 @@ public class OrderDao {
          }
 		return lstOrder;
 	}
+	public static void openWebpage(String url) {
+	    try {
+	        new ProcessBuilder("x-www-browser", url).start();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	public List<AirlinesModel> getAirlines() throws ClassNotFoundException, SQLException{
+		List<AirlinesModel> lstAirline = new ArrayList<>();
+		String sql = "SELECT * FROM exoticre_wrdp1.airlines WHERE selected=1 ORDER BY name";
+		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
+		 while (rs.next()) {
+			 AirlinesModel item = new AirlinesModel();
+			 String text = rs.getString("name");
+			 String value = rs.getString("prefix");
+			 item.setText(text);
+			 item.setValue(value);
+			 lstAirline.add(item);
+		 }
+		return lstAirline;
+	}
 	public List<OrderModel> getOrder(String in_status,String notes) throws ClassNotFoundException, SQLException{
 		List<OrderModel> lstOrder = new ArrayList<>();
 		String status1 = "";
@@ -507,24 +536,24 @@ public class OrderDao {
 			status1 = "0";
 		}
 		System.out.println(in_status);
-		String sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes,t1.tracking  FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.issued) = LOWER('1') AND t1.isExpress ='"+status1+"' GROUP BY t1.order_id order by t1.order_id desc limit 1000";
+		String sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes,t1.tracking ,t1.tracking_link FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.issued) = LOWER('1') AND t1.isExpress ='"+status1+"' GROUP BY t1.order_id order by t1.order_id desc limit 1000";
 		if(in_status.endsWith("Both")){
-			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes,t1.tracking  FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.issued) = LOWER('1') GROUP BY t1.order_id order by t1.order_id desc limit 1000";
+			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes,t1.tracking  ,t1.tracking_link FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.issued) = LOWER('1') GROUP BY t1.order_id order by t1.order_id desc limit 1000";
 		}
 		//String sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes  FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.status) = LOWER('"+in_status+"') GROUP BY t1.order_id order by t1.order_id desc limit 200";
 
 		if(notes.equals("App Java")){
-			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes,t1.tracking     FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.issued) = LOWER('0')   and t1.payment = '0' GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
+			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes,t1.tracking   ,t1.tracking_link  FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.issued) = LOWER('0')   and t1.payment = '0' GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
 		  //sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes     FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.status) = LOWER('"+in_status+"') and t1.notes = '"+notes+"' GROUP BY  t1.order_id order by t1.order_id desc limit 200";
 		}
 		if(notes.equals("Express")){
-			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes,t1.tracking     FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.isExpress) = LOWER('1')  GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
+			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes,t1.tracking  ,t1.tracking_link   FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.isExpress) = LOWER('1')  GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
 		}
 		if(notes.equals("App Java1")){
-			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes,t3.order_idc,t1.tracking     FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID  left join ordersCreditMemo t3 On t1.order_id = t3.order_id WHERE LOWER(t1.status) = LOWER('COMPLETED')  GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
+			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes,t3.order_idc,t1.tracking  ,t1.tracking_link   FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID  left join ordersCreditMemo t3 On t1.order_id = t3.order_id WHERE LOWER(t1.status) = LOWER('COMPLETED')  GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
 		}
 		if(notes.equals("ExpressStore")){
-			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes,t1.tracking     FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.isExpress) = LOWER('1') and t1.ClientCustomerID = '"+in_status+"' GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
+			sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment ,t1.issued,t1.paymentMethod ,t1.amoutPaid,t1.notes,t1.tracking  ,t1.tracking_link   FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE LOWER(t1.isExpress) = LOWER('1') and t1.ClientCustomerID = '"+in_status+"' GROUP BY  t1.order_id order by t1.order_id desc limit 1000";
 		}
 		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
 		 while (rs.next()) {
@@ -546,6 +575,8 @@ public class OrderDao {
              Float amoutPaid = rs.getFloat("amoutPaid");
              
              String tracking = rs.getString("tracking");
+             String tracking_link = rs.getString("tracking_link");
+
              Boolean payments = false;
              Boolean issueds = false;
              if(payment.equals("1")){
@@ -569,6 +600,24 @@ public class OrderDao {
              OrderModel order = new OrderModel(0,Customer_date,status,Customer_ship,order_id,ClientCustomerID,Customer_email,CompanyName,All_Totals,surcharge,payments);
              order.setIssued(issueds);
              order.setTracking(tracking);
+             	Hyperlink link = new Hyperlink();
+	     		link.setText(tracking_link);
+	     		link.setOnAction(new EventHandler<ActionEvent>() {
+	     		    @Override
+	     		    public void handle(ActionEvent e) {
+	     		        System.out.println("This link is clicked");
+	     		      //  openWebpage(tracking_link);
+	     		       URI myUri;
+					try {
+						myUri = new URI(tracking_link);
+						Desktop.getDesktop().browse(myUri);
+					} catch (URISyntaxException | IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+	     		    } 
+	     		});
+             order.setTrackinglink(link);
              if(notes.equals("App Java1")){
                  String order_idc = rs.getString("order_idc");
 	             if(order_idc != null && !order_idc.isEmpty()) { 
@@ -845,6 +894,15 @@ public class OrderDao {
 				+ "  WHERE order_id = "+order_id;       
 		int status = DBConnection.getConnection().createStatement().executeUpdate(sql1);
 		System.out.println("update  tracking: "+status);
+		// for new payment
+		return true;
+	}
+	public Boolean updateTrackingLink(Integer order_id,String trackingLink) throws ClassNotFoundException, SQLException {
+		String sql1 = "UPDATE exoticre_order.orders SET  "
+				+ "tracking_link ='"+trackingLink+"'"
+				+ "  WHERE order_id = "+order_id;       
+		int status = DBConnection.getConnection().createStatement().executeUpdate(sql1);
+		System.out.println("update  trackingLink: "+status);
 		// for new payment
 		return true;
 	}

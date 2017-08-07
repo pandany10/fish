@@ -1,6 +1,9 @@
 package application.Controller;
 
+import java.awt.Desktop;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
@@ -9,6 +12,7 @@ import java.util.ResourceBundle;
 import application.Dao.CustomerDao;
 import application.Dao.OrderDao;
 import application.Dao.ProductDao;
+import application.Model.AirlinesModel;
 import application.Model.CustomerModel;
 import application.Model.InvoiceModel;
 import application.Model.OrderDetailModel;
@@ -30,6 +34,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
@@ -86,6 +91,9 @@ public class OrdersController extends Menu implements Initializable {
 		this.screen = screen;
 		lblf7.setVisible(true);
 		Tracking.setVisible(false);
+		Trackinglink.setVisible(false);
+		twOrder.setPrefWidth(1266.00);
+		root.setPrefWidth(1266.00);
 		if(screen.equals("Express")){
 			twOrder.getItems().clear();
 			Thread thLoadData = new Thread() {
@@ -333,7 +341,7 @@ public class OrdersController extends Menu implements Initializable {
 	private OrderDetailModel orderDetail;
 	private Boolean isShowOrder = true;
 	List<OrderModel> list;
-	
+	List<AirlinesModel> listAirlines;
 	final int[] fSearchPs = new int[] { 100, 200, 300, 500 ,1000};
 	
 	private int str_fSearchPs = fSearchPs[0];
@@ -344,7 +352,7 @@ public class OrdersController extends Menu implements Initializable {
 	TableColumn<OrderModel, String> Customer_emails = new TableColumn<>("Email");
 	TableColumn<OrderModel, String> CompanyName = new TableColumn<>("Store");
 	TableColumn<OrderModel, String> Tracking = new TableColumn<>("Tracking");
-	TableColumn<OrderModel, String> Trackinglink = new TableColumn<>("Trackinglink");
+	TableColumn<OrderModel, Hyperlink> Trackinglink = new TableColumn<>("Delivery");
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -379,6 +387,7 @@ public class OrdersController extends Menu implements Initializable {
 			public void run() {
 				try {
 					list = orderDao.getOrder(str_filters,screen);
+					listAirlines = orderDao.getAirlines();
 					twOrder.getItems().clear();
 					twOrder.getItems().addAll(list);
 					twOrder.getSelectionModel().selectFirst();
@@ -1106,6 +1115,28 @@ public class OrdersController extends Menu implements Initializable {
 	public void focusCusId() {
 		bill_cus_id.requestFocus();
 	}
+	public class HyperlinkCell implements  Callback<TableColumn<OrderModel, Hyperlink>, TableCell<OrderModel, Hyperlink>> {
+		 
+	    @Override
+	    public TableCell<OrderModel, Hyperlink> call(TableColumn<OrderModel, Hyperlink> arg) {
+	        TableCell<OrderModel, Hyperlink> cell = new TableCell<OrderModel, Hyperlink>() {
+	            @Override
+	            protected void updateItem(Hyperlink item, boolean empty) {
+	                setGraphic(item);
+	            }
+	        };
+	        return cell;
+	    }
+	}
+	public String getCodeByName(String name){
+		String value = "";
+		for (AirlinesModel item : listAirlines) {
+		    if(name.toLowerCase().equals(item.getText().toLowerCase())){
+		    	value = item.getValue();
+		    }
+		}
+		return value;
+	}
 	public void initViewOrders() {
 		
 		 Callback<TableColumn<OrderModel, Boolean>, TableCell<OrderModel, Boolean>> booleanCellFactoryPayment = 
@@ -1258,11 +1289,20 @@ public class OrdersController extends Menu implements Initializable {
 		Tracking.setPrefWidth(153.0);
 		Tracking.getStyleClass().add("clcenter");
 		Trackinglink.setCellValueFactory(new PropertyValueFactory<>("Trackinglink"));
-		Trackinglink.setPrefWidth(253.0);
+		Trackinglink.setPrefWidth(330.0);
 		Trackinglink.getStyleClass().add("clcenter");
+		Trackinglink.setCellFactory(new HyperlinkCell());
+
+		
+/*		urlColumn = new TableColumn<>("Address");
+		urlColumn.setCellValueFactory(new PropertyValueFactory<>("hyperlink"));
+		urlColumn.setCellFactory(new HyperlinkCell());
+		*/
+		
+		
 		//Tracking.setCellFactory(createNumberCellFactory());
 		Tracking.setCellFactory(new Callback<TableColumn<OrderModel,String>, TableCell<OrderModel,String>>() {
-            public TableCell call(TableColumn p) {
+            public TableCell call(TableColumn p) { 
                 return new EditingCell("Tracking");
             }
         });
@@ -1274,11 +1314,49 @@ public class OrdersController extends Menu implements Initializable {
 				String news = event.getNewValue();
 				System.out.println(news);
 				Integer order_id = item.getOrder_id();
-				try {
-					orderDao.updateTracking(order_id, news);
-				} catch (ClassNotFoundException | SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				String shipmen = item.getCustomer_ship();
+				if(news.length()>0){
+					try {
+						orderDao.updateTracking(order_id, news);
+					} catch (ClassNotFoundException | SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					String  trackinUrl = "";
+					if(shipmen.toLowerCase().equals("ups") ||  shipmen.toLowerCase().equals("ontrac")){
+						trackinUrl = "https://track.aftership.com/"+shipmen.toLowerCase()+'/' + news ;
+					}else{
+						String code = getCodeByName(shipmen);
+						trackinUrl = "http://connect.track-trace.com/for/eri/aircargo/" + code + news + "/action,direct";
+					}
+					try {
+						orderDao.updateTrackingLink(order_id, trackinUrl);
+					} catch (ClassNotFoundException | SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					Hyperlink link = new Hyperlink();
+					link.setText(trackinUrl);
+		     		link.setOnAction(new EventHandler<ActionEvent>() {
+		     		    @Override
+		     		    public void handle(ActionEvent e) {
+		     		        System.out.println("This link is clicked");
+		     		      //  openWebpage(tracking_link);
+		     		        URI myUri = null;
+							try {
+								myUri = new URI(trackinUrl);
+								Desktop.getDesktop().browse(myUri);
+							} catch (URISyntaxException | IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+		     		    } 
+		     		});
+		     		
+		     		item.setTracking(news);
+					item.setTrackinglink(link);
+					
+					twOrder.refresh();
 				}
 			}
 		});
@@ -1345,6 +1423,8 @@ public class OrdersController extends Menu implements Initializable {
 		if(screen.equals("final")){
 			twOrder.getColumns().addAll(order_id, Customer_date, status,tw_payment, Customer_ship, ClientCustomerID,
 					Customer_emails, CompanyName,tw_issued, All_Total,Tracking,Trackinglink);
+			twOrder.setPrefWidth(1600.00);
+			root.setPrefWidth(1600.00);
 		}else{
 			twOrder.getColumns().addAll(order_id, Customer_date, status,tw_payment, Customer_ship, ClientCustomerID,
 					Customer_emails, CompanyName,tw_issued, All_Total);
