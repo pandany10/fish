@@ -1,13 +1,26 @@
 package application.Controller;
 
 import java.awt.Desktop;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import application.Dao.CustomerDao;
 import application.Dao.OrderDao;
@@ -19,6 +32,8 @@ import application.Model.OrderDetailModel;
 import application.Model.OrderInfoModel;
 import application.Model.OrderModel;
 import application.Model.ProductModel;
+import application.Utill.InvalidCertificateHostVerifier;
+import application.Utill.InvalidCertificateTrustManager;
 import application.Utill.Menu;
 import application.Utill.Pdf;
 import application.Utill.PdfPackingList;
@@ -396,6 +411,42 @@ public class OrdersController extends Menu implements Initializable {
 						  public void run() {
 							  if(list.size()==0){
 								  twOrder.setPlaceholder(new Label("No matching results were found."));
+							  }else{
+								  for(int i =0;i< twOrder.getItems().size();i++){
+										//System.out.println(twOrder.getItems().get(i).getTrackinglink().getText());
+										Integer order_id  = twOrder.getItems().get(i).getOrder_id();
+										String news = twOrder.getItems().get(i).getTracking();
+										String shipmen = twOrder.getItems().get(i).getCustomer_ship();
+										if(shipmen.toLowerCase().equals("ups") || shipmen.toLowerCase().equals("ontrac") ){
+										if(news.length()>0){
+										URL url;
+										URL url1;
+										try {
+											url = new URL("https://www.exoticreefimports.com/wp-admin/AfterShip/test1s.php?orderid="+order_id+"&"+"trackingnum="+news+"&ship="+shipmen);
+											HttpsURLConnection connection = getConnection(true, url);
+											InputStream content = (InputStream) connection.getInputStream();
+											String result = getStringFromInputStream(content);
+											//JSONObject jsonObject = new JSONObject(result);
+											//String status = jsonObject.getString("status");
+											System.out.println("test1:"+result);
+											
+											url1 = new URL("https://www.exoticreefimports.com/wp-admin/AfterShip/tests.php?orderid="+order_id+"&"+"trackingnum="+news+"&ship="+shipmen);
+											HttpsURLConnection connection1 = getConnection(true, url1);
+											InputStream content1 = (InputStream) connection1.getInputStream();
+											String result1 = getStringFromInputStream(content1);
+											//JSONObject jsonObject1 = new JSONObject(result1);
+											//String status1 = jsonObject.getString("status");
+											System.out.println("test:"+result1);
+											twOrder.getItems().get(i).getTrackinglink().setText(result1);
+
+										} catch (KeyManagementException | NoSuchAlgorithmException | IOException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									   }
+									  }
+																			
+									}
 							  }
 							     if(screen.equals("App Java")){
 								    	// tw_payment.
@@ -1137,6 +1188,53 @@ public class OrdersController extends Menu implements Initializable {
 		}
 		return value;
 	}
+	private static String getStringFromInputStream(InputStream is) {
+
+		BufferedReader br = null;
+		StringBuilder sb = new StringBuilder();
+
+		String line;
+		try {
+
+			br = new BufferedReader(new InputStreamReader(is));
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return sb.toString();
+
+	}
+	public static HttpsURLConnection getConnection(boolean ignoreInvalidCertificate, URL url)
+			throws KeyManagementException, NoSuchAlgorithmException, IOException {
+		SSLContext ctx = SSLContext.getInstance("TLS");
+		if (ignoreInvalidCertificate) {
+			ctx.init(null, new TrustManager[] { new InvalidCertificateTrustManager() }, null);
+		}
+		SSLContext.setDefault(ctx);
+
+		HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+
+		connection.setRequestMethod("GET");
+		connection.setDoOutput(true);
+
+		if (ignoreInvalidCertificate) {
+			connection.setHostnameVerifier(new InvalidCertificateHostVerifier());
+		}
+
+		return connection;
+	}
 	public void initViewOrders() {
 		
 		 Callback<TableColumn<OrderModel, Boolean>, TableCell<OrderModel, Boolean>> booleanCellFactoryPayment = 
@@ -1324,10 +1422,78 @@ public class OrdersController extends Menu implements Initializable {
 					}
 					String  trackinUrl = "";
 					if(shipmen.toLowerCase().equals("ups") ||  shipmen.toLowerCase().equals("ontrac")){
-						trackinUrl = "https://track.aftership.com/"+shipmen.toLowerCase()+'/' + news ;
+						final String trackinUrl1 = "https://track.aftership.com/"+shipmen.toLowerCase()+'/' + news ;
+						trackinUrl =  "https://track.aftership.com/"+shipmen.toLowerCase()+'/' + news ;
+						URL url;
+						URL url1;
+						try {
+							url = new URL("https://www.exoticreefimports.com/wp-admin/AfterShip/test1s.php?orderid="+order_id+"&"+"trackingnum="+news+"&ship="+shipmen);
+							HttpsURLConnection connection = getConnection(true, url);
+							InputStream content = (InputStream) connection.getInputStream();
+							String result = getStringFromInputStream(content);
+							//JSONObject jsonObject = new JSONObject(result);
+							//String status = jsonObject.getString("status");
+							System.out.println("test1:"+result);
+							
+							url1 = new URL("https://www.exoticreefimports.com/wp-admin/AfterShip/tests.php?orderid="+order_id+"&"+"trackingnum="+news+"&ship="+shipmen);
+							HttpsURLConnection connection1 = getConnection(true, url1);
+							InputStream content1 = (InputStream) connection1.getInputStream();
+							String result1 = getStringFromInputStream(content1);
+							//JSONObject jsonObject1 = new JSONObject(result1);
+							//String status1 = jsonObject.getString("status");
+							System.out.println("test:"+result1);
+							Hyperlink link = new Hyperlink();
+							link.setText(result1);
+				     		link.setOnAction(new EventHandler<ActionEvent>() {
+				     		    @Override
+				     		    public void handle(ActionEvent e) {
+				     		        System.out.println("This link is clicked");
+				     		      //  openWebpage(tracking_link);
+				     		        URI myUri = null;
+									try {
+										myUri = new URI(trackinUrl1);
+										Desktop.getDesktop().browse(myUri);
+									} catch (URISyntaxException | IOException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									}
+				     		    } 
+				     		});
+							item.setTracking(news);
+							item.setTrackinglink(link);
+							
+							twOrder.refresh();
+						} catch (KeyManagementException | NoSuchAlgorithmException | IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					
 					}else{
 						String code = getCodeByName(shipmen);
+						final String trackinUrl1 = "http://connect.track-trace.com/for/eri/aircargo/" + code + news + "/action,direct";
 						trackinUrl = "http://connect.track-trace.com/for/eri/aircargo/" + code + news + "/action,direct";
+						Hyperlink link = new Hyperlink();
+						link.setText(trackinUrl);
+			     		link.setOnAction(new EventHandler<ActionEvent>() {
+			     		    @Override
+			     		    public void handle(ActionEvent e) {
+			     		        System.out.println("This link is clicked");
+			     		      //  openWebpage(tracking_link);
+			     		        URI myUri = null;
+								try {
+									myUri = new URI(trackinUrl1);
+									Desktop.getDesktop().browse(myUri);
+								} catch (URISyntaxException | IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+			     		    } 
+			     		});
+			     		
+			     		item.setTracking(news);
+						item.setTrackinglink(link);
+						
+						twOrder.refresh();
 					}
 					try {
 						orderDao.updateTrackingLink(order_id, trackinUrl);
@@ -1335,28 +1501,7 @@ public class OrdersController extends Menu implements Initializable {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					Hyperlink link = new Hyperlink();
-					link.setText(trackinUrl);
-		     		link.setOnAction(new EventHandler<ActionEvent>() {
-		     		    @Override
-		     		    public void handle(ActionEvent e) {
-		     		        System.out.println("This link is clicked");
-		     		      //  openWebpage(tracking_link);
-		     		        URI myUri = null;
-							try {
-								myUri = new URI(trackinUrl);
-								Desktop.getDesktop().browse(myUri);
-							} catch (URISyntaxException | IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-		     		    } 
-		     		});
-		     		
-		     		item.setTracking(news);
-					item.setTrackinglink(link);
 					
-					twOrder.refresh();
 				}
 			}
 		});
