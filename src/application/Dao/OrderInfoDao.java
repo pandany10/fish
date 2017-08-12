@@ -16,7 +16,7 @@ public class OrderInfoDao {
 			 orderInfo.setAwb(rs.getString("awb"));
 			 orderInfo.setFob(rs.getString("fob"));
 			 orderInfo.setTerms(rs.getString("Terms"));
-			 orderInfo.setPonumber(rs.getInt("ponumber"));
+			 orderInfo.setPonumber(rs.getString("purchase_order"));
 			 orderInfo.setSalesperson(rs.getString("Salesperson"));
 			 orderInfo.setFcb(rs.getInt("fcb"));
 			 orderInfo.setFcbw(rs.getInt("fcbw"));
