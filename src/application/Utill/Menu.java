@@ -17,6 +17,7 @@ import application.Controller.OrdersExpressController;
 import application.Controller.OrdersExpressStoreController;
 import application.Controller.OrdersMemoController;
 import application.Controller.PaymentController;
+import application.Controller.PaymentControllerNew;
 import application.Controller.ProductController;
 import application.Controller.SalesController;
 import javafx.application.Platform;
@@ -533,10 +534,10 @@ public class Menu {
 	        Stage stage = new Stage();
 	        stage.setTitle("Billing");
 	        stage.getIcons().add(new Image("file:resources/images/icon.png"));
-	        FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/Payment.fxml"));
+	        FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/PaymentDetailNew.fxml"));
 	        Pane myPane = (Pane)myLoader.load();
 	        
-	        PaymentController controller = (PaymentController) myLoader.getController();
+	        PaymentControllerNew controller = (PaymentControllerNew) myLoader.getController();
 	 	    controller.setPrevStage(stage);
 	        Scene scene = new Scene(myPane);
 	        stage.setScene(scene);

@@ -12,11 +12,11 @@ public class OrderModel {
 	private String Tracking;
 	private Hyperlink Trackinglink;
 
-	
-	
-	
 	private Integer no;
 	private String Customer_date;
+	private String paymentDueDate;
+	private String applyDate;
+	private Integer daysDueDate;
 	private String status;
 	private String Customer_ship;
 	private Integer order_id;
@@ -38,7 +38,55 @@ public class OrderModel {
 	private String blance60  = "";
 	private String blance90  = "";
 	private String blance120  = "";
+	private String note="";
+	private String checknumber="";
+	private String emailPaypal="";
+	private String previousPayment;
+
 	
+	public String getEmailPaypal() {
+		return emailPaypal;
+	}
+	public void setEmailPaypal(String emailPaypal) {
+		this.emailPaypal = emailPaypal;
+	}
+	public String getChecknumber() {
+		return checknumber;
+	}
+	public void setChecknumber(String checknumber) {
+		this.checknumber = checknumber;
+	}	
+	public String getApplyDate() {
+		return applyDate;
+	}
+	public void setApplyDate(String applyDate) {
+		this.applyDate = applyDate;
+	}
+	public String getPaymentDueDate() {
+		return paymentDueDate;
+	}
+	public void setPaymentDueDate(String paymentDueDate) {
+		this.paymentDueDate = paymentDueDate;
+	}
+	public Integer getDaysDueDate() {
+		return daysDueDate;
+	}
+	public void setDaysDueDate(Integer daysDueDate) {
+		this.daysDueDate = daysDueDate;
+	}
+	public String getPreviousPayment() {
+		return previousPayment;
+	}
+	public void setPreviousPayment(String previousPayment) {
+		this.previousPayment = previousPayment;
+	}
+	public String getNote() {
+		return note;
+	}
+	public void setNote(String note) {
+		this.note = note;
+	}
+
 	private String fishDie  = "";
 
 
@@ -255,7 +303,7 @@ public class OrderModel {
 	}
 	public OrderModel() {}
 
-    public  OrderModel(Integer No, String Customer_date,String status,String Customer_ship, Integer order_id, String ClientCustomerID,String Customer_email, String CompanyName,String All_Total,Float surcharge ,Boolean payment) {
+    public  OrderModel(Integer No, String Customer_date,String status,String Customer_ship, Integer order_id, String ClientCustomerID,String Customer_email, String CompanyName,String All_Total,Float surcharge ,Boolean payment,String note) {
     	setNo(No);
     	setCustomer_date(Customer_date);
     	setStatus(status);

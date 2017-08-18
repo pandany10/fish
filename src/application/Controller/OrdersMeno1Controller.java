@@ -1,6 +1,7 @@
 package application.Controller;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
@@ -2209,7 +2210,13 @@ public class OrdersMeno1Controller extends Menu implements Initializable {
          					} catch (SQLException e) {
          						// TODO Auto-generated catch block
          						e.printStackTrace();
-         					}
+         					} catch (MalformedURLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
                             lock = false;
                             checkBox.setDisable(true);
                 	 }
