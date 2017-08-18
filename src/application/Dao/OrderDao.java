@@ -7,7 +7,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +22,7 @@ import application.Model.OrderDetailModel;
 import application.Model.OrderInfoModel;
 import application.Model.OrderModel;
 import application.Model.ProductModel;
+import application.Utill.PetcoInvoicing;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Hyperlink;
@@ -678,36 +678,25 @@ public class OrderDao {
 	}
 	public List<OrderModel> getLstPayment(String CustomerId) throws ClassNotFoundException, SQLException{
 		List<OrderModel> lstOrder = new ArrayList<>();
-		List<String> lstPre = new ArrayList<>();
-
-		String sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment,t1.paymentMethod ,t1.amoutPaid,t1.notes ,t1.applyDate,t1.checknumber,t1.emailPaypal   FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE readyPayment = '1' and  LOWER(t1.ClientCustomerID) = LOWER('"+CustomerId+"')  GROUP BY  t1.order_id order by t1.order_id desc limit 500";
+		String sql = "SELECT t1.Customer_date,t1.status,t1.Customer_ship,t1.order_id,t1.ClientCustomerID,t1.Customer_email,t2.CompanyName,t1.All_Total,t1.surcharge,t1.payment,t1.paymentMethod ,t1.amoutPaid    FROM exoticre_order.orders t1 LEFT JOIN customerfishpro t2 ON t1.ClientCustomerID = t2.CustomerID WHERE readyPayment = '1' and  LOWER(t1.ClientCustomerID) = LOWER('"+CustomerId+"')  GROUP BY  t1.order_id order by t1.order_id desc limit 500";
 		ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
-		String previousPayment = "";
-		
 		 while (rs.next()) {
-            String Customer_date = rs.getString("Customer_date"); //
+            String Customer_date = rs.getString("Customer_date");
             String status = rs.getString("status");
             String Customer_ship = rs.getString("Customer_ship");
-            Integer order_id = rs.getInt("order_id"); //
+            Integer order_id = rs.getInt("order_id");
             String ClientCustomerID = rs.getString("ClientCustomerID");
             String Customer_email =  rs.getString("Customer_email");
             String CompanyName =  rs.getString("CompanyName");
-            Float All_Total = rs.getFloat("All_Total"); //
+            Float All_Total = rs.getFloat("All_Total");
             String All_Totals = String.format ("%.2f", All_Total);
             All_Total = Float.parseFloat(All_Totals);
             Float surcharge = rs.getFloat("surcharge");
             String payment = rs.getString("payment");
-            String paymentMethod = rs.getString("paymentMethod");//paymentMethod
+            String paymentMethod = rs.getString("paymentMethod");
             String notes1= rs.getString("notes");
-            Float amoutPaid = rs.getFloat("amoutPaid"); //
-            String amoutPaids = String.format ("%.2f", amoutPaid);
-            String applyDate = rs.getString("applyDate");
-            String checknumber = rs.getString("checknumber");
-            String emailPaypal = rs.getString("emailPaypal");
+            Float amoutPaid = rs.getFloat("amoutPaid");
             
-            if(checknumber == null){
-            	checknumber = "";
-            }
             Boolean payments = false;
             if(payment.equals("1")){
            	 payments = true;
@@ -721,64 +710,12 @@ public class OrderDao {
             }else{
             	
             }
-            if((!paymentMethod.equals("") && amoutPaid != 0.00)){
-            	
-            }else{
-            	amoutPaids="0.00";
-            }
-            
             order.setPayments(payments1);
-            order.setPaymentMethod(paymentMethod);
-            order.setAmoutPaid(amoutPaids);
-            order.setEmailPaypal(emailPaypal);
-            
-            //if(i<lstPre.size()-1){
-            order.setPreviousPayment(amoutPaids);
-           // }else{
-            	//order.setPreviousPayment("");
-            //}
-            
-            order.setPaymentDueDate(Customer_date);
-            order.setApplyDate(applyDate);
-    		SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd"); 
-    		Date d1 = null;
-			Date d2 = null;
-
-			Date date = new Date();
-			String dateStop = format.format(date);
-			String dateStart = Customer_date;
-			//if(applyDate.equals("")){
-			//	order.setDaysDueDate(0);
-			//}else{
-				try {
-					
-					d1 = format.parse(dateStart);
-					d2 = format.parse(dateStop);
-					long diff = d2.getTime() - d1.getTime();
-					int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
-					System.out.println(diffDays + " days, ");
-					order.setDaysDueDate(diffDays);
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			//}
-			
-            //if((!paymentMethod.equals("") && amoutPaid != 0.00)){
-            //}else{
-            lstOrder.add(order);
-            previousPayment = amoutPaids;
-            //}
+            if((!paymentMethod.equals("") && amoutPaid != 0.00)){
+            }else{
+            	 lstOrder.add(order);
+            }
         }
-		 int i =0;
-		 for (OrderModel element : lstOrder) {
-			   if(i<lstOrder.size()-1){
-				   lstOrder.get(i).setPreviousPayment(lstOrder.get(i+1).getPreviousPayment());
-			   }else{
-				   lstOrder.get(i).setPreviousPayment("");
-			   }
-			   i++;
-		 }
 		return lstOrder;
 	}
 	public List<OrderModel> getLstPaymentExpress() throws ClassNotFoundException, SQLException{
@@ -1118,13 +1055,13 @@ public class OrderDao {
 			issueds = "1";
 			Integer isPetco  = getPetcoValidation(order_id);
 			System.out.println("IS Petco : " +isPetco);
-		/*	if(isPetco==1) {
+			if(isPetco==1) {
 				currentOrder = getOrderPrint(order_id);
 				OrderModel currentOrders =  currentOrder.get(0);
 				orderDetail = getOrderDetail(order_id);
 		     PetcoInvoicing petcoUp= new PetcoInvoicing();
 			petcoUp.UploadInvoice(orderDetail,currentOrders);
-			}*/
+			}
 		}
 		String sql1 = "UPDATE exoticre_order.orders SET  "
 				+ "issued ='"+issueds+"'"
@@ -1272,89 +1209,11 @@ public class OrderDao {
 	 * FROM PEDRO **************** PETCO ORDERS  ***************	
 	 */
 	
-	public Integer addPetcoOrder(String order) throws ClassNotFoundException, SQLException {
+	public Integer addPetcoOrder(String order,Integer order_id) throws ClassNotFoundException, SQLException {
 		
-	//	OrderInfoModel orderInfoModel = invoice.getOrderInfo();
-	//	ProductModel productModel = invoice.getProduct();
 		Date myDate = new Date();
 		String date = new SimpleDateFormat("yyyy-MM-dd").format(myDate);
-	//	int commission = 1;
-	//	if(productModel.getCommission() == false){
-	//		commission = 0;
-	//	}
-	/**	String sql = "INSERT INTO exoticre_order.orders("
-				+ "notes,"
-				+ "Airport,"
-				+ "Customer_comments,"
-				+ "Product_id,"
-				+ "Date,"
-				+ "Customer_date,"
-				+ "Customer_email,"
-				+ "saleperson_email,"
-				+ "order_id,"
-				+ "ClientCustomerID,"
-				+ "Customer_ship,"
-				+ "awb,"
-				+ "fob,"
-				+ "ponumber,"
-				+ "fcb,"
-				+ "fcbw,"
-				+ "tpacks,"
-				+ "rockb,"
-				+ "rockw,"
-				+ "totalp,"
-				+ "dfb,"
-				+ "dfbw,"
-				+ "totalb,"
-				+ "Product_Sku,"
-				+ "Item,"
-				+ "Size,"
-				+ "Product_name,"
-				+ "Lot,"
-				+ "Addon,"
-				+ "Price,"
-				+ "disc,"
-				+ "Total,"
-				+ "commission,"
-				+ "readyPayment,"
-				+ "issued,"
-				+ "All_Total)"
-				+ "VALUES ('App Java','"
-				+ "','"
-				+  "','"
-				+ "0','"
-				+date+"','"
-				+date+"','"
-				+orderInfoModel.getCustomer_email()+"','"
-				+orderInfoModel.getSaleEmail()+"','"
-				+order_id+"','"
-				+orderInfoModel.getClientCustomerID()+"','"
-				+orderInfoModel.getCustomer_ship()+"','"
-				+orderInfoModel.getAwb()+"','"
-				+orderInfoModel.getFob()+"','"
-				+orderInfoModel.getPonumber()+"','"
-				+orderInfoModel.getFcb()+"','"
-				+orderInfoModel.getFcbw()+"','"
-				+orderInfoModel.getTpacks()+"','"
-				+orderInfoModel.getRockb()+"','"
-				+orderInfoModel.getRockw()+"','"
-				+orderInfoModel.getTotalp()+"','"
-				+orderInfoModel.getDfb()+"','"
-				+orderInfoModel.getDfbw()+"','"
-				+orderInfoModel.getTotalb()+"','"
-				+productModel.getSku()+"','"
-				+productModel.getQty()+"','"
-				+productModel.getSize()+"','"
-				+productModel.getName()+"','"
-				+productModel.getLot()+"','"
-				+productModel.getAddon()+"','"
-				+productModel.getPrice()+"','"
-				+productModel.getDisc()+"','"
-				+productModel.getTotal()+"',"
-				+commission+",'"
-				+productModel.getReadyPayment()+"','"
-				+productModel.getIssued()+"','"
-				+productModel.getAll_Total()+"')"; **/
+
 		Statement stmt = (Statement) DBConnection.getConnection().createStatement();
 		int status = stmt.executeUpdate(order,Statement.RETURN_GENERATED_KEYS);
 		ResultSet rs = stmt.getGeneratedKeys();
@@ -1363,7 +1222,18 @@ public class OrderDao {
         }
         rs.close();
 
+        String  All_Total="";
+        ResultSet at =  stmt.executeQuery("SELECT SUM(Total) AS All_Total FROM `orders` WHERE order_id=" + order_id);
+        while(at.next()) {
+        
+        All_Total = at.getString("All_Total");
+        
+        }
+        String updateAll_Total = "UPDATE orders SET All_Total=" +All_Total+ " WHERE order_id=" + order_id;
+        stmt.executeUpdate(updateAll_Total);
         stmt.close();
+        
+       
 		return status;
 
 	}
