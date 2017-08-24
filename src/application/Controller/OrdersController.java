@@ -37,6 +37,7 @@ import application.Utill.InvalidCertificateTrustManager;
 import application.Utill.Menu;
 import application.Utill.Pdf;
 import application.Utill.PdfPackingList;
+import application.Utill.PetcoFileReader;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -395,13 +396,15 @@ public class OrdersController extends Menu implements Initializable {
 		orderDao = new OrderDao();
 		initViewOrders();
 		initViewOrderDetail();
-		twOrder.setPlaceholder(new Label("Please wait… Searching Database."));
+		twOrder.setPlaceholder(new Label("Please waitï¿½ Searching Database."));
 		if(!screen.equals("Express")){
 		Thread thLoadData = new Thread() {
 			@SuppressWarnings("deprecation")
 			public void run() {
 				try {
-					list = orderDao.getOrder(str_filters,screen);
+					PetcoFileReader petco = new PetcoFileReader();
+					petco.DownloadOrders();
+                    list = orderDao.getOrder(str_filters,screen);
 					listAirlines = orderDao.getAirlines();
 					twOrder.getItems().clear();
 					twOrder.getItems().addAll(list);
@@ -466,6 +469,9 @@ public class OrdersController extends Menu implements Initializable {
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 			}
 		};
@@ -1271,7 +1277,7 @@ public class OrdersController extends Menu implements Initializable {
 		.addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue ov, Number value, Number new_value) {
 				str_filters = screens[new_value.intValue()];
-				twOrder.setPlaceholder(new Label("Please wait… Searching Database."));
+				twOrder.setPlaceholder(new Label("Please waitï¿½ Searching Database."));
 				twOrder.getItems().clear();
 				Thread thLoadData = new Thread() {
 					@SuppressWarnings("deprecation")
@@ -2481,7 +2487,7 @@ public class OrdersController extends Menu implements Initializable {
 		orderInfoModel.setAwb(tracking.getText());
 		orderInfoModel.setFob(fob.getText());
 		orderInfoModel.setTerms(terms.getText());
-		orderInfoModel.setPonumber(Integer.parseInt(ponumber.getText()));
+		orderInfoModel.setPonumber(ponumber.getText());
 		orderInfoModel.setSalesperson(salsperson.getText());
 		orderInfoModel.setFcb(Integer.parseInt(fish_boxes.getText()));
 		orderInfoModel.setFcbw(Integer.parseInt(fish_weight.getText()));
@@ -2667,5 +2673,4 @@ public class OrdersController extends Menu implements Initializable {
 	    }
 	}
 }
-
 
