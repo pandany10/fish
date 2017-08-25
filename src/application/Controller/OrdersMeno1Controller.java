@@ -2346,7 +2346,7 @@ public class OrdersMeno1Controller extends Menu implements Initializable {
 		orderInfoModel.setAwb(tracking.getText());
 		orderInfoModel.setFob(fob.getText());
 		orderInfoModel.setTerms(terms.getText());
-		orderInfoModel.setPonumber(Integer.parseInt(ponumber.getText()));
+		orderInfoModel.setPonumber(ponumber.getText());
 		orderInfoModel.setSalesperson(salsperson.getText());
 		orderInfoModel.setFcb(Integer.parseInt(fish_boxes.getText()));
 		orderInfoModel.setFcbw(Integer.parseInt(fish_weight.getText()));
