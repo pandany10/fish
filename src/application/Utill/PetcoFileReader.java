@@ -17,7 +17,7 @@ import application.Utill.MoveFiles;
 import application.Dao.OrderDao;
 import application.Dao.ProductQbDao;
 import application.Model.ProductModel;
-import application.Utill.qbComm; 
+//import application.Utill.qbComm; 
 
 public class PetcoFileReader {
  private static final Object[] String = null;
@@ -44,23 +44,23 @@ String productName   = "";
    OrderDao porder = new OrderDao();
 
   try {  
-	  qbComm Petcosend = new qbComm();
+	 // qbComm Petcosend = new qbComm();
 	  //send to QB Web Order Products 
-	  ProductQbDao websend = new ProductQbDao();
+	//  ProductQbDao websend = new ProductQbDao();
 	    keySearch = null;
 		Object str_filters = null;
-		List<ProductModel> lstProduct = websend.getListProduct();
-		int prods = lstProduct.size();
-		for(int i=0;i<prods;i++) {
-		sku = lstProduct.get(i).getSku();
-		productName = lstProduct.get(i).getName();
-		Double unitp = Double.parseDouble(lstProduct.get(i).getPrice());
+	//	List<ProductModel> lstProduct = websend.getListProduct();
+//		int prods = lstProduct.size();
+//		for(int i=0;i<prods;i++) {
+	//	sku = lstProduct.get(i).getSku();
+	//	productName = lstProduct.get(i).getName();
+	//	Double unitp = Double.parseDouble(lstProduct.get(i).getPrice());
 	//	System.out.println("SENDING product to QB: sku= "+sku+",Product Name= "+productName+ ",Price= "+unitp);
 		if(sku.length()>0 && productName.length()>0) {
      //  Petcosend.itemInventoryAdd(sku, productName, unitp);
 		}
 		 //System.out.println("RESULT:"+lstProduct.get(i).getSku());
-		}
+	//	}
   
 	  int order_id=0;
 	  File[] files = new File("petco/download/").listFiles(new FilenameFilter() { @Override public boolean accept(File dir, String name) { return name.endsWith(".txt"); } });  
