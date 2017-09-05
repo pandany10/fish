@@ -151,8 +151,8 @@ for(int j=0;j<100000;j++){
                //   int qty = iqty.intValue();
                  double iprice = Double.parseDouble(price);
                  double total = iqty*iprice;
-              String ordertoinsert = "INSERT INTO orders(Customer_ship,Size,awb,fob,fcb,fcbw,tpacks,rockb,rockw,totalp,dfb,dfbw,totalb,Item,Lot,Addon,disc,commission,readyPayment,issued,order_id,purchase_order,notes,Airport,Customer_comments,Product_id,Date,Customer_email,saleperson_email,Product_name,Customer_date,Product_Sku,Price,Total,All_Total,ClientCustomerID) "
-              		+ "VALUES(\"UPS\",\"STD\",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\""+order_id+"\",\""+po+"\",\"PETCO\",\"ZZZ\",\"NA\",\"0\",\""+date+"\",\"orders@petco.com\",\"ERIfish@aol.com'\",\""+productName+"\",\""+odate+"\",\""+sku+"\",\""+iprice+"\",\""+total+"\",\""+total+"\",\""+StoreNumber+"\")";    
+              String ordertoinsert = "INSERT INTO orders(Customer_ship,Size,awb,fob,fcb,fcbw,tpacks,rockb,rockw,totalp,dfb,dfbw,totalb,Item,Lot,Addon,disc,commission,readyPayment,issued,order_id,purchase_order,notes,Airport,Customer_comments,Product_id,Date,Customer_email,saleperson_email,Product_name,Customer_date,Product_Sku,Price,Total,All_Total,ClientCustomerID,ordertype) "
+              		+ "VALUES(\"UPS\",\"STD\",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\""+order_id+"\",\""+po+"\",\"PETCO\",\"ZZZ\",\"NA\",\"0\",\""+date+"\",\"orders@petco.com\",\"ERIfish@aol.com'\",\""+productName+"\",\""+odate+"\",\""+sku+"\",\""+iprice+"\",\""+total+"\",\""+total+"\",\""+StoreNumber+"\",\"PETCO\")";    
 //System.out.println(ordertoinsert);
 porder.addPetcoOrder(ordertoinsert,order_id);
 //Petcosend.itemInventoryAdd(sku,productName,Double.parseDouble(price));
