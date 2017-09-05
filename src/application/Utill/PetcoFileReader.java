@@ -112,7 +112,7 @@ for(int j=0;j<100000;j++){
                StoreNumber = " 12"+line[3]; //Store Number
             	  }else {
 
-            		  StoreNumber = line[3]; //Store Number     
+            		  StoreNumber = "12"+line[3]; //Store Number     
             	  }
                StoreName   = line[6]; //Store Name
                StoreAdd    = line[9]; //Store address
