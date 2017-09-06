@@ -13,16 +13,18 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
-import application.Utill.MoveFiles;
+//import application.Utill.MoveFiles;
 import application.Dao.OrderDao;
 import application.Dao.ProductQbDao;
-import application.Model.ProductModel;
+import application.Dao.CustomerDao;
+//import application.Model.ProductModel;
+//import application.Model.ProductModel;
 //import application.Utill.qbComm; 
 
 public class PetcoFileReader {
- private static final Object[] String = null;
+// private static final Object[] String = null;
 private BufferedReader b;
-private ProductQbDao keySearch;
+//private ProductQbDao keySearch;
 
 public int DownloadOrders()throws IOException, ClassNotFoundException, SQLException {
 
@@ -42,26 +44,10 @@ String productName   = "";
  File f = null;
 //File[] paths;
    OrderDao porder = new OrderDao();
-
+   CustomerDao customer = new CustomerDao();
   try {  
-	 // qbComm Petcosend = new qbComm();
-	  //send to QB Web Order Products 
-	//  ProductQbDao websend = new ProductQbDao();
-	    keySearch = null;
-		Object str_filters = null;
-	//	List<ProductModel> lstProduct = websend.getListProduct();
-//		int prods = lstProduct.size();
-//		for(int i=0;i<prods;i++) {
-	//	sku = lstProduct.get(i).getSku();
-	//	productName = lstProduct.get(i).getName();
-	//	Double unitp = Double.parseDouble(lstProduct.get(i).getPrice());
-	//	System.out.println("SENDING product to QB: sku= "+sku+",Product Name= "+productName+ ",Price= "+unitp);
-		if(sku.length()>0 && productName.length()>0) {
-     //  Petcosend.itemInventoryAdd(sku, productName, unitp);
-		}
-		 //System.out.println("RESULT:"+lstProduct.get(i).getSku());
-	//	}
-  
+
+
 	  int order_id=0;
 	  File[] files = new File("petco/download/").listFiles(new FilenameFilter() { @Override public boolean accept(File dir, String name) { return name.endsWith(".txt"); } });  
      for(int z = 0;z<files.length;z++){
@@ -119,6 +105,12 @@ for(int j=0;j<100000;j++){
                StoreCity   = line[11]; //Store City
                StoreState  = line[12]; //Store State
                StoreZip    = line[13]; //Store ZipCode
+               
+               System.out.println("STORE NAME : " +StoreName);
+               System.out.println("STORE Address : " +StoreAdd);
+               System.out.println("STORE City : " +StoreCity);
+               System.out.println("STORE State : " +StoreState);
+               System.out.println("STOREZip : " +StoreZip);
                continue;
                 }
               
@@ -153,10 +145,11 @@ for(int j=0;j<100000;j++){
                  double total = iqty*iprice;
               String ordertoinsert = "INSERT INTO orders(Customer_ship,Size,awb,fob,fcb,fcbw,tpacks,rockb,rockw,totalp,dfb,dfbw,totalb,Item,Lot,Addon,disc,commission,readyPayment,issued,order_id,purchase_order,notes,Airport,Customer_comments,Product_id,Date,Customer_email,saleperson_email,Product_name,Customer_date,Product_Sku,Price,Total,All_Total,ClientCustomerID,ordertype) "
               		+ "VALUES(\"UPS\",\"STD\",0,0,0,0,0,0,0,0,0,0,0,"+iqty+",0,0,0,0,0,0,\""+order_id+"\",\""+po+"\",\"PETCO\",\"ZZZ\",\"NA\",\"0\",\""+date+"\",\"orders@petco.com\",\"ERIfish@aol.com'\",\""+productName+"\",\""+odate+"\",\""+sku+"\",\""+iprice+"\",\""+total+"\",\""+total+"\",\""+StoreNumber+"\",\"PETCO\")";    
-System.out.println(ordertoinsert);
+//System.out.println(ordertoinsert);
 porder.addPetcoOrder(ordertoinsert,order_id);
+customer.updatePetcoStore(StoreNumber, StoreName, StoreAdd, StoreCity, StoreState, StoreZip);
 //Petcosend.itemInventoryAdd(sku,productName,Double.parseDouble(price));
-
+//UPDATE 
  petcoorder[l][0] = po;
  petcoorder[l][1] = odate;
  petcoorder[l][2] = StoreNumber;
