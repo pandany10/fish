@@ -501,4 +501,34 @@ public class CustomerDao {
 		System.out.println("delete Customer   : "+status);
 		return true;
 	}
+	
+	/**
+	 * PETCO CUSTOMER FUNCTIONS
+	 * 
+	 **/
+	
+	public int updatePetcoStore(String CustomerID,String StoreName,String StoreAddr,String StoreCity,String StoreState,String StoreZip) throws ClassNotFoundException, SQLException {
+    //Check if exists
+		 int status = 0;
+		String SeqID = null;
+        String Sql = "SELECT SeqID FROM customerfishpro WHERE CUstomerID='"+CustomerID+"'";
+        
+    	ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(Sql);
+		 while (rs.next()) {
+			SeqID = rs.getString("SeqID");
+				 
+		 }
+		 if(SeqID.length()>1) {
+			 Sql = "UPDATE customerfishpro SET Address='"+StoreAddr+"',City='"+StoreCity+"',States='"+StoreState+"',Zip='"+StoreZip+"' WHERE SeqID='"+SeqID+"'";
+			  status = DBConnection.getConnection().createStatement().executeUpdate(Sql);
+			//	System.out.println("update customerfishpro: "+status); 
+		 }else {
+			 Sql = "INSERT INTO customerfishpro(CustomerID,CompanyName,Address,City,States,Zip)VALUES('"
+					 + CustomerID + "','"+StoreName+"','"+StoreAddr+"','" +StoreCity +"','" +StoreState +"','" +StoreZip +"')";
+        status = DBConnection.getConnection().createStatement().executeUpdate(Sql);
+		//System.out.println("update customerfishpro: "+status);
+		 }
+		return status;
+	}
+	
 }
