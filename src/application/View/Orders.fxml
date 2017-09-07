@@ -411,7 +411,14 @@
                <children>
                   <TableView fx:id="twOrder" editable="true" layoutY="32.0" prefHeight="699.0" prefWidth="1266.0" />
                   <BorderPane layoutY="1.0" prefHeight="33.0" prefWidth="1266.0">
-                     <right>
+                      <left>
+                        <ChoiceBox fx:id="pendingordersbox" prefHeight="25.0" prefWidth="135.0" BorderPane.alignment="CENTER">
+                           <effect>
+                              <Blend />
+                           </effect>
+                        </ChoiceBox>
+                     </left>
+                      <right>
                         <ChoiceBox fx:id="cbFilterScreen" prefHeight="25.0" prefWidth="135.0" BorderPane.alignment="CENTER">
                            <effect>
                               <Blend />
@@ -419,14 +426,22 @@
                         </ChoiceBox>
                      </right>
                   </BorderPane>
-                  <ChoiceBox fx:id="cbFilter" prefHeight="25.0" prefWidth="135.0">
+ 
+           <ChoiceBox fx:id="cbFilter" prefHeight="25.0" prefWidth="135.0">
                      <effect>
                         <Blend />
                      </effect>
                   </ChoiceBox>
-               </children>
+                <!--    
+                  <ChoiceBox fx:id="pendingordersbox" prefHeight="25.0" prefWidth="135.0" BorderPane.alignment="CENTER">
+                     <effect>
+                        <Blend />
+                     </effect>
+                  </ChoiceBox>    -->          
+             </children>
             </Pane>
-         </children></StackPane>
+         </children>
+         </StackPane>
       <Pane fx:id="footer" layoutY="710.0" onMouseEntered="#mouseEnter" onMouseExited="#mouseEnter" prefHeight="47.0" prefWidth="1266.0">
          <children>
             <Label fx:id="lblEnter" layoutX="287.0" layoutY="26.0" prefHeight="25.0" prefWidth="177.0" text="[Enter] Order Detail">
