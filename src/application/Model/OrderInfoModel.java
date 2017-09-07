@@ -8,7 +8,7 @@ public class OrderInfoModel {
 	private String fob; //order
 	private String Terms; //cus fish pro
 	
-	private Integer ponumber; //order
+	private String ponumber; //order
 	private String Salesperson; //cus fish pro
 	
 
@@ -84,7 +84,7 @@ public class OrderInfoModel {
 	public void setTerms(String terms) {
 		Terms = terms;
 	}
-	public Integer getPonumber() {
+	public String getPonumber() {
 		return ponumber;
 	}
 	public Integer getFcb() {
@@ -120,7 +120,7 @@ public class OrderInfoModel {
 	public void setSalesperson(String salesperson) {
 		Salesperson = salesperson;
 	}
-	public void setPonumber(Integer ponumber) {
+	public void setPonumber(String ponumber) {
 		this.ponumber = ponumber;
 	}
 	public void setFcb(Integer fcb) {
