@@ -80,6 +80,7 @@ public class OrdersController extends Menu implements Initializable {
 
 	final String[] statusS = new String[] { "Pending", "Packing", "Shipped", "Completed","Pulling" };
 	final String[] filter = new String[] { "Pending", "Packing", "Shipped", "Completed" ,"Pulling" };
+	final String[] pendingfilter = new String[] { "All", "Web", "Desktop", "Petco" };
 	final String[] screens = new String[] { "Express", "Exotic", "Both" };
 	final String[] aftership = new String[] { "UPS", "OnTrac" };
 	private String str_filters = screens[1];
@@ -108,7 +109,7 @@ public class OrdersController extends Menu implements Initializable {
 		lblf7.setVisible(true);
 		Tracking.setVisible(false);
 		Trackinglink.setVisible(false);
-		twOrder.setPrefWidth(1266.00);
+			twOrder.setPrefWidth(1266.00);
 		root.setPrefWidth(1266.00);
 		if(screen.equals("Express")){
 			twOrder.getItems().clear();
@@ -120,6 +121,7 @@ public class OrdersController extends Menu implements Initializable {
 						twOrder.getItems().clear();
 						twOrder.getItems().addAll(list);
 						twOrder.getSelectionModel().selectFirst();
+					
 						Platform.runLater(new Runnable() {
 							  @Override
 							  public void run() {
@@ -129,6 +131,7 @@ public class OrdersController extends Menu implements Initializable {
 									    	tw_issued.setVisible(false);
 									    	status.setVisible(false);
 									    	cbFilter.setVisible(false);
+									    	pendingordersbox.setVisible(true);
 									  }
 							  }
 							});
@@ -301,6 +304,10 @@ public class OrdersController extends Menu implements Initializable {
 	@FXML
 	public ChoiceBox cbFilter;
 	@FXML
+	public ChoiceBox TempOrders;
+	@FXML
+	public ChoiceBox pendingordersbox;
+	@FXML
 	public ChoiceBox cbFilterScreen;
 	@FXML
 	public Label lblEnter;
@@ -326,6 +333,9 @@ public class OrdersController extends Menu implements Initializable {
 	public void setCbFilter(Boolean hiden) {
 		cbFilter.setVisible(hiden);
 	}
+	//public void setTempOrders(Boolean hiden) {
+	//	TempOrders.setVisible(hiden);
+	//}
 	public void setTw_payment(Boolean hiden) {
 		tw_payment.setVisible(hiden);
 	}
@@ -337,7 +347,7 @@ public class OrdersController extends Menu implements Initializable {
 		if(hiden == false){
 			Customer_emails.setPrefWidth(320.0);
 			CompanyName.setPrefWidth(350.0);
-			twOrder.setLayoutY(0);
+			//twOrder.setLayoutY(0);
 			twOrder.setPrefHeight(640);
 			cbFilterScreen.setVisible(false);
 		}
@@ -393,10 +403,11 @@ public class OrdersController extends Menu implements Initializable {
 		//twOrder.setLayoutY(0);
 		twOrder.setPrefHeight(660);
 		cbFilter.setVisible(false);
+		//TempOrders.setVisible(true);
 		orderDao = new OrderDao();
 		initViewOrders();
 		initViewOrderDetail();
-		twOrder.setPlaceholder(new Label("Please wait� Searching Database."));
+		twOrder.setPlaceholder(new Label("Please wait, Searching Database."));
 		if(!screen.equals("Express")){
 		Thread thLoadData = new Thread() {
 			@SuppressWarnings("deprecation")
@@ -404,6 +415,7 @@ public class OrdersController extends Menu implements Initializable {
 				try {
 					PetcoFileReader petco = new PetcoFileReader();
 					petco.DownloadOrders();
+					System.out.println("Filter" +str_filters+ ", Screen : " +screen);
                     list = orderDao.getOrder(str_filters,screen);
 					listAirlines = orderDao.getAirlines();
 					twOrder.getItems().clear();
@@ -457,7 +469,8 @@ public class OrdersController extends Menu implements Initializable {
 								    	tw_issued.setVisible(false);
 								    	status.setVisible(false);
 								    	cbFilter.setVisible(false);
-								    	twOrder.setPrefHeight(670);
+								     	pendingordersbox.setVisible(true);
+								    	twOrder.setPrefHeight(660);
 								  }
 						  }
 						});
@@ -1277,7 +1290,7 @@ public class OrdersController extends Menu implements Initializable {
 		.addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue ov, Number value, Number new_value) {
 				str_filters = screens[new_value.intValue()];
-				twOrder.setPlaceholder(new Label("Please wait� Searching Database."));
+				twOrder.setPlaceholder(new Label("Please wait, Searching Database."));
 				twOrder.getItems().clear();
 				Thread thLoadData = new Thread() {
 					@SuppressWarnings("deprecation")
@@ -1317,6 +1330,44 @@ public class OrdersController extends Menu implements Initializable {
 				thLoadData.start();
 			}
 		});
+		
+		pendingordersbox.setItems(FXCollections.observableArrayList("All", "Web", "Desktop", "Petco"));
+		pendingordersbox.setValue("All");
+		pendingordersbox.getSelectionModel().selectedIndexProperty()
+		.addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue ov, Number value, Number new_value) {
+				String str_filters = pendingfilter[new_value.intValue()];
+				Thread thLoadData = new Thread() {
+					@SuppressWarnings("deprecation")
+					public void run() {
+						//twOrder.getItems().removeAll(list);
+						twOrder.getItems().clear();
+						try {
+							list = orderDao.getOrder(str_filters,screen);
+							for (OrderModel element : list) {
+							  //System.out.println(element.getStatus());COMPLETED
+							}
+							twOrder.getItems().clear();
+							twOrder.getItems().addAll(list);
+							twOrder.getSelectionModel().selectFirst();
+							for(int i =0;i< twOrder.getItems().size();i++){
+								//System.out.println(twOrder.getItems().get(i).getStatus());
+							}
+							this.suspend();
+						} catch (ClassNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				};
+
+				thLoadData.start();
+			}
+		});
+		
 		cbFilter.setItems(FXCollections.observableArrayList("Pending", "Packing", "Shipped", "Completed","Pulling"));
 		cbFilter.setValue("Pending");
 		cbFilter.getSelectionModel().selectedIndexProperty()
@@ -1557,6 +1608,7 @@ public class OrdersController extends Menu implements Initializable {
 	    	tw_issued.setVisible(false);
 	    	status.setVisible(false);
 	    	cbFilter.setVisible(false);
+	    	pendingordersbox.setVisible(true);
 	     }
 		TableColumn<OrderModel, String> Customer_ship = new TableColumn<>("Ship Via");
 		Customer_ship.setCellValueFactory(new PropertyValueFactory<>("Customer_ship"));
@@ -1572,6 +1624,7 @@ public class OrdersController extends Menu implements Initializable {
 		//boolean addAll = twOrder.getColumns().addAll(order_id, Customer_date, status,tw_payment, Customer_ship, ClientCustomerID,
 		//		Customer_emails, CompanyName,tw_issued, All_Total,Tracking);
 		if(screen.equals("final")){
+			pendingordersbox.setVisible(false);
 			twOrder.getColumns().addAll(order_id, Customer_date, status,tw_payment, Customer_ship, ClientCustomerID,
 					Customer_emails, CompanyName,tw_issued, All_Total,Tracking,Trackinglink);
 			twOrder.setPrefWidth(1600.00);
@@ -1579,6 +1632,8 @@ public class OrdersController extends Menu implements Initializable {
 		}else{
 			twOrder.getColumns().addAll(order_id, Customer_date, status,tw_payment, Customer_ship, ClientCustomerID,
 					Customer_emails, CompanyName,tw_issued, All_Total);
+			twOrder.setPrefWidth(1600.00);
+			root.setPrefWidth(1600.00);
 		}
 		twOrder.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 			@Override
