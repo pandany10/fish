@@ -145,6 +145,8 @@ public class InvoiceController  extends Menu implements Initializable {
 	private TextField txtDiscount;
 	@FXML
 	public TextField txtKeySearchCus;
+	@FXML
+	public CheckBox creditmemo;
 	
 	@FXML
 	public TableColumn<ProductModel, String> twd_sku1;
@@ -867,8 +869,9 @@ public class InvoiceController  extends Menu implements Initializable {
 				if(!news.equals("")){
 				try {
 					ProductDao productDao = new ProductDao();
-					ProductModel product = productDao.getProductBySkuInvoice(news);
+					ProductModel product = productDao.getProductBySkuInvoice(news,creditmemo.isSelected());
 					if (product.getSku() != null) {
+					System.out.println("iscreditmemo " +creditmemo.isSelected());	
 						product.setId(item.getId());
 						twOrderDetail.getItems().add(twOrderDetail.getSelectionModel().getSelectedIndex(), product);
 						twOrderDetail.getItems().removeAll(twOrderDetail.getSelectionModel().getSelectedItems());
@@ -1642,6 +1645,13 @@ public class InvoiceController  extends Menu implements Initializable {
 				product.setCommission(twOrderDetail.getItems().get(i).getCommission());
 				product.setReadyPayment(chkpm.isSelected()==true?"1":"0");
 				product.setIssued(chkIs.isSelected()==true?"1":"0");
+				product.setCreditMemo(creditmemo.isSelected()==true?"1":"0");
+				if(creditmemo.isSelected()==true) {
+				product.setFishdie(true);
+				}else {
+					product.setFishdie(false);
+						
+				}
 				invoice.setOrderInfo(orderInfoModel);
 				invoice.setProduct(product);
 				if(product.getTotal() != null){

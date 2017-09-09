@@ -154,7 +154,7 @@ public class OrdersController extends Menu implements Initializable {
 	public void showDetail(List<OrderModel> currentOrders) throws ClassNotFoundException, SQLException {
 		currentOrder = currentOrders;
 		Integer in = currentOrder.get(0).getOrder_id();
-		System.out.println(in);
+		System.out.println(+in);
 		editOrderId = in;
 		isShowOrdes(false);
 		orderDetail = orderDao.getOrderDetail(editOrderId);
@@ -612,6 +612,7 @@ public class OrdersController extends Menu implements Initializable {
 		this.dry_boxes.textProperty().addListener(new TextFieldListenerInfo(this.dry_boxes));
 		this.dry_weight.textProperty().addListener(new TextFieldListenerInfo(this.dry_weight));
 		this.dry_t_boxes.textProperty().addListener(new TextFieldListenerInfo(this.dry_t_boxes));
+	//	this.chkPackingList.textProperty().addListener(new TextFieldListenerInfo(this.chkPackingList));
 		this.txtDiscount.textProperty().addListener(new TextFieldListener(this.txtDiscount));
 		System.out.println(r.isResizable());
         Callback<TableColumn<ProductModel, Boolean>, TableCell<ProductModel, Boolean>> booleanCellFactory = 
@@ -1137,6 +1138,7 @@ public class OrdersController extends Menu implements Initializable {
 	}
 	public void createPackingList() throws IOException {
 		boolean ischeck = chkPackingList.isSelected();
+		//System.out.println(ischeck);
 		PdfPackingList pdf = new PdfPackingList();
 		pdf.scientiflic = !ischeck;
 		OrderModel currentOrders =  currentOrder.get(0);
@@ -1881,7 +1883,7 @@ public class OrdersController extends Menu implements Initializable {
 		currentOrder = twOrder.getSelectionModel().getSelectedItems();
 		Integer in = currentOrder.get(0).getOrder_id();
 		lblEnter.setText("[Enter] Commit Value");
-		System.out.println(in);
+		System.out.println("here is where we edit the order " +in);
 		editOrderId = in;
 		isShowOrdes(false);
 		orderDetail = orderDao.getOrderDetail(editOrderId);
@@ -1931,7 +1933,8 @@ public class OrdersController extends Menu implements Initializable {
 		CustomerModel ship = orderDetail.getShipTo();
 		OrderInfoModel orderInfo = orderDetail.getOrderInfo();
 		List<ProductModel> lstProduct = orderDetail.getLstProduct();
-
+        System.out.println("ORDER TYPE : " + orderInfo.getOrderType());
+    	if(orderInfo.getOrderType().equals("PETCO")) {chkPackingList.setSelected(true);}
 		bill_cus_id.setText(bill.getCustomerID());
 		bill_name.setText(bill.getCompanyName());
 		bill_address1.setText(bill.getAddress());
@@ -1967,6 +1970,7 @@ public class OrdersController extends Menu implements Initializable {
 		dry_boxes.setText(String.valueOf(orderInfo.getDfbw()));
 		dry_weight.setText(String.valueOf(orderInfo.getDfbw()));
 		dry_t_boxes.setText(String.valueOf(orderInfo.getTotalb()));
+	
 		txtShippingCost.setText(String.valueOf(orderInfo.getShippingCost()));
 		System.out.println(twOrderDetail.getItems().size());
 		for (int i = 0; i < twOrderDetail.getItems().size(); i++) {
@@ -2554,6 +2558,7 @@ public class OrdersController extends Menu implements Initializable {
 		orderInfoModel.setDfbw(Integer.parseInt(dry_weight.getText()));
 		orderInfoModel.setTotalb(Integer.parseInt(dry_t_boxes.getText()));
 		orderInfoModel.setSaleEmail(saleEmail.getText());
+	//	orderInfoModel.setOrderType(OrderType.getText());
 		orderInfoModel.setCustomer_email(Customer_email.getText());
 		
 		return orderInfoModel;
