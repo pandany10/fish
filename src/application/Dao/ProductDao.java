@@ -616,7 +616,7 @@ public class ProductDao {
 		 }
 		return product;
 	}
-	public ProductModel getProductBySkuInvoice(String skus) throws ClassNotFoundException, SQLException{
+	public ProductModel getProductBySkuInvoice(String skus, Boolean iscredit) throws ClassNotFoundException, SQLException{
 		ProductModel product = new ProductModel();
 		if(skus.equals("")){
 			skus = "nothing";
@@ -643,6 +643,11 @@ public class ProductDao {
              Float prices = rs.getFloat("prices");
              if(rs.getString("skus") != null){
             	 price = prices; 
+             }
+             /** addind negative if is credit memo **/
+             if(iscredit) {
+            	 price =price -(price*2);
+            	 
              }
              Integer disc =  0;
              Float total = price*lot*qty ;

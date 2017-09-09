@@ -30,6 +30,7 @@ import javafx.scene.control.Hyperlink;
 public class OrderDao {
 	private List<OrderModel> currentOrder;
 	private OrderDetailModel orderDetail;
+	List<ProductModel> lstProduct;
 	public List<OrderModel> getOrderCustomerSale() throws ClassNotFoundException, SQLException{
 		List<OrderModel> lstOrder = new ArrayList<>();
 		String sql = "SELECT * FROM exoticre_order.customerfishpro t1 inner join exoticre_order.orders t2 on t1.CustomerID = t2.ClientCustomerID WHERE t1.CompanyName != '' and t2.amoutPaid != t2.All_Total  and t2.status != 'COMPLETED' GROUP BY t2.order_id order by t1.CompanyName asc limit 20000;";
@@ -1011,7 +1012,7 @@ public class OrderDao {
 		allTotals = String.format ("%.2f", allTotal);
 		for (ProductModel product : lstProduct) {
 		    System.out.println(product.getTotal());
-		    if(product.getFishdie() == true){
+		  //  if(product.getFishdie() == true){
 		    	product.setAll_Total(Float.parseFloat(allTotals));
 		    	product.setAll_Total_Memo(Float.parseFloat(allTotals));
 		    String sql = "INSERT INTO exoticre_order.ordersCreditMemo("
@@ -1041,11 +1042,12 @@ public class OrderDao {
 					+product.getAll_Total()+"','"
 					+product.getSurcharge()+"','"
 					+product.getAll_Total_Memo()+"','"
-					+product.getClientCustomerID()+"')";     
+					+product.getClientCustomerID()+"')";  
+		    System.out.println(sql);
 			Statement stmt = (Statement) DBConnection.getConnection().createStatement();
 			int status = stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
 		    }
-		}
+	//	}
 		return 1;
 	}
 	public Boolean updateReadyPayment(Integer order_id,Boolean payment) throws ClassNotFoundException, SQLException {
@@ -1113,16 +1115,33 @@ public class OrderDao {
 		return status;
 	}
 	public Integer addOrder(InvoiceModel invoice,Integer order_id) throws ClassNotFoundException, SQLException {
-		
+		String savestatus ="Pending";
+		String issued = "0";
+		double price;
+		double total;
+		float all_total;
 		OrderInfoModel orderInfoModel = invoice.getOrderInfo();
 		ProductModel productModel = invoice.getProduct();
 		Date myDate = new Date();
 		String date = new SimpleDateFormat("yyyy-MM-dd").format(myDate);
 		int commission = 1;
+		//System.out.println("IS CREDIT MEMO: " +productModel.getCreditMemo());
+		price   = Double.parseDouble(productModel.getPrice());
+		total     = Double.parseDouble(productModel.getTotal());
+	    all_total = productModel.getAll_Total();
+		if(productModel.getCreditMemo().equals("1")) {
+			savestatus = "COMPLETED";
+	        price  = Math.abs(price);
+	        total = Math.abs(total);
+	       all_total = Math.abs(all_total);
+		  issued = "1";
+		}
+		
 		if(productModel.getCommission() == false){
 			commission = 0;
 		}
 		String sql = "INSERT INTO exoticre_order.orders("
+				+ "status,"
 				+ "notes,"
 				+ "Airport,"
 				+ "Customer_comments,"
@@ -1158,8 +1177,8 @@ public class OrderDao {
 				+ "commission,"
 				+ "readyPayment,"
 				+ "issued,"
-				+ "All_Total,ordertype)"
-				+ "VALUES ('App Java','"
+				+ "All_Total,ordertype,fishdie)"
+				+ "VALUES ('" + savestatus + "','App Java','"
 				+ "','"
 				+  "','"
 				+ "0','"
@@ -1188,14 +1207,14 @@ public class OrderDao {
 				+productModel.getName()+"','"
 				+productModel.getLot()+"','"
 				+productModel.getAddon()+"','"
-				+productModel.getPrice()+"','"
+				+price+"','"
 				+productModel.getDisc()+"','"
-				+productModel.getTotal()+"',"
+				+total+"',"
 				+commission+",'"
 				+productModel.getReadyPayment()+"','"
-				+productModel.getIssued()+"','"
-				+productModel.getAll_Total()+"','DESKTOP')";
-		//System.out.println(sql);
+				+issued+"','"
+				+all_total+"','DESKTOP',"+ productModel.getFishdie()+")";
+		System.out.println(sql);
 		Statement stmt = (Statement) DBConnection.getConnection().createStatement();
 		int status = stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
 		ResultSet rs = stmt.getGeneratedKeys();
@@ -1205,7 +1224,17 @@ public class OrderDao {
         rs.close();
 
         stmt.close();
+     
+        if(productModel.getCreditMemo().equals("1")) {
+        	
+   		//System.out.println("WE are issue a credit memo to : " +order_id);
+		   	
+        	orderDetail = this.getOrderDetail(order_id);
+        	
+        	this.addceOrderCreditMemo(orderDetail.getLstProduct(),order_id);
+        } 
 		return status;
+		
 
 	}
 	public Integer getLastNewOrderId() throws ClassNotFoundException, SQLException {
