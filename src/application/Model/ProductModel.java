@@ -22,6 +22,7 @@ public class ProductModel {
 	private String issued ="0";
 	private String  ExpressCommisson;
 	private String chlSL;
+	private String creditmemo;
 	private String ClientCustomerID;
 	
 	public Float getAll_Total_Memo() {
@@ -67,6 +68,12 @@ public class ProductModel {
 	}
 	public void setIssued(String issued) {
 		this.issued = issued;
+	}
+	public String getCreditMemo() {
+		return creditmemo;
+	}
+	public void setCreditMemo(String value) {
+		this.creditmemo = value;
 	}
 	public String getChecknumber() {
 		return checknumber;
