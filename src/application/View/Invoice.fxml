@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
@@ -395,11 +396,11 @@
                                     </TableColumn>
                                  </columns>
                               </TableView>
-                              <Label fx:id="statusAddnewCus" layoutX="821.0" layoutY="2.0" prefHeight="27.0" prefWidth="264.0" styleClass="clright" textFill="#1a06f8">
+                              <Label fx:id="statusAddnewCus" layoutX="658.0" layoutY="1.0" prefHeight="27.0" prefWidth="264.0" styleClass="clright" text="Credit Memo:">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
-                              </Label>
+                              </Label> 
                               <CheckBox fx:id="chkIs" layoutX="791.0" layoutY="7.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="30.0" />
                               <Label layoutX="3.0" layoutY="1.0" prefHeight="27.0" prefWidth="129.0" text="Bill To :">
                                  <font>
@@ -413,6 +414,7 @@
                                     <Font size="18.0" />
                                  </font>
                               </Label>
+                              <CheckBox fx:id="creditmemo" layoutX="929.0" layoutY="7.0" mnemonicParsing="false" />
                             
                            </children>
                         </Pane>
