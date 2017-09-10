@@ -242,7 +242,8 @@ public class Menu {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					gotoInvoice();
+				//	gotoInvoice();
+					gotoOrdersTemp();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -557,6 +558,7 @@ public class Menu {
 	    	    public void handle(KeyEvent evt) {
 	    	        if (evt.getCode().equals(KeyCode.ESCAPE)) {
 	    	        	if(!controller.stateEdit){
+	    	        	//	System.out.println("GOING BACK");
 	    	        		prevStage.show();
 	    	        		stage.close();
 	    	        	}
@@ -606,6 +608,7 @@ public class Menu {
 	    	    public void handle(KeyEvent evt) {
 	    	        if (evt.getCode().equals(KeyCode.ESCAPE)) {
 	    	        	if(!controller.stateEdit){
+	    	       // 	System.out.println("GOING BACK");
 	    	        		prevStage.show();
 	    	        		stage.close();
 	    	        	}
@@ -655,7 +658,8 @@ public class Menu {
 	    	    public void handle(KeyEvent evt) {
 	    	        if (evt.getCode().equals(KeyCode.ESCAPE)) {
 	    	        	if(!controller.stateEdit){
-	    	        		controller.chk = true;
+	    	        	//	System.out.println("GOING BACK");
+	    	    	        	controller.chk = true;
 	    	        		prevStage.show();
 	    	        		stage.close();
 	    	        	}
@@ -777,7 +781,8 @@ public class Menu {
 		     	        		if(count ==1 ){
 		 	    	        		try {
 		 	    	        			stage.close();
-		 								gotoOrders();
+		 	    	        			gotoOrdersTemp();
+		 	    	        			//	gotoOrders();
 		 							} catch (IOException e) {
 		 								// TODO Auto-generated catch block
 		 								e.printStackTrace();
@@ -946,8 +951,9 @@ public class Menu {
 	     	    }
 	     	}); 
 	     }
-	    public void gotoInvoice() throws IOException {          
-	  /*      Stage stage = new Stage();
+	    public void gotoInvoice() throws IOException { 
+	    	System.out.println("going to edit an order");
+	  /**/     Stage stage = new Stage();
 	        stage.setTitle("Create Invoice");
 	        stage.getIcons().add(new Image("file:resources/images/icon.png"));
 	        FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/Invoice.fxml"));
@@ -964,7 +970,9 @@ public class Menu {
 	    	    @Override
 	    	    public void handle(KeyEvent evt) {
 	    	        if (evt.getCode().equals(KeyCode.ESCAPE)) {
+	    	        	 System.out.println("GOING BACK");
 	    	        	if(!controller.stateEdit){
+	    	        	 System.out.println("GOING BACK");
 	    	        		prevStage.show();
 	    	        		stage.close();
 	    	        	}
@@ -973,15 +981,16 @@ public class Menu {
 	    	        	controller.txtKeySearchCus.requestFocus();
 	    	        }
 	    	    }
-	    	});*/
-	    	if(prevStage.getTitle().equals("Temporary Orders") || prevStage.getTitle().equals("Create Invoice")){ //
+	    	}); /**/
+	    	/**if(prevStage.getTitle().equals("Temporary Orders") || prevStage.getTitle().equals("Create Invoice")){ //
 	    		gotoInvoices();
 	    	}else{
 		    	gotoOrdersTemp();	    		
-	    	}
+	    	} **/
 	     }
 	    public void gotoInvoices() throws IOException {          
-	  	        Stage stage = new Stage();
+	    	System.out.println("going to edit an orders");
+	    	Stage stage = new Stage();
 	  	        stage.setTitle("Create Invoice");
 	  	        stage.getIcons().add(new Image("file:resources/images/icon.png"));
 	  	        FXMLLoader myLoader  = new  FXMLLoader(getClass().getResource("/application/View/Invoice.fxml"));
@@ -994,13 +1003,15 @@ public class Menu {
 	  	        prevStage.close();
 	  	        stage.setResizable(false);
 	  	        stage.show();
+	  	        System.out.println("IM GOING TO EDIT INVOICES");
 	  	        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 	  	    	    @Override
 	  	    	    public void handle(KeyEvent evt) {
 	  	    	        if (evt.getCode().equals(KeyCode.ESCAPE)) {
+	  	    	        	System.out.println("what the controller have : " + controller);
 	  	    	        	if(!controller.stateEdit){
-	  	    	        	//	prevStage.show();
-	  	    	        //		stage.close();
+	  	    	        		//prevStage.show();
+	  	    	        		//stage.close();
 	  	    	        		int count = controller.twOrderDetail.getItems().size();
 	  	    	        		int counts =0;
 	  	    	        		boolean isExitCus = false;
