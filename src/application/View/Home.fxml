@@ -105,7 +105,7 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnInvoice" alignment="TOP_LEFT" layoutX="497.0" layoutY="289.0" mnemonicParsing="false" onAction="#gotoInvoice" prefHeight="30.0" prefWidth="249.0" text="5 - INVOICER">
+      <Button fx:id="btnInvoice" alignment="TOP_LEFT" layoutX="497.0" layoutY="289.0" mnemonicParsing="false" onAction="#gotoOrdersTemp" prefHeight="30.0" prefWidth="249.0" text="5 - INVOICER">
          <font>
             <Font size="18.0" />
          </font>

@@ -407,27 +407,25 @@
                   <CheckBox fx:id="chkPackingList" layoutX="1109.0" layoutY="513.0" mnemonicParsing="false" onAction="#changePackingList" prefHeight="17.0" prefWidth="149.0" text="Scientific Name" />
                </children>
             </Pane>
-            <Pane fx:id="orders" prefHeight="555.0" prefWidth="1266.0" visible="false">
+            <Pane fx:id="orders" prefHeight="555.0" prefWidth="1266.0" visible="true">
                <children>
                   <TableView fx:id="twOrder" editable="true" layoutY="32.0" prefHeight="699.0" prefWidth="1266.0" />
-                  <BorderPane layoutY="1.0" prefHeight="33.0" prefWidth="1266.0">
+                  <BorderPane layoutY="1.0" prefHeight="33.0" prefWidth="1266.0"> 
                       <left>
-                        <ChoiceBox fx:id="pendingordersbox" prefHeight="25.0" prefWidth="135.0" BorderPane.alignment="CENTER">
-                           <effect>
-                              <Blend />
-                           </effect>
-                        </ChoiceBox>
-                     </left>
-                      <right>
                         <ChoiceBox fx:id="cbFilterScreen" prefHeight="25.0" prefWidth="135.0" BorderPane.alignment="CENTER">
                            <effect>
                               <Blend />
                            </effect>
                         </ChoiceBox>
-                     </right>
+                     </left>
                   </BorderPane>
  
            <ChoiceBox fx:id="cbFilter" prefHeight="25.0" prefWidth="135.0">
+                     <effect>
+                        <Blend />
+                     </effect>
+                  </ChoiceBox> 
+                  <ChoiceBox fx:id="pendingordersbox" layoutY="3.0" prefHeight="25.0" prefWidth="135.0">
                      <effect>
                         <Blend />
                      </effect>
