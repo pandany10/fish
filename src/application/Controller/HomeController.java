@@ -107,7 +107,8 @@ public class HomeController extends Menu implements Initializable {
 					}
 					if (number == 5) {
 						try {
-							gotoInvoice();
+							gotoOrdersTemp();
+							//gotoInvoice();
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -181,10 +182,12 @@ public class HomeController extends Menu implements Initializable {
 			@Override
 
 			public void handle(KeyEvent ke) {
+				System.out.println("HRE IS GONSDN");
 				if (ke.getCode().equals(KeyCode.ENTER)) {
 					try {
 						txtEnterSelect.setText("5");
-						gotoInvoice();
+						gotoOrdersTemp();
+						//gotoInvoice();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -213,15 +216,18 @@ public class HomeController extends Menu implements Initializable {
 			@Override
 
 			public void handle(KeyEvent ke) {
-				if (ke.getCode().equals(KeyCode.ENTER)) {
+				System.out.println("GOING TO TEMP ORDERS ");
+				
+			//	if (ke.getCode().equals(KeyCode.ENTER)) {
 					try {
+						txtEnterSelect.setText("5");
 						gotoOrdersTemp();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
-				}
+				//}
 			}
 		});
 		btnProduct.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -331,17 +337,18 @@ public class HomeController extends Menu implements Initializable {
 		gotoOrders();
 	}
 
-	public void gotoInvoice(ActionEvent event) throws IOException {
+	/**public void gotoInvoice(ActionEvent event) throws IOException {
 		txtEnterSelect.setText("5");
-		gotoInvoice();
+		//gotoInvoice();
 	}
-
+**/
 	public void gotoCustomer(ActionEvent event) throws IOException {
 		txtEnterSelect.setText("2");
 		gotoCustomer();
 	}
 
 	public void gotoOrdersTemp(ActionEvent event) throws IOException {
+		txtEnterSelect.setText("5");
 		gotoOrdersTemp();
 	}
 

@@ -109,7 +109,7 @@ public class OrdersController extends Menu implements Initializable {
 		lblf7.setVisible(true);
 		Tracking.setVisible(false);
 		Trackinglink.setVisible(false);
-			twOrder.setPrefWidth(1266.00);
+		twOrder.setPrefWidth(1266.00);
 		root.setPrefWidth(1266.00);
 		if(screen.equals("Express")){
 			twOrder.getItems().clear();
@@ -469,6 +469,7 @@ public class OrdersController extends Menu implements Initializable {
 								    	tw_issued.setVisible(false);
 								    	status.setVisible(false);
 								    	cbFilter.setVisible(false);
+								    	cbFilterScreen.setVisible(false);
 								     	pendingordersbox.setVisible(true);
 								    	twOrder.setPrefHeight(660);
 								  }
@@ -1724,7 +1725,7 @@ public class OrdersController extends Menu implements Initializable {
 			                    @Override
 			                    public void run() {
 			                        System.out.println("Application Closed by click to Close Button(X)");
-			                        System.out.println(a.postStatus);
+			                       System.out.println( a.postStatus);
 			                        if(a.postStatus == true){
 			        					Integer orderID = twOrder.getSelectionModel().getSelectedItem().getOrder_id();
 			        					//twOrderDetail.getItems().removeAll(twOrderDetail.getSelectionModel().getSelectedItems());
@@ -2072,6 +2073,7 @@ public class OrdersController extends Menu implements Initializable {
 		}
 		// select next row, but same column as the current selection
 		else*/
+		System.out.println("this is where we add the product to the new invice");
 		if (pos.getRow() < twResultSearch.getItems().size()) {
 			ProductModel p = twResultSearch.getSelectionModel().getSelectedItem();
 			System.out.println(p.getSku());
@@ -2096,6 +2098,7 @@ public class OrdersController extends Menu implements Initializable {
 				OrderInfoModel orderInfoModel = getOrderInfoModel();
 				InvoiceModel invoice = new InvoiceModel();
 				ProductModel product = new ProductModel();
+				System.out.println("this is a credit memo:" +product.getCreditMemo());
 				product.setAll_Total(calTotal());
 				product.setAddon(p.getAddon());
 				product.setDisc(p.getDisc());

@@ -703,12 +703,20 @@ public class InvoiceController  extends Menu implements Initializable {
 		searchProduct.setVisible(true);
 	}
 	public Float calTotal(){
+	//	System.out.println("WHAT IS THE CREDIT MEMO" + creditmemo.isSelected());
 		Float total = (float) 0;
 		int count = twOrderDetail.getItems().size();
 		for(int i =0;i<count;i++){
 			String sub = twOrderDetail.getItems().get(i).getTotal();
 			if(sub != null && !sub.isEmpty()){
+			//   if(creditmemo.isSelected()) {
+			//	  float new_sub = Float.parseFloat(sub)-(2*Float.parseFloat(sub));
+			//	   total = total + new_sub;
+				   
+			//   }else {
+			   
 				total = total + Float.parseFloat(sub);
+			 //  }
 			}
 		}
 		Float discount = (float) 0;
@@ -1251,6 +1259,17 @@ public class InvoiceController  extends Menu implements Initializable {
 		}
 		if (pos.getRow() < controller.twResultSearch.getItems().size()) {
 			ProductModel p = controller.twResultSearch.getSelectionModel().getSelectedItem();
+			//System.out.println("SI MEMO : " + creditmemo.isSelected());
+			if(creditmemo.isSelected()) {
+			Double new_price = (Double.parseDouble(p.getPrice())-(2*Double.parseDouble(p.getPrice())));
+			p.setPrice(String.format ("%.2f", new_price));
+			//p.setPrice(new_price.toString());
+			Double new_total = (Double.parseDouble(p.getTotal())-(2*Double.parseDouble(p.getTotal())));
+			p.setTotal(String.format ("%.2f", new_total));
+			//p.setTotal(new_total.toString());	
+			}
+			//System.out.println("this is the actual price : " +p.getPrice());
+			
 			System.out.println(p.getSku());
 			if (p.getSku() != null) {
 				p.setId(p.getId());
@@ -1268,6 +1287,7 @@ public class InvoiceController  extends Menu implements Initializable {
 						lst.add(pro);
 					}
 				}
+				//System.out.println("I think is here");
 				//twOrderDetail.getItems().clear();
 				//twOrderDetail.getItems().addAll(lst);
 				twOrderDetail.getItems().remove(pos1.getRow());
